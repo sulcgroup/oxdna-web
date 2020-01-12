@@ -1,4 +1,5 @@
 __pycache__/
-jobfiles/
+jobfiles/*
+!jobfiles/.gitkeep 
 *.py[cod]
 *.log
