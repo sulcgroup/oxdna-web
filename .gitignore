@@ -1,0 +1,4 @@
+__pycache__/
+jobfiles/
+*.py[cod]
+*.log
