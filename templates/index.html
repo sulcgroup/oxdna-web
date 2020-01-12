@@ -1,0 +1,301 @@
+<html>
+<head>
+	<title>azDNA</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+</head>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="/static/style.css">
+<body ng-app="app" ng-controller="MainCtrl">
+	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">azDNA</a>
+		<input class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
+		<ul class="navbar-nav px-3">
+			<li class="nav-item text-nowrap">
+				<a class="nav-link" href="/logout">Sign out</a>
+			</li>
+		</ul>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
+				<div class="sidebar-sticky">
+					<ul class="nav flex-column">
+						<li class="nav-item">
+							<a class="nav-link" href="#">
+								<span data-feather="home"></span>
+								Dashboard <span class="sr-only">(current)</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/jobs">
+								<span data-feather="list"></span>
+								View Jobs
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" href="#">
+								<span data-feather="edit"></span>
+								Create A Job	
+							</a>
+						</li>
+
+
+						<li class="nav-item">
+							<a class="nav-link" href="#">
+								<span data-feather="file-text"></span>
+								My Files	
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">
+								<span data-feather="user"></span>
+								My Account	
+							</a>
+						</li>
+					</ul>
+
+					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+						<span>JOB HISTORY</span>
+						<a class="d-flex align-items-center text-muted" href="#">
+						</a>
+					</h6>
+					<ul class="nav flex-column mb-2">
+						<li class="nav-item">
+							<a class="nav-link" href="#">
+								<span data-feather="file-text"></span>
+								job_123912312312.log
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">
+								<span data-feather="file-text"></span>
+								job_79797988.log
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">
+								<span data-feather="file-text"></span>
+								job_12391239123.log
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">
+								<span data-feather="file-text"></span>
+								job_57412313212.log
+							</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+
+			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+					<h1 class="h2">Create A Job</h1>
+				</div>
+
+
+				<div class="card">
+					<div class="card-body">
+						<p>You are now creating a job for processing on our servers. Please specify the parameters you would like, and be mindful of your usage. You have used 21 out of your weekly allocated 60 job credits. To request more credits, please do so in<a href="/"> my account</a>. </p>
+
+						<!--
+						<p>
+							<div class="progress">
+								<div class="progress-bar" role="progressbar" style="width: 35%;" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100">35%</div>
+							</div>
+						</p>
+						!-->
+
+						<h4>Input Files</h4>
+						<div class="form-group">
+							<label for="exampleFormControlFile1">Please select the input files you'd like for the job</label>
+							<input type="file" accept=".top,.conf" class="form-control-file" id="exampleFormControlFile1" multiple onchange="openFiles(this.files)">
+						</div>
+					</form>
+
+					<iframe name="editor-frame" style="width:95%;height:400px;margin:10px auto;display:block"src="/static/oxdna-viewer/index.html"></iframe>
+
+					<h4>Parameters</h4>
+
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="basic-addon1">Job Title</span>
+						</div>
+						<input ng-model="data.job_title" type="text" class="form-control" placeholder="A title for your reference" aria-label="Username" aria-describedby="basic-addon1">
+					</div>
+					<p>
+						<h6>Interaction Type</h6>
+						<div class="form-check form-check-inline">
+							<input ng-model="data.interaction_type" class="form-check-input" type="radio" name="interaction_type" id="inlineRadio1" value="DNA">
+							<label class="form-check-label" for="inlineRadio1">DNA</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input ng-model="data.interaction_type" class="form-check-input" type="radio" name="interaction_type" id="inlineRadio2" value="RNA">
+							<label class="form-check-label" for="inlineRadio2">RNA</label>
+						</div></p>
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">Salt Concentration</span>
+							</div>
+							<input ng-model="data.salt_concentration"type="number" class="form-control" placeholder="Sets the salt concentration in M" aria-label="sets the salt concentration in M" aria-describedby="basic-addon1">
+						</div>
+
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">Steps</span>
+							</div>
+							<input ng-model="data.steps" type="number" class="form-control" placeholder="Length of the simulation, in time step" aria-label="sets the salt concentration in M" aria-describedby="basic-addon1">
+						</div>
+
+						<p>
+							<h6>Temperature Units</h6>
+							<div class="form-check form-check-inline">
+								<input ng-model="auxillary.temperature_units" class="form-check-input" type="radio" name="temperature_units" id="inlineRadio1" value="kelvin">
+								<label class="form-check-label" for="inlineRadio1">Kelvin</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input ng-model="auxillary.temperature_units" class="form-check-input" type="radio" name="temperature_units" id="inlineRadio1" value="celsius">
+								<label class="form-check-label" for="inlineRadio2">Celsius</label>
+							</div></p>
+
+
+
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1">Temperature</span>
+								</div>
+								<input ng-model="auxillary.temperature" type="number" class="form-control" placeholder="Temperature of the simulation" aria-label="sets the salt concentration in M" aria-describedby="basic-addon1">
+							</div>
+
+							<p>
+								<a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">View advanced parameters</a>
+
+
+
+
+								<div class="collapse" id="multiCollapseExample1">
+									<h4>Advanced Parameters</h4>
+
+
+									<p>
+										<h6>Backend</h6>
+										<div class="form-check form-check-inline">
+											<input ng-model="data.backend" class="form-check-input" type="radio" name="backend" id="inlineRadio1" value="CPU">
+											<label class="form-check-label" for="inlineRadio1">CPU</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input ng-model="data.backend" class="form-check-input" type="radio" name="backend" id="inlineRadio2" value="CUDA" disabled="">
+											<label class="form-check-label" for="inlineRadio2">CUDA</label>
+										</div></p>
+
+
+										<h6>Mismatch Repulsion</h6>
+										<div class="form-check form-check-inline">
+											<input ng-model="auxillary.mismatch_repulsion" class="form-check-input" type="radio" name="mismatch_repulsion" id="inlineRadio1" value="true">
+											<label class="form-check-label" for="inlineRadio1">Yes</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input ng-model="auxillary.mismatch_repulsion" class="form-check-input" type="radio" name="mismatch_repulsion" id="inlineRadio2" value="false">
+											<label class="form-check-label" for="inlineRadio2">No</label>
+										</div></p>
+
+
+										<div class="input-group mb-3">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="basic-addon1">Print conf_interval</span>
+											</div>
+											<input ng-model="data.print_conf_interval" type="number" class="form-control" placeholder="The time steps between the outputting of configurations" aria-label="sets the salt concentration in M" aria-describedby="basic-addon1">
+										</div>
+
+										<div class="input-group mb-3">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="basic-addon1">Print energy_every</span>
+											</div>
+											<input ng-model="data.print_energy_every" type="number" class="form-control" placeholder="The time steps between the outputting of energy" aria-label="sets the salt concentration in M" aria-describedby="basic">
+
+										</div>
+									</div>
+
+
+									<p>
+										<button ng-click="submitJob()" type="submit" class="btn btn-primary">Submit Job</button>
+									</p>
+
+									<div ng-if="hasSubmitted">
+										<h3>Job Submitted!</h3>
+									</div>
+
+								</div>
+
+
+							</div>
+
+						</main>
+					</div>
+				</div>
+				</body>
+				<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+				<script>
+					feather.replace()
+
+					var frame = window.frames['editor-frame'];
+
+					var openFiles = function(files) {
+						//console.log(files);
+						//frame.document.dispatchEvent(new Event('drop'));
+						//console.log("EVENT DISPATCHED!")
+						console.log(files);
+						dispatchFakeDrop(files);
+					}
+
+					var dispatchFakeDrop = function(files) {
+						console.log("called");
+						var fakeDropEvent = new DragEvent('drop');
+					// You override dataTransfer with whichever property
+					// and method the drop function needs
+
+					Object.defineProperty(fakeDropEvent, 'dataTransfer', {
+						value: new FakeDataTransfer(files)
+					});
+					frame.renderer.domElement.dispatchEvent(fakeDropEvent);
+
+					}
+
+					var finishedLoading = function() {
+						console.log("child finished loading!");
+						//dispatchFakeDrop();
+					}
+
+					function FakeDataTransfer(files) {
+					this.dropEffect = 'all';
+					this.effectAllowed = 'all';
+					this.items = [];
+					this.types = ['Files'];
+					this.getData = function() {
+
+					return files;
+					};
+					this.files = files;
+					};
+
+					var files = {};
+
+					function FakeDataDownload(file, filename) {
+						console.log("Fake file download: ", file, filename);
+						files[filename] = file;
+					}
+
+					function TriggerFileDownloads() {
+						frame.makeOutputFiles()
+					}
+				</script>
+
+				<script src="/static/angular.min.js"></script>
+				<script src="/static/script.js"></script>
+				</html>
