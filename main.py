@@ -124,6 +124,43 @@ def updatePassword():
 
 	return Login.updatePasssword(user_id, old_password, new_password)
 
+@app.route("/account/get_email", methods=["GET"])
+def updateEmail():
+	if session.get("user_id") is None:
+		return "You must be logged in to modify your account"
+
+	user_id = int(session["user_id"])
+	
+	return Account.getEmail(user_id)
+
+@app.route("/account/set_email", methods=["POST"])
+def updateEmail():
+	if session.get("user_id") is None:
+		return "You must be logged in to modify your account"
+
+	user_id = int(session["user_id"])
+	email_new = string(session["email"])
+	
+	return Account.setEmail(user_id, email_new)
+
+@app.route("/account/get_status", methods=["GET"])
+def updateEmail():
+	if session.get("user_id") is None:
+		return "You must be logged in to modify your account"
+
+	user_id = int(session["user_id"])
+	
+	return Account.getStatus(user_id)
+
+@app.route("/account/get_creation_date", methods=["GET"])
+def updateEmail():
+	if session.get("user_id") is None:
+		return "You must be logged in to modify your account"
+
+	user_id = int(session["user_id"])
+	
+	return Account.get_creation_date(user_id)
+
 #render the jobs template page
 @app.route("/jobs")
 def jobs():
