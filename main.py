@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, send_file, session, jsonify, redirect, render_template
+from flask import Flask, Response, request, send_file, session, jsonify, redirect, render_template
 import requests
 
 import Login
@@ -169,12 +169,13 @@ def getJobOutput(uuid, desired_output):
 
 	desired_file = open(desired_file_path, "r")
 
+
+
+
 	desired_file_contents = desired_file.read()
 
-	return desired_file_contents
+	return Response(desired_file_contents, mimetype='text/plain')
 
-
-	print("OKAY!!!")
 
 @app.route("/")
 def index():
