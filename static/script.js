@@ -1,6 +1,45 @@
 var app = angular.module("app", [])
 
 
+app.controller("AccountCtrl", function($scope, $http) {
+
+	$scope.status = null;
+
+	console.log("Now in the acccount ctrl!");
+
+	$scope.updatePassword = function(old_password, new_password) {
+		$scope.status = "Loading...";
+
+		$http({
+			method: 'POST',
+			data: 
+			{
+				"old_password":old_password,
+				"new_password":new_password
+			},
+			url: '/account/update_password'
+		}).then(function (response) {
+
+			var data = response.data;
+
+			if(data == "Invalid password") {
+				$scope.status = "Invalid password";
+			} else if(data == "Password updated") {
+				$scope.status = "Password updated";
+			}
+		
+		});
+	}
+
+	$scope.submit = function() {
+		$scope.updatePassword($scope.old_password, $scope.new_password);
+	}
+	
+
+})
+
+
+
 app.controller("JobsCtrl", function($scope, $http) {
 
 	$scope.jobs = [];

@@ -103,6 +103,27 @@ def logout():
 	return "You have logged out"
 
 
+@app.route("/account", methods=["GET"])
+def account():
+
+	if session.get("user_id") is None:
+		return "You must be logged in to modify your account"
+
+	if request.method == "GET":
+		return send_file("templates/account.html")
+
+@app.route("/account/update_password", methods=["POST"])
+def updatePassword():
+	if session.get("user_id") is None:
+		return "You must be logged in to modify your account"
+
+	user_id = int(session["user_id"])
+
+	old_password = request.json["old_password"]
+	new_password = request.json["new_password"]
+
+	return Login.updatePasssword(user_id, old_password, new_password)
+
 #render the jobs template page
 @app.route("/jobs")
 def jobs():

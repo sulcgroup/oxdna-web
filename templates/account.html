@@ -11,27 +11,27 @@
 
 <link rel="stylesheet" href="/static/style.css">
 <style>
-table, th , td {
-  border: 1px solid grey;
-  border-collapse: collapse;
-  padding: 15px;
-  width:100%;
-}
+	table, th , td {
+		border: 1px solid grey;
+		border-collapse: collapse;
+		padding: 15px;
+		width:100%;
+	}
 
-table td {
-	width:15%;
-	text-align: center;
-}
+	table td {
+		width:15%;
+		text-align: center;
+	}
 
-table tr:nth-child(odd) {
-  background-color: #f1f1f1;
-}
+	table tr:nth-child(odd) {
+		background-color: #f1f1f1;
+	}
 
-table tr:nth-child(even) {
-  background-color: #ffffff;
-}
+	table tr:nth-child(even) {
+		background-color: #ffffff;
+	}
 </style>
-<body ng-app="app" ng-controller="JobsCtrl">
+<body ng-app="app" ng-controller="AccountCtrl">
 	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
 		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">azDNA</a>
 		<input class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
@@ -54,7 +54,7 @@ table tr:nth-child(even) {
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link active" href="/jobs">
+							<a class="nav-link" href="/jobs">
 								<span data-feather="list"></span>
 								View Jobs
 							</a>
@@ -74,7 +74,7 @@ table tr:nth-child(even) {
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/account">
+							<a class="nav-link active" href="/account">
 								<span data-feather="user"></span>
 								My Account	
 							</a>
@@ -117,103 +117,51 @@ table tr:nth-child(even) {
 
 			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-					<h1 class="h2">View Jobs</h1>
+					<h1 class="h2">Account</h1>
 				</div>
 
 
 				<div class="card">
 					<div class="card-body">
 
-						<p>Here is a list of the jobs you have currently running under your account.<	/p>
+						Welcome, here you can manage your account.
 
-						<table>
-							<tr>
-								<td>Job Name</td>
-								<td>Started</td>
-								<td>Input</td>
-								<td>Energy</td>
-								<td>Trajectory</td>
-								<td>Log</td>
-							</tr>
-							<tr ng-repeat="x in jobs">
-								<td>{{ x.name }}</td>
-								<td>{{ x.dateString }}</td>
-								<td><a href="/job_output/{{x.uuid}}/input">view input</a></td>
-								<td><a href="/job_output/{{x.uuid}}/energy">view energy</a></td>
-								<td><a href="/job_output/{{x.uuid}}/trajectory">view trajectory</a></td>
-								<td><a href="/job_output/{{x.uuid}}/log">view log</a></td>
-							</tr>
-						</table>
+						<br><br>
 
-					</div>
+						<div class="row">
+							<div class="col-6">
+								<h4>Update your Email</h4>
+							</div>
+							<div class="col-6">
+								<h4>Update your Password</h4>
+								<div ng-if="status != null"><h6>{{status}}</h6></div>
+								<div>
+									<br>
+									Old password: <input type="text" ng-model="old_password" placeholder="Your current password">
+									<br><br>
+									New password: <input type="password" ng-model="new_password" placeholder="Your new password">
+									<br><br>
+									<br><rb>
+										<button ng-click="submit()">Update my password</button>
 
+ 
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+					</main>
 				</div>
+			</div>
 
-			</main>
-		</div>
-	</div>
-
-				<!-- Bootstrap core JavaScript
-					================================================== -->
-					<!-- Placed at the end of the document so the pages load faster -->
 
 				</body>
+
 				<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
 				<script>
 					feather.replace()
-
-					var frame = window.frames['editor-frame'];
-
-					var openFiles = function(files) {
-						//console.log(files);
-						//frame.document.dispatchEvent(new Event('drop'));
-						//console.log("EVENT DISPATCHED!")
-						console.log(files);
-						dispatchFakeDrop(files);
-					}
-
-					var dispatchFakeDrop = function(files) {
-						console.log("called");
-						var fakeDropEvent = new DragEvent('drop');
-					// You override dataTransfer with whichever property
-					// and method the drop function needs
-
-					Object.defineProperty(fakeDropEvent, 'dataTransfer', {
-						value: new FakeDataTransfer(files)
-					});
-					frame.renderer.domElement.dispatchEvent(fakeDropEvent);
-
-					}
-
-					var finishedLoading = function() {
-						console.log("child finished loading!");
-						//dispatchFakeDrop();
-					}
-
-					function FakeDataTransfer(files) {
-					this.dropEffect = 'all';
-					this.effectAllowed = 'all';
-					this.items = [];
-					this.types = ['Files'];
-					this.getData = function() {
-
-					return files;
-					};
-					this.files = files;
-					};
-
-					var files = {};
-
-					function FakeDataDownload(file, filename) {
-						console.log("Fake file download: ", file, filename);
-						files[filename] = file;
-					}
-
-					function TriggerFileDownloads() {
-						frame.makeOutputFiles()
-					}
 				</script>
-
 				<script src="/static/angular.min.js"></script>
 				<script src="/static/script.js"></script>
 				</html>
