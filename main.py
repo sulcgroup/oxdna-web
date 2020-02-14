@@ -125,7 +125,7 @@ def updatePassword():
 	return Login.updatePasssword(user_id, old_password, new_password)
 
 @app.route("/account/get_email", methods=["GET"])
-def updateEmail():
+def getEmail():
 	if session.get("user_id") is None:
 		return "You must be logged in to modify your account"
 
@@ -144,7 +144,7 @@ def updateEmail():
 	return Account.setEmail(user_id, email_new)
 
 @app.route("/account/get_status", methods=["GET"])
-def updateEmail():
+def getStatus():
 	if session.get("user_id") is None:
 		return "You must be logged in to modify your account"
 
@@ -153,7 +153,7 @@ def updateEmail():
 	return Account.getStatus(user_id)
 
 @app.route("/account/get_creation_date", methods=["GET"])
-def updateEmail():
+def getCreationDate():
 	if session.get("user_id") is None:
 		return "You must be logged in to modify your account"
 
