@@ -1,4 +1,4 @@
-<html>
+<html ng-app="app" ng-controller="AppCtrl">
 <head>
 	<title>azDNA</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,7 +10,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 <link rel="stylesheet" href="/static/style.css">
-<body ng-app="app" ng-controller="MainCtrl">
+<body ng-controller="MainCtrl">
 	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
 		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">azDNA</a>
 		<input class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
@@ -66,28 +66,10 @@
 						</a>
 					</h6>
 					<ul class="nav flex-column mb-2">
-						<li class="nav-item">
+						<li ng-repeat="job in job_history">
 							<a class="nav-link" href="#">
 								<span data-feather="file-text"></span>
-								job_123912312312.log
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">
-								<span data-feather="file-text"></span>
-								job_79797988.log
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">
-								<span data-feather="file-text"></span>
-								job_12391239123.log
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">
-								<span data-feather="file-text"></span>
-								job_57412313212.log
+								{{job.name}}
 							</a>
 						</li>
 					</ul>

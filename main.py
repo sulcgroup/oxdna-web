@@ -1,5 +1,5 @@
 import os
-from flask import Flask, Response, request, send_file, session, jsonify, redirect, render_template
+from flask import Flask, Response, request, send_file, session, jsonify, redirect
 import requests
 
 import Login
@@ -218,7 +218,7 @@ def getJobOutput(uuid, desired_output):
 def index():
 
 	if session.get("user_id") is not None:
-		return render_template("index.html")
+		return send_file("templates/index.html")
 	else:
 		return redirect("/login")
 

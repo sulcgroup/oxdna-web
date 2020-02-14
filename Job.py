@@ -98,10 +98,11 @@ def createJobForUserIdWithData(userId, jsonData):
 	
 	job_number = startSlurmJob(job_directory, randomJobId)
 
+	job_title = parameters["job_title"]
 
 	job_data = (
 		int(userId),
-		"job",
+		job_title,
 		randomJobId,
 		job_number,
 		int(time.time())
@@ -128,12 +129,14 @@ def createJobDictionaryForTuple(data):
 def getJobsForUserId(userId):
 	
 	cursor.execute(get_jobs_query, (int(userId),))
+	result = cursor.fetchall()
 
 	payload = []
 
-	for data in cursor:
+	for data in result:
 		job_data = createJobDictionaryForTuple(data)
 		payload.append(job_data)
+
 
 	return payload
 

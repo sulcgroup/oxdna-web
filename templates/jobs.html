@@ -1,4 +1,4 @@
-<html>
+<html ng-app="app" ng-controller="AppCtrl">
 <head>
 	<title></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -31,7 +31,7 @@ table tr:nth-child(even) {
   background-color: #ffffff;
 }
 </style>
-<body ng-app="app" ng-controller="JobsCtrl">
+<body ng-controller="JobsCtrl">
 	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
 		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">azDNA</a>
 		<input class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
@@ -87,28 +87,11 @@ table tr:nth-child(even) {
 						</a>
 					</h6>
 					<ul class="nav flex-column mb-2">
-						<li class="nav-item">
+					<ul class="nav flex-column mb-2">
+						<li ng-repeat="job in job_history">
 							<a class="nav-link" href="#">
 								<span data-feather="file-text"></span>
-								job_123912312312.log
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">
-								<span data-feather="file-text"></span>
-								job_79797988.log
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">
-								<span data-feather="file-text"></span>
-								job_12391239123.log
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">
-								<span data-feather="file-text"></span>
-								job_57412313212.log
+								{{job.name}}
 							</a>
 						</li>
 					</ul>

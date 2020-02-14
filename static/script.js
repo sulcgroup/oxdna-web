@@ -1,5 +1,48 @@
 var app = angular.module("app", [])
 
+app.factory("JobsService", function($http) {
+
+	var factory = {};
+
+	factory.getJobs = function(cb) {
+		$http({
+			method: 'GET',
+			url: '/all_jobs'
+		}).then(function successCallback(response) {
+
+			var data = response.data;
+
+			for(job in data) {
+				var timestamp = data[job]["creationDate"];
+				var date = new Date(timestamp * 1000).toLocaleString("en-US");			
+				data[job]["dateString"] = date;
+			}
+
+			console.log(data);
+			data.sort((a,b) => parseInt(b["creationDate"]) - parseInt(a["creationDate"]))
+			console.log(data);
+			//$scope.jobs = data;
+
+			cb(data);
+		}, function errorCallback() {
+			cb([]);
+		});
+	}
+
+	return factory;
+
+})
+
+app.controller("AppCtrl", function($scope, JobsService) {
+	
+	$scope.job_history = [];
+
+	JobsService.getJobs(function(jobs) {
+		$scope.job_history = jobs;
+	})
+
+
+})
 
 app.controller("AccountCtrl", function($scope, $http) {
 
@@ -40,25 +83,13 @@ app.controller("AccountCtrl", function($scope, $http) {
 
 
 
-app.controller("JobsCtrl", function($scope, $http) {
+app.controller("JobsCtrl", function($scope, JobsService) {
 
 	$scope.jobs = [];
 
-	$http({
-		method: 'GET',
-		url: '/all_jobs'
-	}).then(function successCallback(response) {
-
-		var data = response.data;
-
-		for(job in data) {
-			var timestamp = data[job]["creationDate"];
-			var date = new Date(timestamp * 1000).toLocaleString("en-US");			
-			data[job]["dateString"] = date;
-
-		}
-		$scope.jobs = data;
-	});
+	JobsService.getJobs(function(jobs) {
+		$scope.jobs = jobs;
+	})
 
 })
 
