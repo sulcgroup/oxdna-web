@@ -8,11 +8,14 @@ import mysql.connector
 cnx = mysql.connector.connect(user='root', password='', database='azdna')
 cursor = cnx.cursor()
 
+set_analysis_id_query = (
+	"UPDATE Jobs SET analysisJobId = %s WHERE uuid = %s"
+)
 
 add_job_query = (
 	"INSERT INTO Jobs "
-	"(`userId`, `name`, `uuid`, `slurmId`, `jobType`, `creationDate`)"
-	"VALUES (%s, %s, %s, %s, %s, %s)"
+	"(`userId`, `name`, `uuid`, `slurmId`, `jobType`, `analysisJobId`, `creationDate`)"
+	"VALUES (%s, %s, %s, %s, %s, %s, %s)"
 )
 
 get_jobs_query = ("SELECT * FROM Jobs WHERE userId = %s")
@@ -105,11 +108,22 @@ def createOxDNAFile(input_files, parameters, job_directory):
 
 def createAnalysisForUserIdWithJob(userId, jobId):
 
+	randomAnalysisId = str(uuid.uuid4())
+
 	user_directory = "jobfiles/"+str(userId) + "/"
 	job_directory = user_directory + jobId + "/"
 
-	createSlurmAnalysisFile(job_directory)
-	job_number = startSlurmAnalysis(job_directory)
+	#createSlurmAnalysisFile(job_directory)
+	#job_number = startSlurmAnalysis(job_directory)
+
+	update_data = (
+		randomAnalysisId,
+		"06e16fd2-5cf4-4fe3-bd28-9408b39bd0a8"
+	)
+
+	cursor.execute(set_analysis_id_query, update_data)
+	cnx.commit()
+
 
 	pass
 
@@ -150,6 +164,7 @@ def createJobForUserIdWithData(userId, jsonData):
 		randomJobId,
 		job_number,
 		0,
+		None,
 		int(time.time())
 	)
 
@@ -160,7 +175,7 @@ def createJobForUserIdWithData(userId, jsonData):
 
 def createJobDictionaryForTuple(data):
 
-	job_id, user_id, job_name, uuid, slurm_id, job_type, creation_date = data
+	job_id, user_id, job_name, uuid, slurm_id, job_type, analysis_job_id, creation_date = data
 
 	schema = {
 		"name":job_name,
@@ -192,4 +207,4 @@ def getJobForUserId(jobId, userId):
 
 #createJobForUserIdWithData(53, loldata)
 #getJobsForUserId(12)
-#createAnalysisForUserIdWithJob(1, "897d2b38-12e0-48b7-ba7c-2351fb7ab7f8")
+createAnalysisForUserIdWithJob(1, "897d2b38-12e0-48b7-ba7c-2351fb7ab7f8")
