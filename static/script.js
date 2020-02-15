@@ -12,6 +12,8 @@ app.factory("JobService", function($http) {
 
 			var data = response.data;
 			console.log(data);
+
+			cb(data);
 		}, function errorCallback() {
 			cb([]);
 		});
@@ -40,10 +42,8 @@ app.factory("JobsService", function($http) {
 				data[job]["dateString"] = date;
 			}
 
-			console.log(data);
-			data.sort((a,b) => parseInt(b["creationDate"]) - parseInt(a["creationDate"]))
-			console.log(data);
-			//$scope.jobs = data;
+			data.sort((a,b) => parseInt(b["creationDate"]) - parseInt(a["creationDate"]));
+			data = data.filter(x => x.job_type == 0);
 
 			cb(data);
 		}, function errorCallback() {
@@ -103,12 +103,18 @@ app.controller("AccountCtrl", function($scope, $http) {
 
 })
 
-app.controller("JobCtrl", function($scope, JobService) {
+app.controller("JobCtrl", function($scope, $location, JobService) {
 	console.log("Now loading job...");
+	$scope.job = {};
+	$scope.job.name = "";
 
-	JobService.getJob("72a302e1-0efe-40ef-804e-dbffb4842b41", function(data) {
-		console.log("Here was data:", data);
+	$scope.viewing_job_uuid = $location.absUrl().split("/").pop();
+
+	JobService.getJob($scope.viewing_job_uuid, function(data) {
+		console.log("DATA!:", data);
+		$scope.job = data;
 	})
+
 })
 
 

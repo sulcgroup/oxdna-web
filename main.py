@@ -203,7 +203,7 @@ def getJobs():
 
 	jobs = Job.getJobsForUserId(user_id)
 
-	return Fy(jobs)
+	return jsonify(jobs)
 
 
 @app.route("/job_output/<uuid>/<desired_output>")

@@ -89,7 +89,7 @@ table tr:nth-child(even) {
 					<ul class="nav flex-column mb-2">
 					<ul class="nav flex-column mb-2">
 						<li ng-repeat="job in job_history">
-							<a class="nav-link" href="#">
+							<a class="nav-link" href="/job/{{job.uuid}}">
 								<span data-feather="file-text"></span>
 								{{job.name}}
 							</a>
@@ -118,7 +118,7 @@ table tr:nth-child(even) {
 								<td>Log</td>
 							</tr>
 							<tr ng-repeat="x in jobs">
-								<td>{{ x.name }}</td>
+								<td><a href="/job/{{x.uuid}}">{{ x.name }}</a></td>
 								<td>{{ x.dateString }}</td>
 								<td><a href="/job_output/{{x.uuid}}/input">view input</a></td>
 								<td><a href="/job_output/{{x.uuid}}/energy">view energy</a></td>

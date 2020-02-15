@@ -6,7 +6,6 @@ import mysql.connector
 
 
 cnx = mysql.connector.connect(user='root', password='', database='azdna')
-cursor = cnx.cursor()
 
 set_analysis_id_query = (
 	"UPDATE Jobs SET analysisJobId = %s WHERE uuid = %s"
@@ -109,6 +108,7 @@ def createOxDNAFile(input_files, parameters, job_directory):
 	file.close()
 
 def createAnalysisForUserIdWithJob(userId, jobId):
+	cursor = cnx.cursor(buffered=True)
 
 	randomAnalysisId = str(uuid.uuid4())
 
@@ -139,10 +139,11 @@ def createAnalysisForUserIdWithJob(userId, jobId):
 	)
 	cursor.execute(add_job_query, analysis_data)
 	cnx.commit()
+	cursor.close()
 
 
 def createJobForUserIdWithData(userId, jsonData):
-
+	cursor = cnx.cursor(buffered=True)
 	randomJobId = str(uuid.uuid4())
 
 	user_directory = "jobfiles/"+str(userId) + "/"
@@ -184,6 +185,7 @@ def createJobForUserIdWithData(userId, jsonData):
 
 	cursor.execute(add_job_query, job_data)
 	cnx.commit()
+	cursor.close()
 
 
 
@@ -203,6 +205,10 @@ def createJobDictionaryForTuple(data):
 
 
 def getJobsForUserId(userId):
+
+	temp_cnx = mysql.connector.connect(user='root', password='', database='azdna')
+	cursor = temp_cnx.cursor(buffered=True)
+
 	
 	cursor.execute(get_jobs_query, (int(userId),))
 	result = cursor.fetchall()
@@ -214,16 +220,22 @@ def getJobsForUserId(userId):
 		payload.append(job_data)
 
 
+	cursor.close()
+	temp_cnx.close()
 	return payload
 
 
 def getJobForUserId(jobId, userId):
+	temp_cnx = mysql.connector.connect(user='root', password='', database='azdna')
 
+	cursor = temp_cnx.cursor(buffered=True)
 	cursor.execute(get_job_query, (jobId,))
-	result = cursor.fetchall()
-	
-	if(len(result) != 0):
-		return createJobDictionaryForTuple(result[0])
+	result = cursor.fetchone()
+
+	cursor.close()
+	temp_cnx.close()
+	if(result is not None):
+		return createJobDictionaryForTuple(result)
 	else:
 		return None
 
