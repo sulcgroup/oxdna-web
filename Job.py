@@ -19,6 +19,7 @@ add_job_query = (
 )
 
 get_jobs_query = ("SELECT * FROM Jobs WHERE userId = %s")
+get_job_query = ("SELECT * FROM Jobs WHERE uuid = %s")
 
 
 def startSlurmJob(job_directory, job_id):
@@ -43,17 +44,18 @@ def startSlurmAnalysis(job_directory):
 
 	return job_number
 
-def createSlurmAnalysisFile(job_directory):
+def createSlurmAnalysisFile(job_directory, analysis_id):
 	job_output_file = job_directory + "analysis_out.log"
 
 
 	sbatch_file = """#!/bin/bash
-#SBATCH --job-name=serial_job_analysis    # Job name
+#SBATCH --job-name={analysis_id}    # Job name
 #SBATCH --ntasks=1                    # Run on a single CPU
 #SBATCH --time=336:00:00               # Time limit hrs:min:sec
 #SBATCH --output=/vagrant/azDNA/{job_output_file}   # Standard output and error log
 cd /vagrant/azDNA/{job_directory}
-python3 /vagrant/oxdna_analysis_tools/compute_mean.py -p 1 -d deviations.json -f oxDNA -o mean.dat trajectory.dat sim.top""".	format(
+python3 /vagrant/oxdna_analysis_tools/compute_mean.py -p 1 -d deviations.json -f oxDNA -o mean.dat trajectory.dat sim.top""".format(
+	analysis_id=analysis_id,
 	job_directory=job_directory, 
 	job_output_file=job_output_file
 )
@@ -113,19 +115,31 @@ def createAnalysisForUserIdWithJob(userId, jobId):
 	user_directory = "jobfiles/"+str(userId) + "/"
 	job_directory = user_directory + jobId + "/"
 
-	#createSlurmAnalysisFile(job_directory)
-	#job_number = startSlurmAnalysis(job_directory)
+	createSlurmAnalysisFile(job_directory, randomAnalysisId)
+	job_number = startSlurmAnalysis(job_directory)
+
+	print("Creating analysis now...")
 
 	update_data = (
 		randomAnalysisId,
-		"06e16fd2-5cf4-4fe3-bd28-9408b39bd0a8"
+		jobId
 	)
 
 	cursor.execute(set_analysis_id_query, update_data)
 	cnx.commit()
 
+	analysis_data = (
+		int(userId),
+		"analysis",
+		randomAnalysisId,
+		job_number,
+		1,
+		None,
+		int(time.time())
+	)
+	cursor.execute(add_job_query, analysis_data)
+	cnx.commit()
 
-	pass
 
 def createJobForUserIdWithData(userId, jsonData):
 
@@ -203,8 +217,20 @@ def getJobsForUserId(userId):
 
 def getJobForUserId(jobId, userId):
 
-	pass
+	cursor.execute(get_job_query, (jobId,))
+	result = cursor.fetchall()
+	
+	print(result[0])
+
+	if(len(result) != 0):
+		return result[0]
+	else:
+		return None
+
+
 
 #createJobForUserIdWithData(53, loldata)
 #getJobsForUserId(12)
-createAnalysisForUserIdWithJob(1, "897d2b38-12e0-48b7-ba7c-2351fb7ab7f8")
+#createAnalysisForUserIdWithJob(1, "72a302e1-0efe-40ef-804e-dbffb4842b41")
+
+getJobForUserId("72a302e1-0efe-40ef-804e-dbffb4842b41", 1)
