@@ -183,8 +183,13 @@ def get_job_data(job_id):
 
 	if session.get("user_id") is None:
 		return redirect("/login")
+
+	job_data = Job.getJobForUserId(job_id, session.get("user_id"))
+
+	if(job_data is not None):
+		return jsonify(job_data)
 	else:
-		return send_file("templates/job.html")
+		return "No job data."
 
 
 
@@ -198,7 +203,7 @@ def getJobs():
 
 	jobs = Job.getJobsForUserId(user_id)
 
-	return jsonify(jobs)
+	return Fy(jobs)
 
 
 @app.route("/job_output/<uuid>/<desired_output>")

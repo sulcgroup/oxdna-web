@@ -31,7 +31,7 @@ table tr:nth-child(even) {
   background-color: #ffffff;
 }
 </style>
-<body ng-controller="JobsCtrl">
+<body ng-controller="JobCtrl">
 	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
 		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">azDNA</a>
 		<input class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
@@ -100,32 +100,14 @@ table tr:nth-child(even) {
 
 			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-					<h1 class="h2">View Jobs</h1>
+					<h1 class="h2">Viewing Job: my job :)</h1>
 				</div>
 
 
 				<div class="card">
 					<div class="card-body">
 
-						<p>Here is a list of the jobs you have currently running under your account.</p>
-						<table>
-							<tr>
-								<td>Job Name</td>
-								<td>Started</td>
-								<td>Input</td>
-								<td>Energy</td>
-								<td>Trajectory</td>
-								<td>Log</td>
-							</tr>
-							<tr ng-repeat="x in jobs">
-								<td>{{ x.name }}</td>
-								<td>{{ x.dateString }}</td>
-								<td><a href="/job_output/{{x.uuid}}/input">view input</a></td>
-								<td><a href="/job_output/{{x.uuid}}/energy">view energy</a></td>
-								<td><a href="/job_output/{{x.uuid}}/trajectory">view trajectory</a></td>
-								<td><a href="/job_output/{{x.uuid}}/log">view log</a></td>
-							</tr>
-						</table>
+						<p>Hello!</p>
 
 					</div>
 

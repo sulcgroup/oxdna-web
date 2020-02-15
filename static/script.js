@@ -1,5 +1,27 @@
 var app = angular.module("app", [])
 
+app.factory("JobService", function($http) {
+
+	var factory = {};
+
+	factory.getJob = function(jobId, cb) {
+		$http({
+			method: 'GET',
+			url: `/api/job/${jobId}`
+		}).then(function successCallback(response) {
+
+			var data = response.data;
+			console.log(data);
+		}, function errorCallback() {
+			cb([]);
+		});
+	}
+
+	return factory;
+
+})
+
+
 app.factory("JobsService", function($http) {
 
 	var factory = {};
@@ -81,6 +103,13 @@ app.controller("AccountCtrl", function($scope, $http) {
 
 })
 
+app.controller("JobCtrl", function($scope, JobService) {
+	console.log("Now loading job...");
+
+	JobService.getJob("72a302e1-0efe-40ef-804e-dbffb4842b41", function(data) {
+		console.log("Here was data:", data);
+	})
+})
 
 
 app.controller("JobsCtrl", function($scope, JobsService) {

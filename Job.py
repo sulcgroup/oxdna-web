@@ -194,7 +194,9 @@ def createJobDictionaryForTuple(data):
 	schema = {
 		"name":job_name,
 		"uuid":uuid,
-		"creationDate":creation_date
+		"job_type":job_type,
+		"analysisJobId":analysis_job_id,
+		"creationDate":creation_date,
 	}
 
 	return schema
@@ -220,10 +222,8 @@ def getJobForUserId(jobId, userId):
 	cursor.execute(get_job_query, (jobId,))
 	result = cursor.fetchall()
 	
-	print(result[0])
-
 	if(len(result) != 0):
-		return result[0]
+		return createJobDictionaryForTuple(result[0])
 	else:
 		return None
 
@@ -232,5 +232,4 @@ def getJobForUserId(jobId, userId):
 #createJobForUserIdWithData(53, loldata)
 #getJobsForUserId(12)
 #createAnalysisForUserIdWithJob(1, "72a302e1-0efe-40ef-804e-dbffb4842b41")
-
-getJobForUserId("72a302e1-0efe-40ef-804e-dbffb4842b41", 1)
+#getJobForUserId("72a302e1-0efe-40ef-804e-dbffb4842b41", 1)
