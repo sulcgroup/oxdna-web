@@ -161,7 +161,6 @@ def getCreationDate():
 	
 	return Account.get_creation_date(user_id)
 
-#render the jobs template page
 @app.route("/jobs")
 def jobs():
 
@@ -169,6 +168,25 @@ def jobs():
 		return redirect("/login")
 	else:
 		return send_file("templates/jobs.html")
+
+@app.route("/job/<job_id>")
+def view_job(job_id):
+
+	if session.get("user_id") is None:
+		return redirect("/login")
+	else:
+		return send_file("templates/job.html")
+
+
+@app.route("/api/job/<job_id>")
+def get_job_data(job_id):
+
+	if session.get("user_id") is None:
+		return redirect("/login")
+	else:
+		return send_file("templates/job.html")
+
+
 
 @app.route("/all_jobs")
 def getJobs():

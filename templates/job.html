@@ -1,0 +1,201 @@
+<html ng-app="app" ng-controller="AppCtrl">
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+</head>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="/static/style.css">
+<style>
+table, th , td {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 15px;
+  width:100%;
+}
+
+table td {
+	width:15%;
+	text-align: center;
+}
+
+table tr:nth-child(odd) {
+  background-color: #f1f1f1;
+}
+
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style>
+<body ng-controller="JobsCtrl">
+	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">azDNA</a>
+		<input class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
+		<ul class="navbar-nav px-3">
+			<li class="nav-item text-nowrap">
+				<a class="nav-link" href="/logout">Sign out</a>
+			</li>
+		</ul>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
+				<div class="sidebar-sticky">
+					<ul class="nav flex-column">
+						<li class="nav-item">
+							<a class="nav-link" href="/">
+								<span data-feather="home"></span>
+								Dashboard <span class="sr-only">(current)</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" href="/jobs">
+								<span data-feather="list"></span>
+								View Jobs
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/">
+								<span data-feather="edit"></span>
+								Create A Job	
+							</a>
+						</li>
+
+
+						<li class="nav-item">
+							<a class="nav-link" href="#">
+								<span data-feather="file-text"></span>
+								My Files	
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/account">
+								<span data-feather="user"></span>
+								My Account	
+							</a>
+						</li>
+					</ul>
+
+					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+						<span>JOB HISTORY</span>
+						<a class="d-flex align-items-center text-muted" href="#">
+						</a>
+					</h6>
+					<ul class="nav flex-column mb-2">
+					<ul class="nav flex-column mb-2">
+						<li ng-repeat="job in job_history">
+							<a class="nav-link" href="#">
+								<span data-feather="file-text"></span>
+								{{job.name}}
+							</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+
+			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+					<h1 class="h2">View Jobs</h1>
+				</div>
+
+
+				<div class="card">
+					<div class="card-body">
+
+						<p>Here is a list of the jobs you have currently running under your account.</p>
+						<table>
+							<tr>
+								<td>Job Name</td>
+								<td>Started</td>
+								<td>Input</td>
+								<td>Energy</td>
+								<td>Trajectory</td>
+								<td>Log</td>
+							</tr>
+							<tr ng-repeat="x in jobs">
+								<td>{{ x.name }}</td>
+								<td>{{ x.dateString }}</td>
+								<td><a href="/job_output/{{x.uuid}}/input">view input</a></td>
+								<td><a href="/job_output/{{x.uuid}}/energy">view energy</a></td>
+								<td><a href="/job_output/{{x.uuid}}/trajectory">view trajectory</a></td>
+								<td><a href="/job_output/{{x.uuid}}/log">view log</a></td>
+							</tr>
+						</table>
+
+					</div>
+
+				</div>
+
+			</main>
+		</div>
+	</div>
+
+				<!-- Bootstrap core JavaScript
+					================================================== -->
+					<!-- Placed at the end of the document so the pages load faster -->
+
+				</body>
+				<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+				<script>
+					feather.replace()
+
+					var frame = window.frames['editor-frame'];
+
+					var openFiles = function(files) {
+						//console.log(files);
+						//frame.document.dispatchEvent(new Event('drop'));
+						//console.log("EVENT DISPATCHED!")
+						console.log(files);
+						dispatchFakeDrop(files);
+					}
+
+					var dispatchFakeDrop = function(files) {
+						console.log("called");
+						var fakeDropEvent = new DragEvent('drop');
+					// You override dataTransfer with whichever property
+					// and method the drop function needs
+
+					Object.defineProperty(fakeDropEvent, 'dataTransfer', {
+						value: new FakeDataTransfer(files)
+					});
+					frame.renderer.domElement.dispatchEvent(fakeDropEvent);
+
+					}
+
+					var finishedLoading = function() {
+						console.log("child finished loading!");
+						//dispatchFakeDrop();
+					}
+
+					function FakeDataTransfer(files) {
+					this.dropEffect = 'all';
+					this.effectAllowed = 'all';
+					this.items = [];
+					this.types = ['Files'];
+					this.getData = function() {
+
+					return files;
+					};
+					this.files = files;
+					};
+
+					var files = {};
+
+					function FakeDataDownload(file, filename) {
+						console.log("Fake file download: ", file, filename);
+						files[filename] = file;
+					}
+
+					function TriggerFileDownloads() {
+						frame.makeOutputFiles()
+					}
+				</script>
+
+				<script src="/static/angular.min.js"></script>
+				<script src="/static/script.js"></script>
+				</html>

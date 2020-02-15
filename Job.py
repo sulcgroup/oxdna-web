@@ -185,6 +185,11 @@ def getJobsForUserId(userId):
 
 	return payload
 
+
+def getJobForUserId(jobId, userId):
+
+	pass
+
 #createJobForUserIdWithData(53, loldata)
 #getJobsForUserId(12)
 #createAnalysisForUserIdWithJob(1, "897d2b38-12e0-48b7-ba7c-2351fb7ab7f8")
