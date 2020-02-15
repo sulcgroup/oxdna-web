@@ -4,6 +4,7 @@ import uuid
 import subprocess
 import mysql.connector
 
+
 cnx = mysql.connector.connect(user='root', password='', database='azdna')
 cursor = cnx.cursor()
 
@@ -29,6 +30,39 @@ def startSlurmJob(job_directory, job_id):
 
 	return job_number
 
+def startSlurmAnalysis(job_directory):
+	sbatch_file = job_directory + "sbatch_analysis.sh"
+	
+	pipe = subprocess.Popen(["sbatch", sbatch_file], stdout=subprocess.PIPE)
+
+	output = pipe.communicate()[0].decode("ascii")[:-1]
+	job_number = output.split("job ")[1]
+
+	return job_number
+
+def createSlurmAnalysisFile(job_directory):
+	job_output_file = job_directory + "analysis_out.log"
+
+
+	sbatch_file = """#!/bin/bash
+#SBATCH --job-name=serial_job_analysis    # Job name
+#SBATCH --ntasks=1                    # Run on a single CPU
+#SBATCH --time=336:00:00               # Time limit hrs:min:sec
+#SBATCH --output=/vagrant/azDNA/{job_output_file}   # Standard output and error log
+cd /vagrant/azDNA/{job_directory}
+python3 /vagrant/oxdna_analysis_tools/compute_mean.py -p 1 -d deviations.json -f oxDNA -o mean.dat trajectory.dat sim.top""".	format(
+	job_directory=job_directory, 
+	job_output_file=job_output_file
+)
+
+	file_name = "sbatch_analysis.sh"
+	file_path = job_directory + file_name
+
+
+	file = open(file_path, "w+")
+	file.write(sbatch_file)
+	
+
 def createSlurmJobFile(job_directory):
 	#job_output_location = job_directory
 	job_output_file = job_directory + "job_out.log"
@@ -37,8 +71,8 @@ def createSlurmJobFile(job_directory):
 #SBATCH --job-name=serial_job_test    # Job name
 #SBATCH --ntasks=1                    # Run on a single CPU
 #SBATCH --time=336:00:00               # Time limit hrs:min:sec
-#SBATCH --output={job_output_file}   # Standard output and error log
-cd {job_directory}
+#SBATCH --output=/vagrant/azDNA/{job_output_file}   # Standard output and error log
+cd /vagrant/azDNA/{job_directory}
 oxDNA input""".	format(
 	job_directory=job_directory, 
 	job_output_file=job_output_file
@@ -68,6 +102,16 @@ def createOxDNAFile(input_files, parameters, job_directory):
 	file = open(file_path, "w+")
 	file.write(input_file_data)
 	file.close()
+
+def createAnalysisForUserIdWithJob(userId, jobId):
+
+	user_directory = "jobfiles/"+str(userId) + "/"
+	job_directory = user_directory + jobId + "/"
+
+	createSlurmAnalysisFile(job_directory)
+	job_number = startSlurmAnalysis(job_directory)
+
+	pass
 
 def createJobForUserIdWithData(userId, jsonData):
 
@@ -142,16 +186,6 @@ def getJobsForUserId(userId):
 
 
 
-'''
-loldata = {
-	"files": {
-		"sim.top":"HELLO THIS IS A TOPOLOGY FILE",
-		"test.conf":"THIS IS THE CONF FILE!!!:)"
-	},
-	"parameters": {
-		"temperature":"100C"
-	}
-}
-'''
 #createJobForUserIdWithData(53, loldata)
 #getJobsForUserId(12)
+#createAnalysisForUserIdWithJob(1, "677e4bce-efa7-44eb-a9a0-a3c749308865")
