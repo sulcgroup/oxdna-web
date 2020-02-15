@@ -11,8 +11,8 @@ cursor = cnx.cursor()
 
 add_job_query = (
 	"INSERT INTO Jobs "
-	"(`userId`, `name`, `uuid`, `slurmId`, `creationDate`)"
-	"VALUES (%s, %s, %s, %s, %s)"
+	"(`userId`, `name`, `uuid`, `slurmId`, `jobType`, `creationDate`)"
+	"VALUES (%s, %s, %s, %s, %s, %s)"
 )
 
 get_jobs_query = ("SELECT * FROM Jobs WHERE userId = %s")
@@ -149,6 +149,7 @@ def createJobForUserIdWithData(userId, jsonData):
 		job_title,
 		randomJobId,
 		job_number,
+		0,
 		int(time.time())
 	)
 
@@ -159,7 +160,7 @@ def createJobForUserIdWithData(userId, jsonData):
 
 def createJobDictionaryForTuple(data):
 
-	job_id, user_id, job_name, uuid, slurm_id, creation_date = data
+	job_id, user_id, job_name, uuid, slurm_id, job_type, creation_date = data
 
 	schema = {
 		"name":job_name,
@@ -184,8 +185,6 @@ def getJobsForUserId(userId):
 
 	return payload
 
-
-
 #createJobForUserIdWithData(53, loldata)
 #getJobsForUserId(12)
-#createAnalysisForUserIdWithJob(1, "677e4bce-efa7-44eb-a9a0-a3c749308865")
+#createAnalysisForUserIdWithJob(1, "897d2b38-12e0-48b7-ba7c-2351fb7ab7f8")
