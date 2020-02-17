@@ -54,6 +54,34 @@ def handle_form():
 
 	return "Uploaded!"
 
+@app.route('/create_analysis/<jobId>', methods=['POST'])
+def create_analysis(jobId):
+
+	if session.get("user_id") is None:
+		return "You must be logged in to submit a job!"
+
+	user_id = session["user_id"]
+	print("Now creating a job on behalf of:", user_id)
+
+	json_data = request.get_json()
+
+	parameters = json_data["parameters"]
+	files = json_data["files"]
+
+	addDefaultParameters(parameters)
+
+	metadata = {}
+
+	job_data = {
+		"metadata":metadata,
+		"parameters": parameters, 
+		"files": files
+	}
+
+	Job.createJobForUserIdWithData(user_id, job_data)
+
+	return "Uploaded!"
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -216,7 +244,9 @@ def getJobOutput(uuid, desired_output):
 		"energy":"energy.dat",
 		"trajectory":"trajectory.dat",
 		"log":"job_out.log",
-		"input":"input"
+		"input":"input",
+		"mean":"mean",
+		"deviation":"deviation"
 	}
 
 	if desired_output not in desired_output_map:

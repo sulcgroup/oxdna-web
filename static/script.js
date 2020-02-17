@@ -46,7 +46,7 @@ app.factory("JobsService", function($http) {
 			data = data.filter(x => x.job_type == 0);
 
 			cb(data);
-		}, function errorCallback() {
+		}, function errorCallback() {````
 			cb([]);
 		});
 	}
