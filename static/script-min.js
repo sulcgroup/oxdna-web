@@ -1,70 +1,5 @@
 var app = angular.module("app", [])
 
-app.factory("JobService", function($http) {
-
-	var factory = {};
-
-	factory.getJob = function(jobId, cb) {
-		$http({
-			method: 'GET',
-			url: `/api/job/${jobId}`
-		}).then(function successCallback(response) {
-
-			var data = response.data;
-			console.log(data);
-
-			cb(data);
-		}, function errorCallback() {
-			cb([]);
-		});
-	}
-
-	return factory;
-
-})
-
-
-app.factory("JobsService", function($http) {
-
-	var factory = {};
-
-	factory.getJobs = function(cb) {
-		$http({
-			method: 'GET',
-			url: '/all_jobs'
-		}).then(function successCallback(response) {
-
-			var data = response.data;
-
-			for(job in data) {
-				var timestamp = data[job]["creationDate"];
-				var date = new Date(timestamp * 1000).toLocaleString("en-US");			
-				data[job]["dateString"] = date;
-			}
-
-			data.sort((a,b) => parseInt(b["creationDate"]) - parseInt(a["creationDate"]));
-			data = data.filter(x => x.job_type == 0);
-
-			cb(data);
-		}, function errorCallback() {````
-			cb([]);
-		});
-	}
-
-	return factory;
-
-})
-
-app.controller("AppCtrl", function($scope, JobsService) {
-	
-	$scope.job_history = [];
-
-	JobsService.getJobs(function(jobs) {
-		$scope.job_history = jobs;
-	})
-
-
-})
 
 app.controller("AccountCtrl", function($scope, $http) {
 
@@ -115,11 +50,8 @@ app.controller("AdminCtrl", function($scope, $http) {
 
 	$scope.searchInput = "";
 
-	$scope.selectedUserName = ""
-	$scope.selectedUserID = -1;
+	$scope.selectedUserName = "";
 	$scope.selectedUserJobCount = "";
-	$scope.selectedUserIsAdmin = false
-	$scope.selectedUserIsPrivaleged = false
 	$scope.privalegedButtonText = "Make Privaleged";
 	$scope.adminButtonText = "Make Admin";
 
@@ -130,31 +62,17 @@ app.controller("AdminCtrl", function($scope, $http) {
 		}).then(function (response){
 			$scope.recentUser1 = response.data[0];
 			console.log($scope.recentUser1)
-			$scope.selectedUserName = $scope.recentUser1;
-			$scope.getSelectedID();
-			$scope.getSelectedUserInfo();
-			
 		});
 	}
 
-	$scope.getSelectedUserInfo = function(){
+	$scope.searchUser = function(){
 		$http({
 			method: "GET",
-			url: '/admin/getUserInfo/' + $scope.selectedUserID
+			url: '/admin/getUserInfo/recentUser1'
 		}).then(function (response){
-			selectedUserJobCount = response.data[0]
-			selectedUserIsAdmin = response.data[1]
-			selectedUserIsPrivaleged = response.data[2]
-		})
-	}
-
-	$scope.getSelectedID = function(){
-		$http({
-			method: "GET",
-			url: '/admin/getUserID/' + $scope.selectedUserName
-		}).then(function (response){
-			selectedUserID = response.data[0]
-			console.log(selectedUserID)
+			$selectedUserName = response.data[0];
+			$selectedUserJobCount = response.data[1]
+			$selectedUserPrivaleges = response.data[2]
 		})
 	}
 
@@ -162,33 +80,29 @@ app.controller("AdminCtrl", function($scope, $http) {
 
 
 
-
-
-
-})
-
-app.controller("JobCtrl", function($scope, $location, JobService) {
-	console.log("Now loading job...");
-	$scope.job = {};
-	$scope.job.name = "";
-
-	$scope.viewing_job_uuid = $location.absUrl().split("/").pop();
-
-	JobService.getJob($scope.viewing_job_uuid, function(data) {
-		console.log("DATA!:", data);
-		$scope.job = data;
-	})
-
 })
 
 
-app.controller("JobsCtrl", function($scope, JobsService) {
+
+app.controller("JobsCtrl", function($scope, $http) {
 
 	$scope.jobs = [];
 
-	JobsService.getJobs(function(jobs) {
-		$scope.jobs = jobs;
-	})
+	$http({
+		method: 'GET',
+		url: '/all_jobs'
+	}).then(function successCallback(response) {
+
+		var data = response.data;
+
+		for(job in data) {
+			var timestamp = data[job]["creationDate"];
+			var date = new Date(timestamp * 1000).toLocaleString("en-US");			
+			data[job]["dateString"] = date;
+
+		}
+		$scope.jobs = data;
+	});
 
 })
 

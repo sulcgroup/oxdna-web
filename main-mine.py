@@ -1,12 +1,17 @@
 import os
-from flask import Flask, Response, request, send_file, session, jsonify, redirect
+from flask import Flask, Response, request, send_file, session, jsonify, redirect, render_template
 import requests
+import logging
+import sys
 
 import Login
 import Job
 import Register
 import Admin
+
 from util import log_output
+
+output_file = open("output.txt", "w")
 
 app = Flask(__name__, static_url_path='/static', static_folder="static")
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -30,34 +35,6 @@ def addDefaultParameters(parameters):
 
 @app.route('/create_job', methods=['POST'])
 def handle_form():
-
-	if session.get("user_id") is None:
-		return "You must be logged in to submit a job!"
-
-	user_id = session["user_id"]
-	print("Now creating a job on behalf of:", user_id)
-
-	json_data = request.get_json()
-
-	parameters = json_data["parameters"]
-	files = json_data["files"]
-
-	addDefaultParameters(parameters)
-
-	metadata = {}
-
-	job_data = {
-		"metadata":metadata,
-		"parameters": parameters, 
-		"files": files
-	}
-
-	Job.createJobForUserIdWithData(user_id, job_data)
-
-	return "Uploaded!"
-
-@app.route('/create_analysis/<jobId>', methods=['POST'])
-def create_analysis(jobId):
 
 	if session.get("user_id") is None:
 		return "You must be logged in to submit a job!"
@@ -154,43 +131,7 @@ def updatePassword():
 
 	return Login.updatePasssword(user_id, old_password, new_password)
 
-@app.route("/account/get_email", methods=["GET"])
-def getEmail():
-	if session.get("user_id") is None:
-		return "You must be logged in to modify your account"
-
-	user_id = int(session["user_id"])
-	
-	return Account.getEmail(user_id)
-
-@app.route("/account/set_email", methods=["POST"])
-def updateEmail():
-	if session.get("user_id") is None:
-		return "You must be logged in to modify your account"
-
-	user_id = int(session["user_id"])
-	email_new = string(session["email"])
-	
-	return Account.setEmail(user_id, email_new)
-
-@app.route("/account/get_status", methods=["GET"])
-def getStatus():
-	if session.get("user_id") is None:
-		return "You must be logged in to modify your account"
-
-	user_id = int(session["user_id"])
-	
-	return Account.getStatus(user_id)
-
-@app.route("/account/get_creation_date", methods=["GET"])
-def getCreationDate():
-	if session.get("user_id") is None:
-		return "You must be logged in to modify your account"
-
-	user_id = int(session["user_id"])
-	
-	return Account.get_creation_date(user_id)
-
+#render the jobs template page
 @app.route("/jobs")
 def jobs():
 
@@ -198,30 +139,6 @@ def jobs():
 		return redirect("/login")
 	else:
 		return send_file("templates/jobs.html")
-
-@app.route("/job/<job_id>")
-def view_job(job_id):
-
-	if session.get("user_id") is None:
-		return redirect("/login")
-	else:
-		return send_file("templates/job.html")
-
-
-@app.route("/api/job/<job_id>")
-def get_job_data(job_id):
-
-	if session.get("user_id") is None:
-		return redirect("/login")
-
-	job_data = Job.getJobForUserId(job_id, session.get("user_id"))
-
-	if(job_data is not None):
-		return jsonify(job_data)
-	else:
-		return "No job data."
-
-
 
 @app.route("/all_jobs")
 def getJobs():
@@ -246,9 +163,7 @@ def getJobOutput(uuid, desired_output):
 		"energy":"energy.dat",
 		"trajectory":"trajectory.dat",
 		"log":"job_out.log",
-		"input":"input",
-		"mean":"mean",
-		"deviation":"deviation"
+		"input":"input"
 	}
 
 	if desired_output not in desired_output_map:
@@ -268,6 +183,7 @@ def getJobOutput(uuid, desired_output):
 
 	return Response(desired_file_contents, mimetype='text/plain')
 
+
 @app.route("/admin")
 def admin():
 	userID = session.get("user_id")
@@ -275,7 +191,7 @@ def admin():
 	log_output("this is output")
 	log_output(isAdmin)
 	if isAdmin == 1:
-		return send_file("templates/admin.html")
+		return render_template("admin.html")
 	else:
 		return "You must be an admin to access this page."
 
@@ -295,25 +211,20 @@ def promoteToPrivaleged(uuid):
 	Admin.promoteToPrivaleged(uuid)
 	return uuid + " promoted to privaleged"
 
-@app.route("/admin/getUserID/<username>")
-def getUserID(username):
-	return jsonify(Admin.getID(username))
-
-
-@app.route("/admin/getUserInfo/<uuid>")
+@app.route("/admin/getUserData/<uuid>")
 def getUserJobCount(uuid):
 	userID = uuid
 	jobCount = Admin.getUserJobCount(uuid)
 	isAdmin = Admin.checkIfAdmin(uuid)
 	isPrivaleged = Admin.checkIfPrivaleged(uuid)
-	info = (jobCount, isAdmin, isPrivaleged)
-	return jsonify(info)
+	return count
+
 
 @app.route("/")
 def index():
 
 	if session.get("user_id") is not None:
-		return send_file("templates/index.html")
+		return render_template("index.html")
 	else:
 		return redirect("/login")
 
