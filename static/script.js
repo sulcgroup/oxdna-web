@@ -19,6 +19,20 @@ app.factory("JobService", function($http) {
 		});
 	}
 
+	factory.startAnalysisForJob = function(jobId, cb) {
+		$http({
+			method: 'POST',
+			url: `/api/create_analysis/${jobId}`,
+		}).then(function success(analysisId) {
+			console.log("Created analysis!");
+			cb(true, analysisId);
+
+		}, function error() {
+			console.log("Failed to create analysis!");
+			cb(false);
+		});
+	}
+
 	return factory;
 
 })
@@ -103,7 +117,7 @@ app.controller("AccountCtrl", function($scope, $http) {
 
 })
 
-app.controller("JobCtrl", function($scope, $location, JobService) {
+app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
 	console.log("Now loading job...");
 	$scope.job = {};
 	$scope.job.name = "";
@@ -114,6 +128,24 @@ app.controller("JobCtrl", function($scope, $location, JobService) {
 		console.log("DATA!:", data);
 		$scope.job = data;
 	})
+
+	$scope.startAnalysis = function() {
+
+		console.log("Starting analysis now...");
+
+		JobService.startAnalysisForJob($scope.viewing_job_uuid, function(success, analysisId) {
+			if(success) {
+				console.log("started analysis!");
+
+				$timeout(function() {
+					$scope.job.analysisJobId = analysisId
+				}, 1000)
+			} else {
+				console.log("Failed to create analysis!");
+			}
+		})
+
+	}
 
 })
 

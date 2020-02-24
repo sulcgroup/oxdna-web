@@ -141,6 +141,8 @@ def createAnalysisForUserIdWithJob(userId, jobId):
 	cnx.commit()
 	cursor.close()
 
+	return randomAnalysisId
+
 
 def createJobForUserIdWithData(userId, jsonData):
 	cursor = cnx.cursor(buffered=True)
