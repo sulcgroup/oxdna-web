@@ -68,6 +68,7 @@ python3 /vagrant/oxdna_analysis_tools/compute_mean.py -p 1 -d deviations.json -f
 	
 
 def createSlurmJobFile(job_directory, backend):
+	
 	#job_output_location = job_directory
 	job_output_file = job_directory + "job_out.log"
 
@@ -76,11 +77,12 @@ def createSlurmJobFile(job_directory, backend):
 #SBATCH --partition={backend}
 #SBATCH --ntasks=1                    # Run on a single CPU
 #SBATCH --time=336:00:00               # Time limit hrs:min:sec
-#SBATCH --output=/vagrant/azDNA/{job_output_file}   # Standard output and error log
-cd /vagrant/azDNA/{job_directory}
-oxDNA input""".	format(
+#SBATCH --output=/var/www/azDNA/azDNA/{job_output_file}   # Standard output and error log
+cd /var/www/azDNA/azDNA/{job_directory}
+/opt/oxdna/oxDNA/build/bin/oxDNA input""".	format(
 	job_directory=job_directory, 
-	job_output_file=job_output_file
+	job_output_file=job_output_file,
+	backend=backend
 )
 	
 	file_name = "sbatch.sh"
