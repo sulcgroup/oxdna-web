@@ -108,8 +108,16 @@ table tr:nth-child(even) {
 				<div class="card">
 					<div class="card-body">
 
-						<p>Hello!</p>
-						{{job}}
+						<h1>{{job.name}}</h1>
+
+						<div ng-show="job.analysisJobId == null"> 
+							<button ng-click="startAnalysis()">Start analysis</button>	
+						</div>
+
+						<div ng-hide="job.analysisJobId == null">
+							<a href="/job_output/{{job.uuid}}/mean" target="_blank">View mean</a><br>
+							<a href="/job_output/{{job.uuid}}/deviations" target="_blank">View deviations</a>
+						</div>
 
 					</div>
 

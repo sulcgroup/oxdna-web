@@ -106,7 +106,6 @@ table tr:nth-child(even) {
 
 				<div class="card">
 					<div class="card-body">
-
 						<p>Here is a list of the jobs you have currently running under your account.</p>
 						<table>
 							<tr>
@@ -118,12 +117,13 @@ table tr:nth-child(even) {
 								<td>Log</td>
 							</tr>
 							<tr ng-repeat="x in jobs">
+
 								<td><a href="/job/{{x.uuid}}">{{ x.name }}</a></td>
 								<td>{{ x.dateString }}</td>
-								<td><a href="/job_output/{{x.uuid}}/input">view input</a></td>
-								<td><a href="/job_output/{{x.uuid}}/energy">view energy</a></td>
-								<td><a href="/job_output/{{x.uuid}}/trajectory">view trajectory</a></td>
-								<td><a href="/job_output/{{x.uuid}}/log">view log</a></td>
+								<td><a target="_blank" href="/job_output/{{x.uuid}}/input">view input</a></td>
+								<td><a target="_blank" href="/job_output/{{x.uuid}}/energy">view energy</a></td>
+								<td><a target="_blank" href="/job_output/{{x.uuid}}/trajectory">view trajectory</a></td>
+								<td><a target="_blank" href="/job_output/{{x.uuid}}/log">view log</a></td>
 							</tr>
 						</table>
 
