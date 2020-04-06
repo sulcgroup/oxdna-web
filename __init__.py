@@ -5,8 +5,6 @@ import requests
 import Login
 import Job
 import Register
-import Admin
-from util import log_output
 
 app = Flask(__name__, static_url_path='/static', static_folder="static")
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -52,12 +50,9 @@ def handle_form():
 		"files": files
 	}
 
-	success, error_message = Job.createJobForUserIdWithData(user_id, job_data)
+	Job.createJobForUserIdWithData(user_id, job_data)
 
-	if success:
-		return "Success"
-	else:
-		return error_message
+	return "Uploaded!"
 
 @app.route('/api/create_analysis/<jobId>', methods=['POST'])
 def create_analysis(jobId):
@@ -102,9 +97,6 @@ def register():
 	if request.method == "POST":
 		username = request.form["username"]
 		password = request.form["password"]
-
-	if username[-4:] != ".edu":
-		return "We are currently only accepting .edu registrations at this time."
 
 	if username is not None and password is not None:
 		user_id = Register.registerUser(username, password)
@@ -279,46 +271,6 @@ def getJobOutput(uuid, desired_output):
 
 	return Response(desired_file_contents, mimetype='text/plain')
 
-@app.route("/admin")
-def admin():
-	userID = session.get("user_id")
-	isAdmin = Admin.checkIfAdmin(userID)
-	log_output("this is output")
-	log_output(isAdmin)
-	if isAdmin == 1:
-		return send_file("templates/admin.html")
-	else:
-		return "You must be an admin to access this page."
-
-@app.route("/admin/recentlyaddedusers")
-def recentlyAddedUsers():
-	newUsers = Admin.getRecentlyAddedUsers()
-	users = tuple(newUsers)
-	return jsonify(users)
-
-@app.route("/admin/promoteToAdmin/<uuid>")
-def promoteToAdmin(uuid):
-	Admin.promoteToAdmin(uuid)
-	return uuid + " promoted to Admin"
-
-@app.route("/admin/promoteToPrivaleged/<uuid>")
-def promoteToPrivaleged(uuid):
-	Admin.promoteToPrivaleged(uuid)
-	return uuid + " promoted to privaleged"
-
-@app.route("/admin/getUserID/<username>")
-def getUserID(username):
-	return jsonify(Admin.getID(username))
-
-
-@app.route("/admin/getUserInfo/<uuid>")
-def getUserJobCount(uuid):
-	userID = uuid
-	jobCount = Admin.getUserJobCount(uuid)
-	isAdmin = Admin.checkIfAdmin(uuid)
-	isPrivaleged = Admin.checkIfPrivaleged(uuid)
-	info = (jobCount, isAdmin, isPrivaleged)
-	return jsonify(info)
 
 @app.route("/")
 def index():
