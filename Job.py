@@ -43,6 +43,8 @@ def startSlurmAnalysis(job_directory):
 
 	return job_number
 
+
+
 def createSlurmAnalysisFile(job_directory, analysis_id):
 	job_output_file = job_directory + "analysis_out.log"
 
@@ -66,7 +68,6 @@ python3 /vagrant/oxdna_analysis_tools/compute_mean.py -p 1 -d deviations.json -f
 	file = open(file_path, "w+")
 	file.write(sbatch_file)
 	
-
 def createSlurmJobFile(job_directory):
 	#job_output_location = job_directory
 	job_output_file = job_directory + "job_out.log"
@@ -88,6 +89,22 @@ oxDNA input""".	format(
 	file = open(file_path, "w+")
 	file.write(sbatch_file)
 
+
+def createOxDNAInput(parameters, job_directory, input_file_data, is_one_step_job=False):
+	if is_one_step_job:
+		parameters["steps"] = 10
+
+	for (key, value) in parameters.items():
+		input_file_data += str(key) + " = " + str(value) + "\n"
+
+	file_name = "input" if not is_one_step_job else "input_one_step"
+	file_path = job_directory + file_name
+
+	file = open(file_path, "w+")
+	file.write(input_file_data)
+	file.close()
+
+
 def createOxDNAFile(input_files, parameters, job_directory):
 	input_file_data = ""
 
@@ -97,15 +114,9 @@ def createOxDNAFile(input_files, parameters, job_directory):
 		if(".dat" in file_name or ".conf" in file_name):
 			input_file_data += "conf_file = " + file_name + "\n"
 
-	for (key, value) in parameters.items():
-		input_file_data += str(key) + " = " + str(value) + "\n"
+	createOxDNAInput(parameters, job_directory, input_file_data)
+	createOxDNAInput(parameters, job_directory, input_file_data, is_one_step_job=True)
 
-	file_name = "input"
-	file_path = job_directory + file_name
-
-	file = open(file_path, "w+")
-	file.write(input_file_data)
-	file.close()
 
 def createAnalysisForUserIdWithJob(userId, jobId):
 	cursor = cnx.cursor(buffered=True)
@@ -165,14 +176,22 @@ def createJobForUserIdWithData(userId, jsonData):
 		#print(file_directory)
 		file = open(file_path, "w+")
 		file.write(file_data)
+		file.close()
 
 	parameters = jsonData["parameters"]
 
+
 	createOxDNAFile(files, parameters, job_directory)
 	createSlurmJobFile(job_directory)
-	
-	job_number = startSlurmJob(job_directory, randomJobId)
+		
 
+	#delay until we've ran one step job!
+	job_ran_okay, error = runOneStepJob(job_directory)
+
+	if not job_ran_okay:
+		return False, error
+
+	job_number = startSlurmJob(job_directory, randomJobId)
 	job_title = parameters["job_title"]
 
 	job_data = (
@@ -188,6 +207,8 @@ def createJobForUserIdWithData(userId, jsonData):
 	cursor.execute(add_job_query, job_data)
 	cnx.commit()
 	cursor.close()
+
+	return True, job_number
 
 
 
@@ -247,3 +268,35 @@ def getJobForUserId(jobId, userId):
 #getJobsForUserId(12)
 #createAnalysisForUserIdWithJob(1, "72a302e1-0efe-40ef-804e-dbffb4842b41")
 #getJobForUserId("72a302e1-0efe-40ef-804e-dbffb4842b41", 1)
+
+
+def runOneStepJob(job_directory):
+	pipe = subprocess.Popen(
+		["oxDNA", "input_one_step"], 
+		stdout=subprocess.PIPE, 
+		stderr=subprocess.PIPE,
+		cwd=job_directory
+	)
+	stdout, stderr = pipe.communicate()
+
+	'''
+	print("OUT:", stdout)
+	print("\n\n\n\n-------------_")
+	print("ERR:", stderr)
+	print("\n\n\n\n-------------_")
+	print(len(stdout), len(stderr))
+	print("\n\n\n\n-------------_")
+	'''
+
+	if len(stdout) == 0 and len(stderr) > 0:
+		return False, stderr
+	else:
+		return True, None
+
+
+
+
+#runOneStepJob("jobfiles/1/67423c24-6ee2-420e-af00-14f1e62c3362/")
+#runOneStepJob("jobfiles/1/f776a944-54d4-4ff0-a6c1-65906be3872c")
+
+	

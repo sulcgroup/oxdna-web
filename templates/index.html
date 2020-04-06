@@ -204,13 +204,17 @@
 										</div>
 									</div>
 
-
 									<p>
 										<button ng-click="submitJob()" type="submit" class="btn btn-primary">Submit Job</button>
 									</p>
 
 									<div ng-if="hasSubmitted">
 										<h3>Job Submitted!</h3>
+									</div>
+
+									<div ng-if="error != ''">
+										<h3>Error</h3>
+										<p>{{error}}</p>
 									</div>
 
 								</div>

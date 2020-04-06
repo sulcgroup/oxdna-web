@@ -160,9 +160,13 @@ app.controller("JobsCtrl", function($scope, JobsService) {
 
 })
 
+app.controller("LoginCtrl", function($scope) {
+})
+
 app.controller("MainCtrl", function($scope, $http) {
 
 	$scope.data = {};
+	$scope.error = "";
 
 	$scope.auxillary = {
 		"temperature":334,
@@ -227,8 +231,17 @@ app.controller("MainCtrl", function($scope, $http) {
 		request.send(JSON.stringify(payload));
 
 		request.onload = function() {
-			window.location = "/jobs"
-			console.log("Job submission was a success!")
+			if(request.response == "Success") {
+				window.location = "/jobs";
+				console.log("Job submission was a success!")
+			} else {
+				$scope.error = request.response;
+				$scope.$apply();
+
+				console.log("Error set?:", $scope.error)
+			}
+			console.log(request.response);
+			//window.location = "/jobs"
 		}
 	}
 

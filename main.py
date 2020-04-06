@@ -50,9 +50,12 @@ def handle_form():
 		"files": files
 	}
 
-	Job.createJobForUserIdWithData(user_id, job_data)
+	success, error_message = Job.createJobForUserIdWithData(user_id, job_data)
 
-	return "Uploaded!"
+	if success:
+		return "Success"
+	else:
+		return error_message
 
 @app.route('/api/create_analysis/<jobId>', methods=['POST'])
 def create_analysis(jobId):
@@ -97,6 +100,9 @@ def register():
 	if request.method == "POST":
 		username = request.form["username"]
 		password = request.form["password"]
+
+	if username[-4:] != ".edu":
+		return "We are currently only accepting .edu registrations at this time."
 
 	if username is not None and password is not None:
 		user_id = Register.registerUser(username, password)
