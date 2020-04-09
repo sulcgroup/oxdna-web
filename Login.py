@@ -12,9 +12,16 @@ find_by_user_id_query = ("SELECT id, password FROM Users WHERE id = %s")
 update_password_query = ("UPDATE Users SET password = %s WHERE id = %s")
 
 def loginUser(username, password):
-	cursor.execute(query, (username.encode("utf-8"),))	
+	cnx.start_transaction(isolation_level='READ COMMITTED')
 
-	for (id, hashed_password) in cursor:
+	cursor = cnx.cursor()
+	print("Now logging in user:", username, password)
+	cursor.execute(query, (username.encode("utf-8"),))	
+	result = cursor.fetchone()
+	cnx.commit()
+
+	if result is not None:
+		id, hashed_password = result
 		hashed_password_encoded = hashed_password.encode("utf-8")
 		
 		isValidPassword = bcrypt.hashpw(password.encode("utf-8"), hashed_password_encoded) == hashed_password_encoded
