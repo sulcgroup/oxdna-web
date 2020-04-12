@@ -258,7 +258,7 @@ def getJobOutput(uuid, desired_output):
 		return "You must specify a valid desired output"
 	
 
-	user_directory = "jobfiles/" + str(session["user_id"]) + "/"
+	user_directory = "/users/" + str(session["user_id"]) + "/"
 	job_directory =  user_directory + uuid + "/"
 	desired_file_path = job_directory + desired_output_map[desired_output]
 

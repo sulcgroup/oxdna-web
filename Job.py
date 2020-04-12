@@ -188,7 +188,7 @@ def createJobForUserIdWithData(userId, jsonData):
 		backend = "GPU"
 
 	createOxDNAFile(files, parameters, job_directory)
-	createSlurmJobFile(job_directory, parameters["backend"])
+	createSlurmJobFile(job_directory, backend)
 		
 
 	#delay until we've ran one step job!

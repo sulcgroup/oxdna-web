@@ -4,16 +4,12 @@ import mysql.connector
 import time
 import bcrypt
 
-cnx = mysql.connector.connect(user='root', password='', database='azdna')
-cursor = cnx.cursor()
-
 query = ("SELECT id, password FROM Users WHERE username = %s")
 find_by_user_id_query = ("SELECT id, password FROM Users WHERE id = %s")
 update_password_query = ("UPDATE Users SET password = %s WHERE id = %s")
 
 def loginUser(username, password):
-	cnx.start_transaction(isolation_level='READ COMMITTED')
-
+	cnx = mysql.connector.connect(user='root', password='', database='azdna')
 	cursor = cnx.cursor()
 	print("Now logging in user:", username, password)
 	cursor.execute(query, (username.encode("utf-8"),))	
@@ -30,6 +26,8 @@ def loginUser(username, password):
 			return id
 		else:
 			return -1
+
+	cnx.close()
 
 	return -1
 

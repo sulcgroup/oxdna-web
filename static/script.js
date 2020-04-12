@@ -233,7 +233,7 @@ app.controller("MainCtrl", function($scope, $http) {
 	$scope.error = "";
 
 	$scope.auxillary = {
-		"temperature":334,
+		"temperature":20,
 		"temperature_units":"celsius",
 		"mismatch_repulsion":"false"
 	}
@@ -262,12 +262,12 @@ app.controller("MainCtrl", function($scope, $http) {
 
 	$scope.setDefaults = function() {
 		$scope.data["job_title"] = "My Job"
-		$scope.data["steps" ] = 1000;
-		$scope.data["salt_concentration"] = 0.5;
+		$scope.data["steps" ] = 1e9;
+		$scope.data["salt_concentration"] = 1.0;
 		$scope.data["backend"] = "CPU";
 		$scope.data["interaction_type"]= "DNA";
-		$scope.data["print_conf_interval"] = 10;
-		$scope.data["print_energy_every"] = 10;
+		$scope.data["print_conf_interval"] = 5e5;
+		$scope.data["print_energy_every"] = 5e4;
 	}
 
 	$scope.parseData();
