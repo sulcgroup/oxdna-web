@@ -222,6 +222,23 @@ app.controller("JobsCtrl", function($scope, JobsService) {
 		$scope.jobs = jobs;
 	})
 
+	$scope.cancelJob = function(job){
+		var request = new XMLHttpRequest();
+		request.open("POST", "/cancel_job");
+		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+		var payload = {};
+		payload["jobId"] = job.uuid
+
+
+		request.send(JSON.stringify(payload));
+
+		request.onload = function() {
+			console.log(request.response);
+			job.status = "Completed"
+		}
+	}
+
 })
 
 app.controller("LoginCtrl", function($scope) {

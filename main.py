@@ -59,6 +59,24 @@ def handle_form():
 	else:
 		return error_message
 
+@app.route('/cancel_job', methods=['POST'])
+def cancel_job():
+	print("Received Cancel Request")
+	if session.get("user_id") is None:
+		return "You must be logged in to cancel their job!"
+
+	json_data = request.get_json()
+	jobId = json_data["jobId"]
+	print("Canceling Job " + jobId)
+	Job.cancelJob(jobId)
+	return "Canceled Job " + jobId
+
+@app.route('/job_status/<jobId>', methods=['GET'])
+def job_status(jobId):
+	status = Job.getJobStatus(jobId)
+	return status
+
+
 @app.route('/api/create_analysis/<jobId>', methods=['POST'])
 def create_analysis(jobId):
 

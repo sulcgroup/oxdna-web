@@ -68,12 +68,12 @@ python3 /opt/oxdna_analysis_tools/compute_mean.py -p 1 -d deviations.json -f oxD
 	file = open(file_path, "w+")
 	file.write(sbatch_file)
 
-def createSlurmJobFile(job_directory, backend):
+def createSlurmJobFile(job_directory, job_name, backend):
 	#job_output_location = job_directory
 	job_output_file = job_directory + "job_out.log"
 
 	sbatch_file = """#!/bin/bash
-#SBATCH --job-name=serial_job_test    # Job name
+#SBATCH --job-name={job_name}    # Job name
 #SBATCH --partition={backend}
 #SBATCH --ntasks=1                    # Run on a single CPU
 #SBATCH --time=336:00:00               # Time limit hrs:min:sec
@@ -82,7 +82,8 @@ cd {job_directory}
 /opt/oxdna/oxDNA/build/bin/oxDNA input""".	format(
 	job_directory=job_directory, 
 	job_output_file=job_output_file,
-	backend=backend
+	backend=backend,
+	job_name=job_name
 )
 	
 	file_name = "sbatch.sh"
@@ -188,7 +189,7 @@ def createJobForUserIdWithData(userId, jsonData):
 		backend = "GPU"
 
 	createOxDNAFile(files, parameters, job_directory)
-	createSlurmJobFile(job_directory, backend)
+	createSlurmJobFile(job_directory, randomJobId, backend)
 		
 
 	#delay until we've ran one step job!
@@ -220,7 +221,7 @@ def createJobForUserIdWithData(userId, jsonData):
 
 def createJobDictionaryForTuple(data):
 
-	job_id, user_id, job_name, uuid, slurm_id, job_type, analysis_job_id, creation_date = data
+	job_id, user_id, job_name, uuid, slurm_id, job_type, analysis_job_id, creation_date= data
 
 	schema = {
 		"name":job_name,
@@ -245,7 +246,9 @@ def getJobsForUserId(userId):
 	payload = []
 
 	for data in result:
+		
 		job_data = createJobDictionaryForTuple(data)
+		job_data["status"] = getJobStatus(data[3])
 		payload.append(job_data)
 
 
@@ -299,7 +302,40 @@ def runOneStepJob(job_directory):
 	else:
 		return True, None
 
+def cancelJob(job_name):
+	subprocess.Popen(["scancel", "-n", job_name], stdout=subprocess.PIPE)
 
+def getJobStatus(job_name):
+	pipe = subprocess.Popen(["squeue", "-n", job_name], stdout=subprocess.PIPE)
+	output = pipe.communicate()[0].decode("ascii")[:-1]
+	if output == "":
+		return "None"
+	print(output)
+	
+	try:
+		code = output.split()[12]
+	except:
+		return "Completed"
+
+	status = code
+	if code == "R":
+		status = "Running"
+	elif code == "PD":
+		status = "Pending"
+	elif code == "S":
+		status = "Suspended"
+	elif code == "CG":
+		status = "Completing"
+	elif code == "CD":
+		status = "Completed"
+	
+	return status
+
+	
+	
+
+
+	
 
 
 #runOneStepJob("jobfiles/1/67423c24-6ee2-420e-af00-14f1e62c3362/")
