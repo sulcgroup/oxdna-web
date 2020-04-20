@@ -34,7 +34,7 @@ table tr:nth-child(even) {
 <body ng-controller="JobCtrl">
 	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
 		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">azDNA</a>
-		<input class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
+		<input ng-model="searchText" class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
 		<ul class="navbar-nav px-3">
 			<li class="nav-item text-nowrap">
 				<a class="nav-link" href="/logout">Sign out</a>
@@ -74,7 +74,7 @@ table tr:nth-child(even) {
 							</a>
 						</li>
 						!--> 
-						
+
 						<li class="nav-item">
 							<a class="nav-link" href="/account">
 								<span data-feather="user"></span>
@@ -90,7 +90,7 @@ table tr:nth-child(even) {
 					</h6>
 					<ul class="nav flex-column mb-2">
 					<ul class="nav flex-column mb-2">
-						<li ng-repeat="job in job_history">
+						<li ng-repeat="job in job_history | filter: searchText">
 							<a class="nav-link" href="/job/{{job.uuid}}">
 								<span data-feather="file-text"></span>
 								{{job.name}}
