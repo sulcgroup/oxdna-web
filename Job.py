@@ -71,8 +71,23 @@ python3 /opt/oxdna_analysis_tools/compute_mean.py -p 1 -d deviations.json -f oxD
 def createSlurmJobFile(job_directory, job_name, backend):
 	#job_output_location = job_directory
 	job_output_file = job_directory + "job_out.log"
-
-	sbatch_file = """#!/bin/bash
+	if backend == "CPU":
+		sbatch_file = """#!/bin/bash
+#SBATCH --job-name={job_name}    # Job name
+#SBATCH --partition={backend}
+#SBATCH --ntasks=1                    # Run on a single CPU
+#SBATCH --time=336:00:00               # Time limit hrs:min:sec
+#SBATCH --output={job_output_file}   # Standard output and error log
+cd {job_directory}
+/opt/oxdna-cpu-only/oxDNA/build/bin/oxDNA input""".	format(
+	job_directory=job_directory, 
+	job_output_file=job_output_file,
+	backend=backend,
+	job_name=job_name
+)
+	
+	else:
+		sbatch_file = """#!/bin/bash
 #SBATCH --job-name={job_name}    # Job name
 #SBATCH --partition={backend}
 #SBATCH --ntasks=1                    # Run on a single CPU
@@ -96,6 +111,7 @@ cd {job_directory}
 def createOxDNAInput(parameters, job_directory, input_file_data, is_one_step_job=False):
 	if is_one_step_job:
 		parameters["steps"] = 10
+		parameters["backend"] = "CPU"
 
 	for (key, value) in parameters.items():
 		input_file_data += str(key) + " = " + str(value) + "\n"
@@ -191,12 +207,13 @@ def createJobForUserIdWithData(userId, jsonData):
 	createOxDNAFile(files, parameters, job_directory)
 	createSlurmJobFile(job_directory, randomJobId, backend)
 		
-
+	
 	#delay until we've ran one step job!
 	job_ran_okay, error = runOneStepJob(job_directory)
 
 	if not job_ran_okay:
 		return False, error
+	
 
 	job_number = startSlurmJob(job_directory, randomJobId)
 	job_title = parameters["job_title"]
@@ -281,7 +298,7 @@ def getJobForUserId(jobId, userId):
 
 def runOneStepJob(job_directory):
 	pipe = subprocess.Popen(
-		["/opt/oxdna/oxDNA/build/bin/oxDNA", "input_one_step"], 
+		["/opt/oxdna-cpu-only/oxDNA/build/bin/oxDNA", "input_one_step"], 
 		stdout=subprocess.PIPE, 
 		stderr=subprocess.PIPE,
 		cwd=job_directory
@@ -310,7 +327,6 @@ def getJobStatus(job_name):
 	output = pipe.communicate()[0].decode("ascii")[:-1]
 	if output == "":
 		return "None"
-	print(output)
 	
 	try:
 		code = output.split()[12]
