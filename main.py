@@ -6,7 +6,6 @@ import Login
 import Job
 import Register
 import Admin
-from util import log_output
 
 app = Flask(__name__, static_url_path='/static', static_folder="static")
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -299,10 +298,11 @@ def getJobOutput(uuid, desired_output):
 
 @app.route("/admin")
 def admin():
+	print("admin page request")
 	userID = session.get("user_id")
 	isAdmin = Admin.checkIfAdmin(userID)
-	log_output("this is output")
-	log_output(isAdmin)
+	print("user: " + str(userID) + " is admin: ")
+	print(isAdmin)
 	if isAdmin == 1:
 		return send_file("templates/admin.html")
 	else:
@@ -332,10 +332,10 @@ def getUserID(username):
 @app.route("/admin/getUserInfo/<uuid>")
 def getUserJobCount(uuid):
 	userID = uuid
-	jobCount = Admin.getUserJobCount(uuid)
+	#jobCount = Admin.getUserJobCount(uuid)
 	isAdmin = Admin.checkIfAdmin(uuid)
 	isPrivaleged = Admin.checkIfPrivaleged(uuid)
-	info = (jobCount, isAdmin, isPrivaleged)
+	info = (isAdmin, isPrivaleged)
 	return jsonify(info)
 
 @app.route("/")

@@ -66,13 +66,15 @@
 							</a>
 						</li>
 
-
+						<!-- 
 						<li class="nav-item">
 							<a class="nav-link" href="#">
 								<span data-feather="file-text"></span>
 								My Files	
 							</a>
 						</li>
+						!--> 
+						
 						<li class="nav-item">
 							<a class="nav-link active" href="/account">
 								<span data-feather="user"></span>
@@ -128,19 +130,18 @@
 
 						<br><br>
 						<h3>Recently Added Users</h3>
-						<button>{{recentUser1}}</button>
-						<button>{{recentUser2}}</button>
-						<button>{{recentUser3}}</button>
-						<button>{{recentUser4}}</button>
-						<button>{{recentUser5}}</button>
-						<br>
+						<button ng-repeat="x in recentUsers">{{x}}</button>
+						<br><br>
+						<h5>Search User</h5>
 						<input ng-model="searchInput"><button>Search</button>
 						<br><br>
 
 						<h3>{{recentUser1}}</h3>
 						Number of jobs: {{selectedUserJobCount}}
 						<br>
-						Privaleges: {{selectedUserIsAdmin}} {{selectedUserIsPrivaleged}}
+						Admin: {{selectedUserIsAdmin}}
+						<br>
+						Privaleged: {{selectedUserIsPrivaleged}}
 						<br>
 						<button>Make Privaleged</button>
 						<button>Make Admin</button>

@@ -120,6 +120,7 @@ app.controller("AccountCtrl", function($scope, $http) {
 app.controller("AdminCtrl", function($scope, $http) {
 
 	console.log("Now in the admin ctrl2!");
+	$scope.recentUsers = [];
 
 	$scope.recentUser1 = "User1";
 	$scope.recentUser2 = "User2";
@@ -141,7 +142,10 @@ app.controller("AdminCtrl", function($scope, $http) {
 		$http({
 			method: 'GET',
 			url: '/admin/recentlyaddedusers'
-		}).then(function (response){
+		}).then(function successCallback(response){
+			console.log(response)
+			$scope.recentUsers = response.data;
+			console.log($scope.recentUsers)
 			$scope.recentUser1 = response.data[0];
 			console.log($scope.recentUser1)
 			$scope.selectedUserName = $scope.recentUser1;
@@ -167,8 +171,8 @@ app.controller("AdminCtrl", function($scope, $http) {
 			method: "GET",
 			url: '/admin/getUserID/' + $scope.selectedUserName
 		}).then(function (response){
-			selectedUserID = response.data[0]
-			console.log(selectedUserID)
+			$scope.selectedUserID = response.data[0]
+			console.log($scope.selectedUserID)
 		})
 	}
 
