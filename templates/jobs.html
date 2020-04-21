@@ -124,10 +124,10 @@ table tr:nth-child(even) {
 								<td><a href="/job/{{x.uuid}}">{{ x.name }}</a></td>
 								<td>{{x.status}}</td>
 								<td>{{ x.dateString }}</td>
-								<td><a target="_blank" href="/job_output/{{x.uuid}}/input" download>view input</a></td>
-								<td><a target="_blank" href="/job_output/{{x.uuid}}/energy" download>view energy</a></td>
-								<td><a target="_blank" href="/job_output/{{x.uuid}}/trajectory" download>view trajectory</a></td>
-								<td><a target="_blank" href="/job_output/{{x.uuid}}/log" download>view log</a></td>
+								<td><a target="_blank" href="/job_output/{{x.uuid}}/input">view input</a></td>
+								<td><a target="_blank" href="/job_output/{{x.uuid}}/log">view log</a></td>
+								<td><a target="_blank" href="/job_output/{{x.uuid}}/energy" download>download  energy</a></td>
+								<td><a target="_blank" href="/job_output/{{x.uuid}}/trajectory" download>download trajectory</a></td>
 								<td><button ng-click="cancelJob(x); x.status = 'Completed'">Cancel Job</button></td>
 							</tr>
 						</table>
