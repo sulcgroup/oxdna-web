@@ -1,10 +1,10 @@
 import os
 from flask import Flask, Response, request, send_file, session, jsonify, redirect
 import requests
-
 import Login
 import Job
 import Register
+import Account
 import Admin
 
 app = Flask(__name__, static_url_path='/static', static_folder="static")
