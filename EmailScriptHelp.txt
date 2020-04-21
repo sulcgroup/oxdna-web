@@ -1,0 +1,20 @@
+This is a script to send automated emails. 
+There are currently five templates to choose from: Registration, Job started, Job Problem, Job Finished, Files Deleted Soon, Files have been Deleted.
+Additional template arguments must be passed in through command line when the script is invoked.
+Different arguments are preceded by their corresponding flag. e.g. -n flag indicates all successive arguments are of <n> type, until the next flag. 
+Unrecognized flags will be ignored. Unnecessary arguments will be discarded.
+For each argument, replace spaces with underscores.
+Currently the flags are:
+-t, template number
+-n, names
+-u, urls
+-j, job names
+-e, email addresses
+-l, generic list arguments, such as a list of files. Pass the entire list as one argument
+-d, destination email address
+
+The script WILL resolve escape sequences.
+
+example usage:
+python EmailScript.py -t 0 -d kyin6@asu.edu -n Kai_Yin -u www.google.com 
+this says, use template 0 (first template), send the email to kyin6@asu.edu, replace first n type argument with Kai_Yin, replace first u type argument with www.google.com

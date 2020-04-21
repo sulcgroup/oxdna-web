@@ -1,0 +1,55 @@
+Dear <n>, 
+;;
+Good luck with your simulations.\r\nPlease do not reply to this email.\r\nIf you have any questions, please contact oxdna.org.questions@gmail.com or raise an issue on our github forum.
+;;
+OxDNA Registration
+::
+<HEADER>
+
+Thank you for registering with AZDNA. Please click the following link <u> to verify your account. Once you verify your account, you will be able to submit jobs. Please make sure to mark future emails from AZDNA as not spam.
+
+<TAIL>
+;;
+OxDNA Job Started 
+::
+<HEADER>
+
+Your job <j> has started and is now running. Expect updates within the next few days. You can view the job’s progress here <u>
+
+<TAIL>
+;;
+OxDNA Issue Running Job
+::
+<HEADER>
+
+Your job <j> ran into an issue and could not finish. You can view the job here <u>.
+
+<TAIL>
+;;
+OxDNA Job Completed
+::
+<HEADER>
+
+Your job <j> has finished and files are now available. You can view and download the files here <u>. Please note that the .top and .dat files will only be available for one week before being removed. 
+
+<TAIL>
+;;
+OxDNA File Deletion Notice
+::
+<HEADER>
+
+You have files that are approaching the one-week time limit and will soon be deleted. You can access the files here <u>
+The files are <l>
+
+<TAIL>
+;;
+OxDNA Files Deleted
+::
+<HEADER>
+
+We have deleted some of your simulation files as per our policy. 
+The following files were deleted <l>
+
+<TAIL>
+;;
+
