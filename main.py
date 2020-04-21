@@ -1,6 +1,7 @@
 import os
 from flask import Flask, Response, request, send_file, session, jsonify, redirect
 import requests
+
 import Login
 import Job
 import Register
@@ -47,7 +48,7 @@ def handle_form():
 
 	job_data = {
 		"metadata":metadata,
-		"parameters": parameters,
+		"parameters": parameters, 
 		"files": files
 	}
 
@@ -75,6 +76,7 @@ def job_status(jobId):
 	status = Job.getJobStatus(jobId)
 	return status
 
+
 @app.route('/api/create_analysis/<jobId>', methods=['POST'])
 def create_analysis(jobId):
 
@@ -98,7 +100,7 @@ def create_analysis(jobId):
 
 	job_data = {
 		"metadata":metadata,
-		"parameters": parameters,
+		"parameters": parameters, 
 		"files": files
 	}
 
@@ -106,7 +108,7 @@ def create_analysis(jobId):
 
 	return Job.createAnalysisForUserIdWithJob(userId, jobId)
 
-#account verification process
+	#return "Analysis created!"
 @app.route("/verify", methods = ["GET"])
 def verify():
 	#TODO refactor to use exceptions
@@ -172,11 +174,9 @@ def login():
 	if username is not None and password is not None:
 		user_id = Login.loginUser(username, password)
 
-		if(user_id > -1):
+		if(user_id != -1):
 			session["user_id"] = user_id
 			return redirect("/")
-		elif(user_id == -2):
-			return "Error, user not verified. Please verify using the link sent to the email you registered with."
 		else:
 			return "Invalid username or password"
 
@@ -215,7 +215,7 @@ def getEmail():
 		return "You must be logged in to modify your account"
 
 	user_id = int(session["user_id"])
-
+	
 	return Account.getEmail(user_id)
 
 @app.route("/account/set_email", methods=["POST"])
@@ -225,7 +225,7 @@ def updateEmail():
 
 	user_id = int(session["user_id"])
 	email_new = string(session["email"])
-
+	
 	return Account.setEmail(user_id, email_new)
 
 @app.route("/account/get_status", methods=["GET"])
@@ -234,7 +234,7 @@ def getStatus():
 		return "You must be logged in to modify your account"
 
 	user_id = int(session["user_id"])
-
+	
 	return Account.getStatus(user_id)
 
 @app.route("/account/get_creation_date", methods=["GET"])
@@ -243,7 +243,7 @@ def getCreationDate():
 		return "You must be logged in to modify your account"
 
 	user_id = int(session["user_id"])
-
+	
 	return Account.get_creation_date(user_id)
 
 @app.route("/jobs")
@@ -276,6 +276,8 @@ def get_job_data(job_id):
 	else:
 		return "No job data."
 
+
+
 @app.route("/all_jobs")
 def getJobs():
 
@@ -299,6 +301,7 @@ def getJobOutput(uuid, desired_output):
 		"energy":"energy.dat",
 		"trajectory":"trajectory.dat",
 		"log":"job_out.log",
+		"analysis_log":"analysis_out.log",
 		"input":"input",
 		"mean":"mean.dat",
 		"deviations":"deviations.json"
@@ -306,7 +309,7 @@ def getJobOutput(uuid, desired_output):
 
 	if desired_output not in desired_output_map:
 		return "You must specify a valid desired output"
-
+	
 
 	user_directory = "/users/" + str(session["user_id"]) + "/"
 	job_directory =  user_directory + uuid + "/"
@@ -323,11 +326,8 @@ def getJobOutput(uuid, desired_output):
 
 @app.route("/admin")
 def admin():
-	print("admin page request")
 	userID = session.get("user_id")
 	isAdmin = Admin.checkIfAdmin(userID)
-	print("user: " + str(userID) + " is admin: ")
-	print(isAdmin)
 	if isAdmin == 1:
 		return send_file("templates/admin.html")
 	else:
@@ -339,30 +339,48 @@ def recentlyAddedUsers():
 	users = tuple(newUsers)
 	return jsonify(users)
 
-@app.route("/admin/promoteToAdmin/<uuid>")
-def promoteToAdmin(uuid):
-	Admin.promoteToAdmin(uuid)
-	return uuid + " promoted to Admin"
+@app.route("/admin/promoteToAdmin/<username>")
+def promoteToAdmin(username):
+	loggedInUserID = session.get("user_id")
+	isAdmin = Admin.checkIfAdmin(loggedInUserID)
+	if isAdmin == 1:
+		userID = Admin.getID(username)
+		Admin.promoteToAdmin(userID)
+		return username + " promoted to Admin"
 
-@app.route("/admin/promoteToPrivaleged/<uuid>")
-def promoteToPrivaleged(uuid):
-	Admin.promoteToPrivaleged(uuid)
-	return uuid + " promoted to privaleged"
+@app.route("/admin/promoteToPrivaleged/<username>")
+def promoteToPrivaleged(username):
+	loggedInUserID = session.get("user_id")
+	isAdmin = Admin.checkIfAdmin(loggedInUserID)
+	if isAdmin == 1:
+		userID = Admin.getID(username)
+		Admin.promoteToPrivaleged(userID)
+		return username + " promoted to privaleged"
 
 @app.route("/admin/getUserID/<username>")
 def getUserID(username):
-	return jsonify(Admin.getID(username))
+	userID = Admin.getID(username)
+	return jsonify(userID)
 
 
-@app.route("/admin/getUserInfo/<uuid>")
-def getUserJobCount(uuid):
-	userID = uuid
+@app.route("/admin/getUserInfo/<username>")
+def getUserInfo(username):
+	userID = Admin.getID(username)
 	#jobCount = Admin.getUserJobCount(uuid)
-	isAdmin = Admin.checkIfAdmin(uuid)
-	isPrivaleged = Admin.checkIfPrivaleged(uuid)
-	info = (isAdmin, isPrivaleged)
+	isAdmin = Admin.checkIfAdmin(userID)
+	if isAdmin == 1:
+		isAdmin = "True"
+	else:
+		isAdmin = "False"
+	isPrivaleged = Admin.checkIfPrivaleged(userID)
+	if isPrivaleged == 1:
+		isPrivaleged = "True"
+	else:
+		isPrivaleged = "False"
+	jobCount = Admin.getUserJobCount(userID)
+	info = (jobCount, isAdmin, isPrivaleged)
 	return jsonify(info)
-	
+
 @app.route("/")
 def index():
 

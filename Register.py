@@ -14,7 +14,7 @@ cursor = cnx.cursor()
 
 
 add_user_query = (
-"INSERT INTO UsersDev "
+"INSERT INTO Users"
 "(`username`, `password`, `group`, `creationDate`, `verifycode`, `verified`)"
 "VALUES (%s, %s, %s, %s, %s, %s)"
 )

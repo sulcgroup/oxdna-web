@@ -4,37 +4,39 @@ import mysql.connector
 import time
 import bcrypt
 
-query = ("SELECT id, password FROM UsersDev WHERE username = %s")
-find_by_user_id_query = ("SELECT id, password FROM UsersDev WHERE id = %s")
-update_password_query = ("UPDATE UsersDev SET password = %s WHERE id = %s")
-get_verified_query = ("SELECT verified FROM UsersDev WHERE id = %s")
+query = ("SELECT id, password FROM Users WHERE username = %s")
+find_by_user_id_query = ("SELECT id, password FROM Users WHERE id = %s")
+update_password_query = ("UPDATE Users SET password = %s WHERE id = %s")
+get_verified_query = ("SELECT verified FROM Users WHERE id = %s")
 
 def loginUser(username, password):
+	print("loggin in user")
 	cnx = mysql.connector.connect(user='root', password='', database='azdna')
 	cursor = cnx.cursor()
 
-    cursor.execute(query, (username.encode("utf-8"),))
+	cursor.execute(query, (username.encode("utf-8"),))
 
-    for (id, hashed_password) in cursor.fetchall():
-        hashed_password_encoded = hashed_password.encode("utf-8")
+	for (id, hashed_password) in cursor.fetchall():
+		hashed_password_encoded = hashed_password.encode("utf-8")
 
-        isValidPassword = bcrypt.hashpw(password.encode("utf-8"), hashed_password_encoded) == hashed_password_encoded
+		isValidPassword = bcrypt.hashpw(password.encode("utf-8"), hashed_password_encoded) == hashed_password_encoded
 
-        if isValidPassword:
-            cursor.execute(get_verified_query, (id,))
-            isVerified =  cursor.fetchall()
-            if(isVerified):
-                isVerified = isVerified[0][0]
-            if isVerified == "True":
-                return id
-            else:
-                return -2
-        else:
-            return -1
+		if isValidPassword:
+			print("Password is valid")
+			cursor.execute(get_verified_query, (id,))
+			isVerified =  cursor.fetchall()
+			if(isVerified):
+				isVerified = isVerified[0][0]
+			if isVerified == "True":
+				return id
+			else:
+				return -2
+		else:
+			return -1
 
 	cnx.close()
 
-    return -1
+	return -1
 
 
 def updatePasssword(userId, old_password, new_password):

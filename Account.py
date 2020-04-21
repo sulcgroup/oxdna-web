@@ -7,14 +7,14 @@ import mysql.connector
 cnx = mysql.connector.connect(user='root', password='', database='azdna')
 cursor = cnx.cursor()
 
-find_email_by_user_id_query = ("SELECT email FROM UsersDev WHERE id = %s")
-set_email = ("UPDATE UsersDev SET email = %s WHERE id = %s")
-find_date_by_user_id_query = ("SELECT creationDate FROM UsersDev WHERE id = %s")
-find_status_by_user_id_query = ("SELECT status FROM UsersDev WHERE id = %s")
-get_verify_code_query = ("SELECT verifycode FROM UsersDev WHERE id = %s")
-verify_user = ("UPDATE UsersDev SET verified = %s WHERE id = %s")
-get_username_query = ("SELECT username FROM UsersDev WHERE id = %s")
-get_userid_query = ("SELECT id FROM UsersDev WHERE username = %s")
+find_email_by_user_id_query = ("SELECT email FROM Users WHERE id = %s")
+set_email = ("UPDATE Users SET email = %s WHERE id = %s")
+find_date_by_user_id_query = ("SELECT creationDate FROM Users WHERE id = %s")
+find_status_by_user_id_query = ("SELECT status FROM Users WHERE id = %s")
+get_verify_code_query = ("SELECT verifycode FROM Users WHERE id = %s")
+verify_user = ("UPDATE Users SET verified = %s WHERE id = %s")
+get_username_query = ("SELECT username FROM Users WHERE id = %s")
+get_userid_query = ("SELECT id FROM Users WHERE username = %s")
 
 
 ##DEPRECATED

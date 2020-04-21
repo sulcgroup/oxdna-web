@@ -15,8 +15,8 @@ privalegedQuery = ("SELECT privaleged FROM Users WHERE id = %s")
 recentUsersQuery = ("SELECT id, username FROM Users ORDER BY creationDate DESC LIMIT 5")
 updateToAdministrator = ("UPDATE Users SET administrator = 1 WHERE id = %s")
 updateToPrivaleged = ("UPDATE Users SET privaleged = 1 WHERE id = %s")
-userJobCountQuery = ("SELECT COUNT(*) FROM Jobs WHERE id = %s")
-userIDQuery = ("SELECT id FROM Users WHERE username = \"%s\"")
+userJobCountQuery = ("SELECT COUNT(*) FROM Jobs WHERE userId = %s")
+userIDQuery = ("SELECT id FROM Users WHERE username = %s")
 
 
 
@@ -26,7 +26,6 @@ def getRecentlyAddedUsers():
 	newUsers = []
 	for (id, username) in cursor:
 		newUsers.append(username)
-	print(newUsers)
 	return newUsers
 
 def checkIfAdmin(uuid):
@@ -53,8 +52,11 @@ def getUserJobCount(uuid):
 		return count[0]
 
 def getID(username):
-	cursor.execute(userIDQuery, (username,))
+	print(username)
+	cursor.execute(userIDQuery, (username.encode("utf-8"),))
 	for (id) in cursor:
-		return id
+		print(id)
+		return id[0]
+	return 0
 
 #loginUser("david", "pass1234")

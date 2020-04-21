@@ -122,12 +122,6 @@ app.controller("AdminCtrl", function($scope, $http) {
 	console.log("Now in the admin ctrl2!");
 	$scope.recentUsers = [];
 
-	$scope.recentUser1 = "User1";
-	$scope.recentUser2 = "User2";
-	$scope.recentUser3 = "User3";
-	$scope.recentUser4 = "User4";
-	$scope.recentUser5 = "User5";
-
 	$scope.searchInput = "";
 
 	$scope.selectedUserName = ""
@@ -137,32 +131,28 @@ app.controller("AdminCtrl", function($scope, $http) {
 	$scope.selectedUserIsPrivaleged = false
 	$scope.privalegedButtonText = "Make Privaleged";
 	$scope.adminButtonText = "Make Admin";
+	$scope.message = ""
 
 	$scope.getRecentUsers = function(){
 		$http({
 			method: 'GET',
 			url: '/admin/recentlyaddedusers'
 		}).then(function successCallback(response){
-			console.log(response)
 			$scope.recentUsers = response.data;
-			console.log($scope.recentUsers)
-			$scope.recentUser1 = response.data[0];
-			console.log($scope.recentUser1)
-			$scope.selectedUserName = $scope.recentUser1;
-			$scope.getSelectedID();
-			$scope.getSelectedUserInfo();
-			
+			$scope.getUserInfo(response.data[0]);		
 		});
 	}
 
-	$scope.getSelectedUserInfo = function(){
+	$scope.getUserInfo = function(userID){
 		$http({
 			method: "GET",
-			url: '/admin/getUserInfo/' + $scope.selectedUserID
-		}).then(function (response){
-			selectedUserJobCount = response.data[0]
-			selectedUserIsAdmin = response.data[1]
-			selectedUserIsPrivaleged = response.data[2]
+			url: '/admin/getUserInfo/' + userID
+		}).then(function successCallback(response){
+			console.log(response)
+			$scope.selectedUserName = userID
+			$scope.selectedUserJobCount = response.data[0]
+			$scope.selectedUserIsAdmin = response.data[1]
+			$scope.selectedUserIsPrivaleged = response.data[2]
 		})
 	}
 
@@ -170,18 +160,42 @@ app.controller("AdminCtrl", function($scope, $http) {
 		$http({
 			method: "GET",
 			url: '/admin/getUserID/' + $scope.selectedUserName
-		}).then(function (response){
+		}).then(function successCallback(response){
 			$scope.selectedUserID = response.data[0]
 			console.log($scope.selectedUserID)
+			return response.data[0]
+		})
+	}
+
+	$scope.searchUser = function(){
+		console.log("Search Pressed")
+		console.log($scope.searchInput)
+		$scope.getUserInfo($scope.searchInput)
+	}
+
+	$scope.selectRecentUser = function(userName){
+		$scope.getUserInfo(userName)
+	}
+
+	$scope.promoteToAdmin = function(){
+		$http({
+			method: "GET",
+			url: '/admin/promoteToAdmin/' + $scope.selectedUserName
+		}).then(function successCallback(response){
+			$scope.message = response.data
+		})
+	}
+
+	$scope.promoteToPrivaleged = function(){
+		$http({
+			method: "GET",
+			url: '/admin/promoteToPrivaleged/' + $scope.selectedUserName
+		}).then(function successCallback(response){
+			$scope.message = response.data
 		})
 	}
 
 	$scope.getRecentUsers();
-
-
-
-
-
 
 })
 

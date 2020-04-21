@@ -51,6 +51,7 @@ def createSlurmAnalysisFile(job_directory, analysis_id):
 
 	sbatch_file = """#!/bin/bash
 #SBATCH --job-name={analysis_id}    # Job name
+#SBATCH --partition=CPU
 #SBATCH --ntasks=1                    # Run on a single CPU
 #SBATCH --time=336:00:00               # Time limit hrs:min:sec
 #SBATCH --output={job_output_file}   # Standard output and error log
@@ -64,6 +65,8 @@ python3 /opt/oxdna_analysis_tools/compute_mean.py -p 1 -d deviations.json -f oxD
 	file_name = "sbatch_analysis.sh"
 	file_path = job_directory + file_name
 
+
+	print("Creating analysis file at filepath:", file_path)
 
 	file = open(file_path, "w+")
 	file.write(sbatch_file)
@@ -145,10 +148,11 @@ def createAnalysisForUserIdWithJob(userId, jobId):
 	user_directory = "/users/"+str(userId) + "/"
 	job_directory = user_directory + jobId + "/"
 
+	print("Now creating analysis file...")
 	createSlurmAnalysisFile(job_directory, randomAnalysisId)
 	job_number = startSlurmAnalysis(job_directory)
 
-	print("Creating analysis now...")
+	print("Creating analysis now..., received job number:", job_number)
 
 	update_data = (
 		randomAnalysisId,
