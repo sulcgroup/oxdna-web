@@ -146,7 +146,7 @@ def register():
 
 
 	if username[-4:] != ".edu":
-		  return "We are currently only accepting .edu registrations at this time."
+		 return "We are currently only accepting .edu registrations at this time."
 
 	if username is not None and password is not None:
 		user_id = Register.registerUser(username, password)
@@ -173,13 +173,14 @@ def login():
 		password = request.form["password"]
 	if username is not None and password is not None:
 		user_id = Login.loginUser(username, password)
-
-		if(user_id != -1):
+		if(user_id > -1):
 			session["user_id"] = user_id
 			return redirect("/")
+		elif(user_id == -2):
+			return "Error, user not verified. Please verify using the link sent to the email you registered with."
 		else:
 			return "Invalid username or password"
-
+		
 	return "Invalid username or password"
 
 @app.route("/logout")
