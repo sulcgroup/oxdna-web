@@ -6,7 +6,7 @@ OxDNA Registration
 ::
 <HEADER>
 
-Thank you for registering with AZDNA. Please click the following link <u> to verify your account. Once you verify your account, you will be able to submit jobs. Please make sure to mark future emails from AZDNA as not spam.
+Thank you for registering with OxDNA. Please click the following link <u> to verify your account. Once you verify your account, you will be able to submit jobs. Please make sure to mark future emails from OxDNA as not spam.
 
 <TAIL>
 ;;
