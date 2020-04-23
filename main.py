@@ -143,13 +143,15 @@ def register():
 	if request.method == "POST":
 		username = request.form["username"]
 		password = request.form["password"]
-
+		firstName = request.form["firstName"]
+		lastName = request.form["lastName"]
+		institution = request.form["institution"]
 
 	if username[-4:] != ".edu":
 		 return "We are currently only accepting .edu registrations at this time."
 
 	if username is not None and password is not None:
-		user_id = Register.registerUser(username, password)
+		user_id = Register.registerUser(username, password, firstName, lastName, institution)
 
 		if(user_id > -1):
 			#session["user_id"] = user_id

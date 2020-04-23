@@ -2218,3 +2218,470 @@ mysql.connector.errors.OperationalError: MySQL Connection not available.
 172.31.27.118 - - [14/Apr/2020 23:49:46] "GET /static/style.css HTTP/1.1" 200 -
 172.31.27.118 - - [14/Apr/2020 23:49:46] "GET /favicon.ico HTTP/1.1" 404 -
 172.31.27.118 - - [14/Apr/2020 23:49:46] "GET /all_jobs HTTP/1.1" 200 -
+ * Serving Flask app "main" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://0.0.0.0:9000/ (Press CTRL+C to quit)
+172.31.45.207 - - [21/Apr/2020 23:21:15] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:21:16] "[37mGET / HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:21:16] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:06] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:10] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:11] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:13] "[37mGET /account HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:13] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+172.31.45.207 - - [21/Apr/2020 23:22:13] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:15] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:15] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:16] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:18] "[37mGET /jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:18] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:19] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:20] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:20] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:21] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:23] "[37mGET /api/job/de489f13-b710-4968-ae06-1a610d2f993c HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:23] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:25] "[37mGET /job_output/de489f13-b710-4968-ae06-1a610d2f993c/deviations HTTP/1.1[0m" 200 -
+172.31.45.207 - - [21/Apr/2020 23:22:28] "[37mGET /job_output/de489f13-b710-4968-ae06-1a610d2f993c/analysis_log HTTP/1.1[0m" 200 -
+172.31.32.242 - - [22/Apr/2020 17:12:04] "[37mGET / HTTP/1.1[0m" 200 -
+172.31.32.242 - - [22/Apr/2020 17:12:04] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/index.html HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[37mGET /static/angular.min.js HTTP/1.1[0m" 200 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[37mGET /static/script.js HTTP/1.1[0m" 200 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/style.css HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/ts/lib/three.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/ts/lib/CCapture.all.min.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/ts/lib/Lut.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/ts/controls/DragControls.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/dist/scene_setup.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/ts/controls/TrackballControls.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/dist/mesh_setup.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/dist/instancing.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/dist/io.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/dist/PBC_switchbox.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/dist/file_reading.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/dist/doUndo.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/dist/rigid-body_simulation.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/dist/main.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/dist/keybindings.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/dist/base_selector.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/dist/output_file.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/ts/controls/SceneUtils.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/dist/adhoc_api.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[36mGET /static/oxdna-viewer/dist/translation.js HTTP/1.1[0m" 304 -
+172.31.32.242 - - [22/Apr/2020 17:12:05] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:32] "[32mGET / HTTP/1.1[0m" 302 -
+172.31.33.161 - - [22/Apr/2020 17:31:33] "[37mGET /login HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:33] "[37mGET /static/style.css HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:33] "[37mGET /static/angular.min.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:33] "[37mGET /static/script.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:33] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[32mPOST /login HTTP/1.1[0m" 302 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET / HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/style.css HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/index.html HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/style.css HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/ts/lib/Lut.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/ts/lib/CCapture.all.min.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/ts/controls/DragControls.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/ts/controls/TrackballControls.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/dist/scene_setup.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/dist/instancing.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/dist/mesh_setup.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/ts/lib/three.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/dist/io.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/dist/PBC_switchbox.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/dist/file_reading.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/dist/doUndo.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/dist/rigid-body_simulation.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/dist/main.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/dist/keybindings.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/dist/base_selector.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/dist/output_file.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/dist/translation.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/ts/controls/SceneUtils.js HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:31:39] "[37mGET /static/oxdna-viewer/dist/adhoc_api.js HTTP/1.1[0m" 200 -
+[2020-04-22 17:32:39,074] ERROR in app: Exception on /create_job [POST]
+Traceback (most recent call last):
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "main.py", line 55, in handle_form
+    success, error_message = Job.createJobForUserIdWithData(user_id, job_data)
+  File "/var/www/azDNA/azDNA/Job.py", line 182, in createJobForUserIdWithData
+    cursor = cnx.cursor(buffered=True)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/connection.py", line 809, in cursor
+    raise errors.OperationalError("MySQL Connection not available.")
+mysql.connector.errors.OperationalError: MySQL Connection not available.
+172.31.33.161 - - [22/Apr/2020 17:32:39] "[35m[1mPOST /create_job HTTP/1.1[0m" 500 -
+172.31.33.161 - - [22/Apr/2020 17:33:24] "[37mGET /logout HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:33:31] "[32mGET / HTTP/1.1[0m" 302 -
+172.31.33.161 - - [22/Apr/2020 17:33:31] "[37mGET /login HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:33:31] "[37mGET /static/style.css HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:33:31] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:33:33] "[37mGET /register HTTP/1.1[0m" 200 -
+172.31.33.161 - - [22/Apr/2020 17:33:34] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+[2020-04-22 17:33:49,026] ERROR in app: Exception on /register [POST]
+Traceback (most recent call last):
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "main.py", line 152, in register
+    user_id = Register.registerUser(username, password)
+  File "/var/www/azDNA/azDNA/Register.py", line 29, in registerUser
+    cursor.execute(add_user_query, user_data)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/cursor.py", line 551, in execute
+    self._handle_result(self._connection.cmd_query(stmt))
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/connection.py", line 490, in cmd_query
+    result = self._handle_result(self._send_cmd(ServerCmd.QUERY, query))
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/connection.py", line 267, in _send_cmd
+    return self._socket.recv()
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/network.py", line 243, in recv_plain
+    raise errors.InterfaceError(errno=2013)
+mysql.connector.errors.InterfaceError: 2013: Lost connection to MySQL server during query
+172.31.33.161 - - [22/Apr/2020 17:33:49] "[35m[1mPOST /register HTTP/1.1[0m" 500 -
+172.31.24.227 - - [22/Apr/2020 21:38:45] "[37mGET / HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:45] "[37mGET /static/style.css HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/angular.min.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/script.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/index.html HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/style.css HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/ts/lib/CCapture.all.min.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/ts/lib/Lut.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/ts/lib/three.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/ts/controls/DragControls.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/ts/controls/TrackballControls.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/dist/scene_setup.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/dist/instancing.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/dist/mesh_setup.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/dist/PBC_switchbox.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/dist/io.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/dist/file_reading.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/dist/doUndo.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/dist/rigid-body_simulation.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/dist/main.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/dist/keybindings.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/dist/output_file.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/dist/base_selector.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/dist/translation.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/ts/controls/SceneUtils.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:46] "[37mGET /static/oxdna-viewer/dist/adhoc_api.js HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:47] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:53] "[37mGET /account HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:55] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:57] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:38:57] "[37mGET /logout HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:39:00] "[32mGET / HTTP/1.1[0m" 302 -
+172.31.24.227 - - [22/Apr/2020 21:39:00] "[37mGET /login HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:39:01] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:39:04] "[37mGET /register HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:39:04] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:39:07] "[32mGET /jobs HTTP/1.1[0m" 302 -
+172.31.24.227 - - [22/Apr/2020 21:39:08] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.24.227 - - [22/Apr/2020 21:39:08] "[32mGET / HTTP/1.1[0m" 302 -
+172.31.24.227 - - [22/Apr/2020 21:39:09] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.23.122 - - [23/Apr/2020 04:33:37] "[32mGET / HTTP/1.1[0m" 302 -
+172.31.23.122 - - [23/Apr/2020 04:33:37] "[37mGET /login HTTP/1.1[0m" 200 -
+172.31.23.122 - - [23/Apr/2020 04:33:37] "[37mGET /static/style.css HTTP/1.1[0m" 200 -
+172.31.23.122 - - [23/Apr/2020 04:33:37] "[37mGET /static/script.js HTTP/1.1[0m" 200 -
+172.31.23.122 - - [23/Apr/2020 04:33:37] "[37mGET /static/angular.min.js HTTP/1.1[0m" 200 -
+172.31.23.122 - - [23/Apr/2020 04:33:38] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.23.122 - - [23/Apr/2020 04:33:38] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+172.31.23.122 - - [23/Apr/2020 04:33:39] "[37mGET /register HTTP/1.1[0m" 200 -
+172.31.23.122 - - [23/Apr/2020 04:33:40] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+[2020-04-23 04:33:47,088] ERROR in app: Exception on /register [POST]
+Traceback (most recent call last):
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/network.py", line 140, in send_plain
+    self.sock.sendall(packet)
+BrokenPipeError: [Errno 32] Broken pipe
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "main.py", line 152, in register
+    user_id = Register.registerUser(username, password)
+  File "/var/www/azDNA/azDNA/Register.py", line 29, in registerUser
+    cursor.execute(add_user_query, user_data)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/cursor.py", line 551, in execute
+    self._handle_result(self._connection.cmd_query(stmt))
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/connection.py", line 490, in cmd_query
+    result = self._handle_result(self._send_cmd(ServerCmd.QUERY, query))
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/connection.py", line 261, in _send_cmd
+    packet_number, compressed_packet_number)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/network.py", line 143, in send_plain
+    errno=2055, values=(self.get_address(), _strioerror(err)))
+mysql.connector.errors.OperationalError: 2055: Lost connection to MySQL server at '127.0.0.1:3306', system error: 32 Broken pipe
+172.31.23.122 - - [23/Apr/2020 04:33:47] "[35m[1mPOST /register HTTP/1.1[0m" 500 -
+[2020-04-23 04:33:57,943] ERROR in app: Exception on /register [POST]
+Traceback (most recent call last):
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/network.py", line 140, in send_plain
+    self.sock.sendall(packet)
+BrokenPipeError: [Errno 32] Broken pipe
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "main.py", line 152, in register
+    user_id = Register.registerUser(username, password)
+  File "/var/www/azDNA/azDNA/Register.py", line 29, in registerUser
+    cursor.execute(add_user_query, user_data)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/cursor.py", line 551, in execute
+    self._handle_result(self._connection.cmd_query(stmt))
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/connection.py", line 490, in cmd_query
+    result = self._handle_result(self._send_cmd(ServerCmd.QUERY, query))
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/connection.py", line 261, in _send_cmd
+    packet_number, compressed_packet_number)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/network.py", line 143, in send_plain
+    errno=2055, values=(self.get_address(), _strioerror(err)))
+mysql.connector.errors.OperationalError: 2055: Lost connection to MySQL server at '127.0.0.1:3306', system error: 32 Broken pipe
+172.31.23.122 - - [23/Apr/2020 04:33:57] "[35m[1mPOST /register HTTP/1.1[0m" 500 -
+172.31.23.122 - - [23/Apr/2020 04:34:20] "[32mGET / HTTP/1.1[0m" 302 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET / HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[36mGET /static/angular.min.js HTTP/1.1[0m" 304 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/script.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/index.html HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/style.css HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/ts/lib/CCapture.all.min.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/ts/lib/three.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/ts/lib/Lut.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/ts/controls/DragControls.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/ts/controls/TrackballControls.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/dist/instancing.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/dist/scene_setup.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/dist/mesh_setup.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/dist/io.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/dist/PBC_switchbox.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/dist/doUndo.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/dist/file_reading.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/dist/rigid-body_simulation.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/dist/main.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/dist/keybindings.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/dist/base_selector.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/dist/translation.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/dist/output_file.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/ts/controls/SceneUtils.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:00:06] "[37mGET /static/oxdna-viewer/dist/adhoc_api.js HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:02:01] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.25.147 - - [23/Apr/2020 06:02:02] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+172.31.39.229 - - [23/Apr/2020 17:23:57] "[32mGET / HTTP/1.1[0m" 302 -
+172.31.39.229 - - [23/Apr/2020 17:23:57] "[37mGET /login HTTP/1.1[0m" 200 -
+172.31.39.229 - - [23/Apr/2020 17:23:57] "[37mGET /static/style.css HTTP/1.1[0m" 200 -
+172.31.39.229 - - [23/Apr/2020 17:23:57] "[37mGET /static/script.js HTTP/1.1[0m" 200 -
+172.31.39.229 - - [23/Apr/2020 17:23:57] "[37mGET /static/angular.min.js HTTP/1.1[0m" 200 -
+172.31.39.229 - - [23/Apr/2020 17:24:03] "[37mGET /register HTTP/1.1[0m" 200 -
+172.31.39.229 - - [23/Apr/2020 17:24:03] "[37mGET /static/script.js HTTP/1.1[0m" 200 -
+172.31.39.229 - - [23/Apr/2020 17:24:03] "[37mGET /static/angular.min.js HTTP/1.1[0m" 200 -
+172.31.39.229 - - [23/Apr/2020 17:24:10] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+[2020-04-23 17:24:10,980] ERROR in app: Exception on /register [POST]
+Traceback (most recent call last):
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/network.py", line 140, in send_plain
+    self.sock.sendall(packet)
+BrokenPipeError: [Errno 32] Broken pipe
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "main.py", line 152, in register
+    user_id = Register.registerUser(username, password)
+  File "/var/www/azDNA/azDNA/Register.py", line 29, in registerUser
+    cursor.execute(add_user_query, user_data)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/cursor.py", line 551, in execute
+    self._handle_result(self._connection.cmd_query(stmt))
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/connection.py", line 490, in cmd_query
+    result = self._handle_result(self._send_cmd(ServerCmd.QUERY, query))
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/connection.py", line 261, in _send_cmd
+    packet_number, compressed_packet_number)
+  File "/home/capstonegroup/.local/lib/python3.6/site-packages/mysql/connector/network.py", line 143, in send_plain
+    errno=2055, values=(self.get_address(), _strioerror(err)))
+mysql.connector.errors.OperationalError: 2055: Lost connection to MySQL server at '127.0.0.1:3306', system error: 32 Broken pipe
+172.31.39.229 - - [23/Apr/2020 17:24:10] "[35m[1mPOST /register HTTP/1.1[0m" 500 -
+172.31.39.229 - - [23/Apr/2020 17:24:13] "[37mGET /register HTTP/1.1[0m" 200 -
+172.31.39.229 - - [23/Apr/2020 17:24:13] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+ * Serving Flask app "main" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://0.0.0.0:9000/ (Press CTRL+C to quit)
+172.31.39.229 - - [23/Apr/2020 18:01:30] "GET / HTTP/1.1" 302 -
+172.31.39.229 - - [23/Apr/2020 18:01:30] "GET /login HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:01:30] "GET /static/style.css HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:01:30] "GET /static/angular.min.js HTTP/1.1" 304 -
+172.31.39.229 - - [23/Apr/2020 18:01:30] "GET /static/script.js HTTP/1.1" 304 -
+ * Serving Flask app "main" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://0.0.0.0:9000/ (Press CTRL+C to quit)
+172.31.39.229 - - [23/Apr/2020 18:04:23] "GET /login HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:23] "GET /static/angular.min.js HTTP/1.1" 304 -
+172.31.39.229 - - [23/Apr/2020 18:04:23] "GET /static/script.js HTTP/1.1" 304 -
+172.31.39.229 - - [23/Apr/2020 18:04:23] "GET /static/style.css HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:24] "GET /all_jobs HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:26] "GET /all_jobs HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:37] "POST /register HTTP/1.1" 302 -
+172.31.39.229 - - [23/Apr/2020 18:04:38] "GET /login HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:38] "GET /all_jobs HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:44] "POST /login HTTP/1.1" 302 -
+172.31.39.229 - - [23/Apr/2020 18:04:44] "GET / HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:44] "GET /static/oxdna-viewer/index.html HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:44] "GET /all_jobs HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:44] "GET /static/oxdna-viewer/style.css HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/ts/lib/Lut.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/ts/controls/DragControls.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/ts/controls/TrackballControls.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/dist/scene_setup.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/dist/instancing.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/dist/mesh_setup.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/ts/lib/CCapture.all.min.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/dist/adhoc_api.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/dist/io.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/dist/PBC_switchbox.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/dist/file_reading.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/dist/doUndo.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/dist/rigid-body_simulation.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/dist/keybindings.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/dist/main.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/dist/base_selector.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/dist/output_file.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/dist/translation.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/ts/controls/SceneUtils.js HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:04:45] "GET /static/oxdna-viewer/ts/lib/three.js HTTP/1.1" 304 -
+172.31.39.229 - - [23/Apr/2020 18:10:56] "POST /create_job HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:10:56] "GET /jobs HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:10:56] "GET /all_jobs HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:10:56] "GET /all_jobs HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:11:08] "GET /jobs HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:11:09] "GET /static/angular.min.js HTTP/1.1" 304 -
+172.31.39.229 - - [23/Apr/2020 18:11:09] "GET /static/script.js HTTP/1.1" 304 -
+172.31.39.229 - - [23/Apr/2020 18:11:09] "GET /static/style.css HTTP/1.1" 304 -
+172.31.39.229 - - [23/Apr/2020 18:11:33] "GET /all_jobs HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:11:33] "GET /all_jobs HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:11:45] "GET /job/b27d9f0f-6cf3-460a-a578-1e02f9ba0b7f HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:11:45] "GET /api/job/b27d9f0f-6cf3-460a-a578-1e02f9ba0b7f HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:11:45] "GET /all_jobs HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:11:50] "POST /api/create_analysis/b27d9f0f-6cf3-460a-a578-1e02f9ba0b7f HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:11:55] "GET /job_output/b27d9f0f-6cf3-460a-a578-1e02f9ba0b7f/mean HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:12:01] "GET /job_output/b27d9f0f-6cf3-460a-a578-1e02f9ba0b7f/deviations HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:12:04] "GET /job_output/b27d9f0f-6cf3-460a-a578-1e02f9ba0b7f/analysis_log HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:14:28] "GET /account HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:14:29] "GET /all_jobs HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:14:30] "GET /all_jobs HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:14:30] "GET /all_jobs HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:14:35] "GET /api/job/b27d9f0f-6cf3-460a-a578-1e02f9ba0b7f HTTP/1.1" 200 -
+172.31.39.229 - - [23/Apr/2020 18:14:35] "GET /all_jobs HTTP/1.1" 200 -
+172.31.24.227 - - [23/Apr/2020 21:58:41] "GET / HTTP/1.1" 302 -
+172.31.24.227 - - [23/Apr/2020 21:58:41] "GET /login HTTP/1.1" 200 -
+172.31.24.227 - - [23/Apr/2020 21:58:41] "GET /static/style.css HTTP/1.1" 304 -
+172.31.24.227 - - [23/Apr/2020 21:58:41] "GET /static/script.js HTTP/1.1" 304 -
+172.31.24.227 - - [23/Apr/2020 21:58:41] "GET /static/angular.min.js HTTP/1.1" 200 -
+172.31.24.227 - - [23/Apr/2020 21:58:41] "GET /all_jobs HTTP/1.1" 200 -
+172.31.24.227 - - [23/Apr/2020 21:58:55] "GET /account HTTP/1.1" 200 -
+172.31.24.227 - - [23/Apr/2020 21:58:57] "GET /all_jobs HTTP/1.1" 200 -
+172.31.24.227 - - [23/Apr/2020 21:58:58] "GET /register HTTP/1.1" 200 -
+172.31.24.227 - - [23/Apr/2020 21:58:59] "GET /all_jobs HTTP/1.1" 200 -
+172.31.35.238 - - [23/Apr/2020 22:19:57] "GET / HTTP/1.1" 302 -
+172.31.35.238 - - [23/Apr/2020 22:19:57] "GET /login HTTP/1.1" 200 -
+172.31.35.238 - - [23/Apr/2020 22:19:57] "GET /static/angular.min.js HTTP/1.1" 200 -
+172.31.35.238 - - [23/Apr/2020 22:19:57] "GET /static/style.css HTTP/1.1" 200 -
+172.31.35.238 - - [23/Apr/2020 22:19:57] "GET /static/script.js HTTP/1.1" 200 -
+172.31.35.238 - - [23/Apr/2020 22:19:57] "GET /all_jobs HTTP/1.1" 200 -
+172.31.35.238 - - [23/Apr/2020 22:19:57] "GET /favicon.ico HTTP/1.1" 404 -
+172.31.35.238 - - [23/Apr/2020 22:19:58] "GET /login HTTP/1.1" 200 -
+172.31.35.238 - - [23/Apr/2020 22:19:58] "GET /all_jobs HTTP/1.1" 200 -
+172.31.35.238 - - [23/Apr/2020 22:19:59] "GET /register HTTP/1.1" 200 -
+172.31.35.238 - - [23/Apr/2020 22:20:00] "GET /all_jobs HTTP/1.1" 200 -
+172.31.35.238 - - [23/Apr/2020 22:28:46] "GET / HTTP/1.1" 302 -
+172.31.35.238 - - [23/Apr/2020 22:28:46] "GET /all_jobs HTTP/1.1" 200 -
+172.31.35.238 - - [23/Apr/2020 22:28:47] "GET /login HTTP/1.1" 200 -
+172.31.35.238 - - [23/Apr/2020 22:28:47] "GET /all_jobs HTTP/1.1" 200 -
+172.31.35.238 - - [23/Apr/2020 22:28:47] "GET /all_jobs HTTP/1.1" 200 -
+[2020-04-23 22:28:51,981] ERROR in app: Exception on /register [POST]
+Traceback (most recent call last):
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "main.py", line 152, in register
+    user_id = Register.registerUser(username, password)
+  File "/var/www/azDNA/azDNA/Register.py", line 29, in registerUser
+    cursor.execute(add_user_query, user_data)
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/mysql/connector/cursor.py", line 551, in execute
+    self._handle_result(self._connection.cmd_query(stmt))
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/mysql/connector/connection.py", line 490, in cmd_query
+    result = self._handle_result(self._send_cmd(ServerCmd.QUERY, query))
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/mysql/connector/connection.py", line 267, in _send_cmd
+    return self._socket.recv()
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/mysql/connector/network.py", line 243, in recv_plain
+    raise errors.InterfaceError(errno=2013)
+mysql.connector.errors.InterfaceError: 2013: Lost connection to MySQL server during query
+172.31.35.238 - - [23/Apr/2020 22:28:51] "POST /register HTTP/1.1" 500 -

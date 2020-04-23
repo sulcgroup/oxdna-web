@@ -15,17 +15,17 @@ cursor = cnx.cursor()
 
 add_user_query = (
 "INSERT INTO Users"
-"(`username`, `password`, `group`, `creationDate`, `verifycode`, `verified`)"
-"VALUES (%s, %s, %s, %s, %s, %s)"
+"(`username`, `password`, `group`, `creationDate`, `verifycode`, `verified`, `firstName`, `lastName`, `institution`)"
+"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 )
 
 #needs input cleaning/escaping/validation
 
-def registerUser(name, password):
+def registerUser(name, password, firstName, lastName, institution):
 
 
     verifycode = binascii.b2a_hex(os.urandom(15)).decode("utf-8")
-    user_data = (name, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), 0, int(time.time()), verifycode, "False")
+    user_data = (name, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), 0, int(time.time()), verifycode, "False", firstName, lastName, institution)
     cursor.execute(add_user_query, user_data)
     cnx.commit()
 
