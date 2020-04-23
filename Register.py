@@ -9,10 +9,6 @@ import os
 import binascii
 import EmailScript
 
-cnx = mysql.connector.connect(user='root', password='', database='azdna')
-cursor = cnx.cursor()
-
-
 add_user_query = (
 "INSERT INTO Users"
 "(`username`, `password`, `group`, `creationDate`, `verifycode`, `verified`, `firstName`, `lastName`, `institution`)"
@@ -22,23 +18,25 @@ add_user_query = (
 #needs input cleaning/escaping/validation
 
 def registerUser(name, password, firstName, lastName, institution):
+	cnx = mysql.connector.connect(user='root', password='', database='azdna')
+	cursor = cnx.cursor()
 
+	verifycode = binascii.b2a_hex(os.urandom(15)).decode("utf-8")
+	user_data = (name, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), 0, int(time.time()), verifycode, "False", firstName, lastName, institution)
+	cursor.execute(add_user_query, user_data)
+	cnx.commit()
 
-    verifycode = binascii.b2a_hex(os.urandom(15)).decode("utf-8")
-    user_data = (name, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), 0, int(time.time()), verifycode, "False", firstName, lastName, institution)
-    cursor.execute(add_user_query, user_data)
-    cnx.commit()
+	#user_id = Login.loginUser(name, password)
+	user_id = Account.getUserId(name)
 
-    #user_id = Login.loginUser(name, password)
-    user_id = Account.getUserId(name)
+	#call emailing script with verification link
+	verifylink = "www.oxdna.org/verify?id={userId}&verify={verifycode}".format(userId = user_id, verifycode = verifycode)
 
-    #call emailing script with verification link
-    verifylink = "www.oxdna.org/verify?id={userId}&verify={verifycode}".format(userId = user_id, verifycode = verifycode)
-
-    #os.system("python3 EmailScript.py -t 0 -n {username} -u {verifylink} -d {email}".format(username = name, verifylink = verifylink, email = name))
-    EmailScript.SendEmail("-t 0 -n {username} -u {verifylink} -d {email}".format(username = name, verifylink = verifylink, email = name).split(" "))
-
-    return user_id
+	#os.system("python3 EmailScript.py -t 0 -n {username} -u {verifylink} -d {email}".format(username = name, verifylink = verifylink, email = name))
+	EmailScript.SendEmail("-t 0 -n {username} -u {verifylink} -d {email}".format(username = name, verifylink = verifylink, email = name).split(" "))
+	
+	cnx.close()
+	return user_id
 
 '''
 import random
