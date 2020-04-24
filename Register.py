@@ -30,7 +30,7 @@ def registerUser(name, password, firstName, lastName, institution):
 	user_id = Account.getUserId(name)
 
 	#call emailing script with verification link
-	verifylink = "www.oxdna.org/verify?id={userId}&verify={verifycode}".format(userId = user_id, verifycode = verifycode)
+	verifylink = "10.126.22.10/verify?id={userId}&verify={verifycode}".format(userId = user_id, verifycode = verifycode)
 
 	#os.system("python3 EmailScript.py -t 0 -n {username} -u {verifylink} -d {email}".format(username = name, verifylink = verifylink, email = name))
 	EmailScript.SendEmail("-t 0 -n {username} -u {verifylink} -d {email}".format(username = name, verifylink = verifylink, email = name).split(" "))

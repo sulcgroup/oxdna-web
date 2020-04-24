@@ -3,3 +3,4 @@ jobfiles/*
 !jobfiles/.gitkeep 
 *.py[cod]
 *.log
+nohup.out

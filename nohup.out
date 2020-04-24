@@ -258,3 +258,115 @@ IndentationError: unindent does not match any outer indentation level
 172.31.35.238 - - [23/Apr/2020 22:50:02] "[32mPOST /register HTTP/1.1[0m" 302 -
 172.31.35.238 - - [23/Apr/2020 22:50:02] "[37mGET /login HTTP/1.1[0m" 200 -
 172.31.35.238 - - [23/Apr/2020 22:50:02] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.35.238 - - [23/Apr/2020 22:50:47] "[37mGET /login HTTP/1.1[0m" 200 -
+172.31.35.238 - - [23/Apr/2020 22:50:47] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.35.238 - - [23/Apr/2020 22:50:49] "[37mGET /login HTTP/1.1[0m" 200 -
+172.31.35.238 - - [23/Apr/2020 22:50:50] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:25:24] "[32mGET / HTTP/1.1[0m" 302 -
+172.31.41.44 - - [24/Apr/2020 18:25:24] "[37mGET /login HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:25:25] "[37mGET /static/style.css HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:25:25] "[36mGET /static/angular.min.js HTTP/1.1[0m" 304 -
+172.31.41.44 - - [24/Apr/2020 18:25:25] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+172.31.41.44 - - [24/Apr/2020 18:25:25] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:25:35] "[37mPOST /login HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:19] "[37mPOST /login HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[32mPOST /login HTTP/1.1[0m" 302 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[37mGET / HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[36mGET /static/oxdna-viewer/index.html HTTP/1.1[0m" 304 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[37mGET /static/oxdna-viewer/ts/lib/CCapture.all.min.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[37mGET /static/oxdna-viewer/ts/lib/Lut.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[37mGET /static/oxdna-viewer/dist/scene_setup.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[37mGET /static/oxdna-viewer/ts/controls/DragControls.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[37mGET /static/oxdna-viewer/dist/instancing.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[37mGET /static/oxdna-viewer/ts/controls/TrackballControls.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[37mGET /static/oxdna-viewer/dist/mesh_setup.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[37mGET /static/oxdna-viewer/dist/io.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[37mGET /static/oxdna-viewer/dist/PBC_switchbox.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[37mGET /static/oxdna-viewer/dist/doUndo.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[37mGET /static/oxdna-viewer/dist/file_reading.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[36mGET /static/oxdna-viewer/style.css HTTP/1.1[0m" 304 -
+172.31.41.44 - - [24/Apr/2020 18:29:26] "[37mGET /static/oxdna-viewer/dist/rigid-body_simulation.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:27] "[37mGET /static/oxdna-viewer/dist/main.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:27] "[37mGET /static/oxdna-viewer/dist/keybindings.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:27] "[37mGET /static/oxdna-viewer/dist/base_selector.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:27] "[37mGET /static/oxdna-viewer/dist/translation.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:27] "[37mGET /static/oxdna-viewer/dist/output_file.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:27] "[37mGET /static/oxdna-viewer/ts/controls/SceneUtils.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:27] "[36mGET /static/oxdna-viewer/ts/lib/three.js HTTP/1.1[0m" 304 -
+172.31.41.44 - - [24/Apr/2020 18:29:27] "[37mGET /static/oxdna-viewer/dist/adhoc_api.js HTTP/1.1[0m" 200 -
+172.31.41.44 - - [24/Apr/2020 18:29:28] "[37mGET /all_jobs HTTP/1.1[0m" 200 -
+ * Serving Flask app "main" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://0.0.0.0:9000/ (Press CTRL+C to quit)
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET / HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/style.css HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/angular.min.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/script.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/oxdna-viewer/index.html HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/oxdna-viewer/style.css HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/oxdna-viewer/ts/lib/CCapture.all.min.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/oxdna-viewer/ts/lib/three.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/oxdna-viewer/ts/lib/Lut.js HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/oxdna-viewer/ts/controls/DragControls.js HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/oxdna-viewer/ts/controls/TrackballControls.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/oxdna-viewer/dist/scene_setup.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/oxdna-viewer/dist/instancing.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/oxdna-viewer/dist/mesh_setup.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/oxdna-viewer/dist/io.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/oxdna-viewer/dist/PBC_switchbox.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/oxdna-viewer/dist/file_reading.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:20] "GET /static/oxdna-viewer/dist/doUndo.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:21] "GET /static/oxdna-viewer/dist/main.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:21] "GET /static/oxdna-viewer/dist/rigid-body_simulation.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:21] "GET /static/oxdna-viewer/dist/keybindings.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:21] "GET /static/oxdna-viewer/dist/base_selector.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:21] "GET /static/oxdna-viewer/dist/output_file.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:21] "GET /static/oxdna-viewer/dist/translation.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:21] "GET /static/oxdna-viewer/ts/controls/SceneUtils.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:21] "GET /static/oxdna-viewer/dist/adhoc_api.js HTTP/1.1" 304 -
+172.31.41.44 - - [24/Apr/2020 20:02:22] "GET /all_jobs HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 20:02:23] "GET /logout HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 20:02:26] "GET / HTTP/1.1" 302 -
+172.31.41.44 - - [24/Apr/2020 20:02:26] "GET /login HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 20:02:27] "GET /all_jobs HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 20:02:37] "GET /register HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 20:02:37] "GET /all_jobs HTTP/1.1" 200 -
+[2020-04-24 20:02:49,559] ERROR in app: Exception on /register [POST]
+Traceback (most recent call last):
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "main.py", line 154, in register
+    user_id = Register.registerUser(username, password, firstName, lastName, institution)
+  File "/var/www/azDNA/azDNA/Register.py", line 26, in registerUser
+    cursor.execute(add_user_query, user_data)
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/mysql/connector/cursor.py", line 551, in execute
+    self._handle_result(self._connection.cmd_query(stmt))
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/mysql/connector/connection.py", line 490, in cmd_query
+    result = self._handle_result(self._send_cmd(ServerCmd.QUERY, query))
+  File "/home/capstonegroup/anaconda3/lib/python3.7/site-packages/mysql/connector/connection.py", line 395, in _handle_result
+    raise errors.get_exception(packet)
+mysql.connector.errors.IntegrityError: 1062 (23000): Duplicate entry 'epopplet@asu.edu' for key 'username'
+172.31.41.44 - - [24/Apr/2020 20:02:49] "POST /register HTTP/1.1" 500 -
+172.31.41.44 - - [24/Apr/2020 20:12:50] "GET /verify?id=56&verify=f3f3208e6fff7456a278f95fd38b7e HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 20:12:53] "GET / HTTP/1.1" 302 -
+172.31.41.44 - - [24/Apr/2020 20:12:53] "GET /all_jobs HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 20:13:10] "POST /login HTTP/1.1" 302 -
+172.31.41.44 - - [24/Apr/2020 20:13:10] "GET / HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 20:13:11] "GET /all_jobs HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 22:59:54] "POST /create_job HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 22:59:54] "GET /jobs HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 22:59:55] "GET /all_jobs HTTP/1.1" 200 -
+172.31.41.44 - - [24/Apr/2020 22:59:55] "GET /all_jobs HTTP/1.1" 200 -
