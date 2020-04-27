@@ -257,6 +257,30 @@ app.controller("JobsCtrl", function($scope, JobsService) {
 		}
 	}
 
+	$scope.deleteJob = function(job){
+		var request = new XMLHttpRequest();
+		request.open("POST", "/delete_job");
+		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+		var payload = {};
+		payload["jobId"] = job.uuid
+
+
+		request.send(JSON.stringify(payload));
+
+		request.onload = function() {
+			console.log(request.response);
+			job.status = "Deleted"
+		}
+	}
+
+	$scope.confirmDelete = function(job) {
+		var r = confirm("Are you sure you want to delete job " + job.name + ".\nAll files related to this job will no longer be available.");
+		if (r == true) {
+		  $scope.deleteJob(job);
+		} 
+	  }
+
 })
 
 app.controller("LoginCtrl", function($scope) {

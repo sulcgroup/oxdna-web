@@ -19,6 +19,7 @@ add_job_query = (
 
 get_jobs_query = ("SELECT * FROM Jobs WHERE userId = %s")
 get_job_query = ("SELECT * FROM Jobs WHERE uuid = %s")
+get_userId_for_job_uuid = ("SELECT userID FROM Jobs WHERE uuid = %s")
 
 
 def startSlurmJob(job_directory, job_id):
@@ -325,6 +326,29 @@ def runOneStepJob(job_directory):
 
 def cancelJob(job_name):
 	subprocess.Popen(["scancel", "-n", job_name], stdout=subprocess.PIPE)
+
+def deleteJob(job_uuid):
+	print("Deleting Job")
+	#need job name and user id
+	#get user id
+	temp_cnx = mysql.connector.connect(user='root', password='', database='azdna')
+
+	cursor = temp_cnx.cursor(buffered=True)
+	cursor.execute(get_userId_for_job_uuid, (job_uuid,))
+	result = cursor.fetchone()
+
+	cursor.close()
+	temp_cnx.close()
+	userId = result[0]
+	print("User ID:")
+	print(userId)
+
+	job_path = "/users/" + str(userId) + "/" + job_uuid
+	print(job_path)
+	subprocess.Popen(["rm", "-R", job_path], stdout=subprocess.PIPE)
+
+
+
 
 def getJobStatus(job_name):
 	pipe = subprocess.Popen(["squeue", "-n", job_name], stdout=subprocess.PIPE)

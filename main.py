@@ -63,13 +63,25 @@ def handle_form():
 def cancel_job():
 	print("Received Cancel Request")
 	if session.get("user_id") is None:
-		return "You must be logged in to cancel their job!"
+		return "You must be logged in to cancel this job!"
 
 	json_data = request.get_json()
 	jobId = json_data["jobId"]
 	print("Canceling Job " + jobId)
 	Job.cancelJob(jobId)
 	return "Canceled Job " + jobId
+
+@app.route('/delete_job', methods=['POST'])
+def delete_job():
+	print("Received Delete Request")
+	if session.get("user_id") is None:
+		return "You must be logged in to delete this job!"
+
+	json_data = request.get_json()
+	job_uuid = json_data["jobId"]
+	print("Deleting Job " + job_uuid)
+	Job.deleteJob(job_uuid)
+	return "Deleted Job " + job_uuid
 
 @app.route('/job_status/<jobId>', methods=['GET'])
 def job_status(jobId):

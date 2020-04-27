@@ -30,6 +30,26 @@ table tr:nth-child(odd) {
 table tr:nth-child(even) {
   background-color: #ffffff;
 }
+
+.running{
+	color: green;
+}
+
+.completed{
+	color: black;
+}
+
+.pending{
+	color: blue;
+}
+
+.cancelled{
+	color: yellow;
+}
+
+.error{
+	color: red;
+}
 </style>
 <body ng-controller="JobsCtrl">
 	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
@@ -118,17 +138,19 @@ table tr:nth-child(even) {
 								<td>Energy</td>
 								<td>Trajectory</td>
 								<td>Cancel</td>
+								<td>Delete</td>
 							</tr>
 							<tr ng-repeat="x in jobs">
 
 								<td><a href="/job/{{x.uuid}}">{{ x.name }}</a></td>
-								<td>{{x.status}}</td>
+								<td><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
 								<td>{{ x.dateString }}</td>
 								<td><a target="_blank" href="/job_output/{{x.uuid}}/input">view input</a></td>
 								<td><a target="_blank" href="/job_output/{{x.uuid}}/log">view log</a></td>
 								<td><a target="_blank" href="/job_output/{{x.uuid}}/energy" download>download  energy</a></td>
 								<td><a target="_blank" href="/job_output/{{x.uuid}}/trajectory" download>download trajectory</a></td>
-								<td><button ng-click="cancelJob(x); x.status = 'Completed'">Cancel Job</button></td>
+								<td><button ng-click="cancelJob(x); x.status = 'Completed'" ng-disabled="x.status == 'Completed'">Cancel Job</button></td>
+								<td><button ng-click="confirmDelete(x)" ng-disabled="x.status != 'Completed'">Delete Job</button></td>
 							</tr>
 						</table>
 
