@@ -20,6 +20,10 @@ add_user_query = (
 def registerUser(name, password, firstName, lastName, institution):
 	cnx = mysql.connector.connect(user='root', password='', database='azdna')
 	cursor = cnx.cursor()
+	
+	#check if the user already exists.
+	if(Account.getUserId(name)):
+		return -2 #value that is not none means user is in the database. return -2 error code.
 
 	verifycode = binascii.b2a_hex(os.urandom(15)).decode("utf-8")
 	user_data = (name, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), 0, int(time.time()), verifycode, "False", firstName, lastName, institution)
