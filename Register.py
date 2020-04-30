@@ -23,6 +23,7 @@ def registerUser(name, password, firstName, lastName, institution):
 	
 	#check if the user already exists.
 	if(Account.getUserId(name)):
+		cnx.close()
 		return -2 #value that is not none means user is in the database. return -2 error code.
 
 	verifycode = binascii.b2a_hex(os.urandom(15)).decode("utf-8")

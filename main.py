@@ -13,11 +13,16 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 def addDefaultParameters(parameters):
 	default_parameters = {
-		"verlet_skin":1,
+		"sim_type":"MD",
+		"max_density_multiplier":10,
+		"verlet_skin":0.5,
 		"time_scale":"linear",
 		"ensemble":"NVT",
+		"thermostat":"john",
 		"dt":"0.001",
+		"diff_coeff":2.5,
 		"backend_precision":"double",
+		"lastconf_file":"last_conf.dat",
 		"trajectory_file":"trajectory.dat",
 		"energy_file":"energy.dat",
 		"refresh_vel":1,
@@ -39,7 +44,15 @@ def handle_form():
 
 	json_data = request.get_json()
 
-	parameters = json_data["parameters"]
+	parameters = {}
+
+	for (file_name, _) in json_data["files"].items():
+		if(".top" in file_name):
+			parameters.update({"topology": file_name})
+		if(".dat" in file_name or ".conf" in file_name or ".oxdna" in file_name):
+			parameters.update({"conf_file": file_name})
+
+	parameters.update(json_data["parameters"])
 	files = json_data["files"]
 
 	addDefaultParameters(parameters)

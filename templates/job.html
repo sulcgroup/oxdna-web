@@ -118,8 +118,8 @@ table tr:nth-child(even) {
 
 						<div ng-hide="job.analysisJobId == null">
 							<a href="/job_output/{{job.uuid}}/analysis_log" target="_blank">View log</a><br>
-							<a href="/job_output/{{job.uuid}}/mean" target="_blank" download>View mean</a><br>
-							<a href="/job_output/{{job.uuid}}/deviations" target="_blank" download>View deviations</a>
+							<a href="/job_output/{{job.uuid}}/mean" target="_blank" download=mean.dat>View mean</a><br>
+							<a href="/job_output/{{job.uuid}}/deviations" target="_blank" download=devs.json>View deviations</a>
 						</div>
 
 					</div>
