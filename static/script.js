@@ -60,7 +60,7 @@ app.factory("JobsService", function($http) {
 			data = data.filter(x => x.job_type == 0);
 
 			cb(data);
-		}, function errorCallback() {````
+		}, function errorCallback() {
 			cb([]);
 		});
 	}
@@ -271,6 +271,7 @@ app.controller("JobsCtrl", function($scope, JobsService) {
 		request.onload = function() {
 			console.log(request.response);
 			job.status = "Deleted"
+			location.reload()
 		}
 	}
 
@@ -323,7 +324,7 @@ app.controller("MainCtrl", function($scope, $http) {
 		$scope.data["job_title"] = "My Job"
 		$scope.data["steps" ] = 1e9;
 		$scope.data["salt_concentration"] = 1.0;
-		$scope.data["backend"] = "CPU";
+		$scope.data["backend"] = "CUDA";
 		$scope.data["interaction_type"]= "DNA";
 		$scope.data["print_conf_interval"] = 5e5;
 		$scope.data["print_energy_every"] = 5e4;
