@@ -3,6 +3,7 @@ jobfiles/*
 !jobfiles/.gitkeep 
 *.py[cod]
 *.log
+.vscode
 
 #logfiles
 pid.pid
