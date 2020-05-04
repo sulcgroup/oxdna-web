@@ -155,8 +155,9 @@ def createOxDNAInput(parameters, job_directory, file_name, needs_relax):
 	#the secondary relax is a set length and run in molecular dynamics using GPU if requested
 	if file_name == "input_relax_MD":
 		unique_parameters["steps"] = 10000000
-		unique_parameters["dt"] = 0.0005
+		unique_parameters["dt"] = 0.0001
 		unique_parameters["thermostat"] = "bussi"
+		unique_parameters["T"] = "0C"
 		unique_parameters["conf_file"] = "MC_relax.dat"
 		unique_parameters["lastconf_file"] = "MD_relax.dat"
 		unique_parameters["restart_step_counter"] = 0
