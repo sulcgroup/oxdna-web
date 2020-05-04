@@ -328,6 +328,7 @@ def getJobOutput(uuid, desired_output):
 	desired_output_map = {
 		"energy":"energy.dat",
 		"trajectory":"trajectory.dat",
+                "topology": "output.top",
 		"log":"job_out.log",
 		"analysis_log":"analysis_out.log",
 		"input":"input",
