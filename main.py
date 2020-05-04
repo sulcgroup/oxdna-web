@@ -26,7 +26,8 @@ def addDefaultParameters(parameters):
 		"trajectory_file":"trajectory.dat",
 		"energy_file":"energy.dat",
 		"refresh_vel":1,
-		"restart_step_counter":1
+		"restart_step_counter":1,
+		"newtonian_steps": 103
 	}
 
 	for (key, value) in default_parameters.items():
@@ -328,7 +329,8 @@ def getJobOutput(uuid, desired_output):
 	desired_output_map = {
 		"energy":"energy.dat",
 		"trajectory":"trajectory.dat",
-                "topology": "output.top",
+        "topology": "output.top",
+		"last_conf": "last_conf.dat",
 		"log":"job_out.log",
 		"analysis_log":"analysis_out.log",
 		"input":"input",
