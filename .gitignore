@@ -9,3 +9,6 @@ jobfiles/*
 pid.pid
 nohup.out
 logs/*
+
+#oxView (its a separate repository)
+static/oxdna-viewer/*
