@@ -136,6 +136,7 @@ table tr:nth-child(even) {
 								<td>Input</td>
 								<td>Log</td>
 								<td>Energy</td>
+								<td>Last config</td>
 								<td>Trajectory</td>
 								<td>Cancel</td>
 								<td>Delete</td>
@@ -145,13 +146,19 @@ table tr:nth-child(even) {
 								<td><a href="/job/{{x.uuid}}">{{ x.name }}</a></td>
 								<td><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
 								<td>{{ x.dateString }}</td>
-								<td><a target="_blank" href="/job_output/{{x.uuid}}/input">view input</a></td>
-								<td><a target="_blank" href="/job_output/{{x.uuid}}/log">view log</a></td>
-								<td><a target="_blank" href="/job_output/{{x.uuid}}/energy" download="energy.dat">download  energy</a></td>
-								<td>
-                                                                    <a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{x.uuid}}/trajectory&topology=/job_output/{{x.uuid}}/topology">view</a><br>
-                                                                    <a target="_blank" href="/job_output/{{x.uuid}}/trajectory" download="trajectory.dat">download</a>
-                                                                </td>
+								<td><a target="_blank" href="/job_output/{{x.uuid}}/input">view</a>
+									<a target="_blank" href="/job_output/{{x.uuid}}/input" download="{{x.name}}_input">download</a>
+								</td>
+								<td><a target="_blank" href="/job_output/{{x.uuid}}/log">view</a>
+									<a target="_blank" href="/job_output/{{x.uuid}}/log" download="{{x.name}}.log">download</a>
+								</td>
+								<td><a target="_blank" href="/job_output/{{x.uuid}}/energy">view</a>
+									<a target="_blank" href="/job_output/{{x.uuid}}/energy" download="{{x.name}}_energy.dat">download</a>
+								</td>
+								<td><a tartet="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{x.uuid}}/last_conf&topology=/job_output/{{x.uuid}}/topology">view</a>
+									<a target="_blank" href="/job_output/{{x.uuid}}/last_conf" download="{{x.name}}_last_conf.dat">download</a>
+								</td>
+								<td><a target="_blank" href="/job_output/{{x.uuid}}/trajectory" download="{{x.name}}_trajectory.dat">download</a></td>
 								<td><button ng-click="cancelJob(x); x.status = 'Completed'" ng-disabled="x.status == 'Completed'">Cancel Job</button></td>
 								<td><button ng-click="confirmDelete(x)" ng-disabled="x.status != 'Completed' && x.status != 'Canceled'">Delete Job</button></td>
 							</tr>
