@@ -26,6 +26,7 @@ def registerUser(name, password, firstName, lastName, institution, requires_veri
 		cnx.close()
 		return -2 #value that is not none means user is in the database. return -2 error code.
 
+	verifycode = binascii.b2a_hex(os.urandom(15)).decode("utf-8")
 	user_data = (name, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), 0, int(time.time()), verifycode, "False", firstName, lastName, institution)
 
 	if requires_verification == False:
@@ -37,7 +38,6 @@ def registerUser(name, password, firstName, lastName, institution, requires_veri
 
 	user_id = Account.getUserId(name)
 
-	verifycode = binascii.b2a_hex(os.urandom(15)).decode("utf-8")
 	verifylink = "http://10.126.22.10/verify?id={userId}&verify={verifycode}".format(userId = user_id, verifycode = verifycode)
 
 	EmailScript.SendEmail("-t 0 -n {username} -u {verifylink} -d {email}".format(username = name, verifylink = verifylink, email = name).split(" "))
