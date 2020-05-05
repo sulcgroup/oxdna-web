@@ -285,8 +285,7 @@ def createJobForUserIdWithData(userId, jsonData):
 	backend = parameters["backend"]
 	if backend == "CUDA":
 		backend = "GPU"
-		parameters.update([("newtonian_steps", 103), 
-							("CUDA_list", "verlet"), 
+		parameters.update([	("CUDA_list", "verlet"), 
 							("CUDA_sort_every", 0), 
 							("use_edge", 1), 
 							("edge_n_forces", 1)
