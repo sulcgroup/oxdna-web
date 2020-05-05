@@ -118,9 +118,9 @@ table tr:nth-child(even) {
 
 						<div ng-hide="job.analysisJobId == null">
 							<a href="/job_output/{{job.uuid}}/analysis_log" target="_blank">View log</a><br>
-                                                        <a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{job.uuid}}/mean&topology=/job_output/{{job.uuid}}/topology">View mean</a> 
-							<a href="/job_output/{{job.uuid}}/mean" target="_blank" download=mean.dat>[download]</a><br>
-							<a href="/job_output/{{job.uuid}}/deviations" target="_blank" download=devs.json>View deviations</a>
+                            <a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{job.uuid}}/mean&topology=/job_output/{{job.uuid}}/topology&overlay=/job_output/{{job.uuid}}/deviations">View mean+deviations</a> <br>
+							<a href="/job_output/{{job.uuid}}/mean" target="_blank" download={{job.name}}_mean.dat>Download mean</a><br>
+							<a href="/job_output/{{job.uuid}}/deviations" target="_blank" download={{job.name}}_devs.json>Download deviations</a>
 						</div>
 
 					</div>
