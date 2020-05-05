@@ -11,4 +11,4 @@ nohup.out
 logs/*
 
 #oxView (its a separate repository)
-static/oxdna-viewer/*
+static/oxdna-viewer
