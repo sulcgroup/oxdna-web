@@ -28,7 +28,6 @@ from main import app
 if __name__ == "__main__":
     app.run()
 ```
-=======
 You then start gunicorn from the command line with:
 
 ```
