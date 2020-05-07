@@ -16,6 +16,7 @@ except FileNotFoundError:
 yag = yagmail.SMTP(EMAIL_CREDENTIALS[0], EMAIL_CREDENTIALS[1])
 
 def SendEmail(args):
+	print("Now sending email...")
 
 
     argdict = {}
@@ -87,6 +88,7 @@ def SendEmail(args):
         #print(mailtosend[0])
         subject = subject.replace("\n", "")
         subject = codecs.decode(subject, 'unicode_escape')
+		print("EMAIL SENT!")
         yag.send(argdict.get("d")[0], subject, mailtosend)
 
 #parse arguments

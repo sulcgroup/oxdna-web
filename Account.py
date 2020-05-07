@@ -99,18 +99,16 @@ def getUsername(userId):
 
 def getUserId(username):
 	connection = Database.pool.get_connection()
-	results = None
+	
+	user_id = None
 
 	with connection.cursor() as cursor:
 		cursor.execute(get_userid_query, (username,))
-		results = cursor.fetchall()
+		user_id = cursor.fetchone()
 
 	connection.close()
 
-	if results is not None:
-		return results[0][0]
-	else:
-		return None
+	return user_id
 
 
 #checks verification code for user

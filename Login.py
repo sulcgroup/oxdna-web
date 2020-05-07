@@ -21,10 +21,14 @@ def loginUser(username, password):
 	user_id, password_hash, verified = None, None, None
 	verification_status = None
 
+	result = None
+
 	with connection.cursor() as cursor:
 		cursor.execute(query, (username,))
-		#res = cursor.fetchone()
-		user_id, password_hash, verified = cursor.fetchone()
+		result = cursor.fetchone()
+
+	if result is not None:
+		user_id, password_hash, verified = result
 
 	if user_id is None or password_hash is None:
 		connection.close()

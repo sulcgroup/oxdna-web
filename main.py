@@ -168,6 +168,7 @@ def verify():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+	print("NOW REGISTERING USER!")
 
 	if request.method == "GET":
 		return send_file("templates/register.html")
