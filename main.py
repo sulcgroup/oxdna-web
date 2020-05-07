@@ -225,15 +225,7 @@ def logout():
 
 @app.route("/SomeOtherRoute", methods=["GET"])
 def someOtherRoute():
-	'''
-	connection = Database.pool.get_connection()
 
-	with connection.cursor() as cursor:
-		pass
-
-
-	return jsonify(dat)
-	'''
 	result = None
 	connection = Database.pool.get_connection()
 
