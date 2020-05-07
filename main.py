@@ -9,7 +9,6 @@ import Register
 import Account
 import Admin
 import Database
-import MyTest
 
 app = Flask(__name__, static_url_path='/static', static_folder="static")
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -223,24 +222,6 @@ def logout():
 	session["user_id"] = None
 	return "You have logged out"
 
-
-@app.route("/SomeOtherRoute", methods=["GET"])
-def someOtherRoute():
-
-	result = None
-	connection = Database.pool.get_connection()
-
-	with connection.cursor() as cursor:
-		cursor.execute("SELECT * FROM Jobs")
-		result = cursor.fetchall()
-
-	print(result)
-	return jsonify(result)
-
-@app.route("/MyTest", methods=["GET"])
-def someTest():
-	dat = MyTest.someFunctionIHopeWorks()
-	return jsonify(dat)
 
 @app.route("/account", methods=["GET"])
 def account():
