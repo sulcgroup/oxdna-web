@@ -2,10 +2,8 @@ import os
 import time
 import uuid
 import subprocess
-import mysql.connector
 
-
-cnx = mysql.connector.connect(user='root', password='', database='azdna')
+import Database
 
 set_analysis_id_query = (
 	"UPDATE Jobs SET analysisJobId = %s WHERE uuid = %s"
@@ -204,8 +202,6 @@ def createOxDNAFile(parameters, job_directory, needs_relax=False):
 
 
 def createAnalysisForUserIdWithJob(userId, jobId):
-	cursor = cnx.cursor(buffered=True)
-
 	randomAnalysisId = str(uuid.uuid4())
 
 	user_directory = "/users/"+str(userId) + "/"
@@ -222,8 +218,11 @@ def createAnalysisForUserIdWithJob(userId, jobId):
 		jobId
 	)
 
-	cursor.execute(set_analysis_id_query, update_data)
-	cnx.commit()
+	connection = Database.pool.get_connection()
+
+	with connection.cursor() as cursor:
+		cursor.execute(set_analysis_id_query, update_data)
+
 
 	analysis_data = (
 		int(userId),
@@ -234,15 +233,16 @@ def createAnalysisForUserIdWithJob(userId, jobId):
 		None,
 		int(time.time())
 	)
-	cursor.execute(add_job_query, analysis_data)
-	cnx.commit()
-	cursor.close()
+
+	with connection.cursor() as cursor:
+		cursor.execute(add_job_query, analysis_data)
+	
+	connection.close()
 
 	return randomAnalysisId
 
 
 def createJobForUserIdWithData(userId, jsonData):
-	cursor = cnx.cursor(buffered=True)
 	randomJobId = str(uuid.uuid4())
 
 	user_directory = "/users/"+str(userId) + "/"
@@ -317,9 +317,12 @@ def createJobForUserIdWithData(userId, jsonData):
 		int(time.time())
 	)
 
-	cursor.execute(add_job_query, job_data)
-	cnx.commit()
-	cursor.close()
+	connection = Database.pool.get_connection()
+
+	with connection.cursor() as cursor:
+		cursor.execute(add_job_query, job_data)
+	
+	connection.close()
 
 	return True, job_number
 
@@ -342,48 +345,38 @@ def createJobDictionaryForTuple(data):
 
 
 def getJobsForUserId(userId):
-
-	temp_cnx = mysql.connector.connect(user='root', password='', database='azdna')
-	cursor = temp_cnx.cursor(buffered=True)
-
-	
-	cursor.execute(get_jobs_query, (int(userId),))
-	result = cursor.fetchall()
-
+	connection = Database.pool.get_connection()
 	payload = []
 
-	for data in result:
-		
-		job_data = createJobDictionaryForTuple(data)
-		job_data["status"] = getJobStatus(data[3])
-		payload.append(job_data)
+	with connection.cursor() as cursor:
+		cursor.execute(get_jobs_query, (int(userId),))
+		result = cursor.fetchall()
 
+		for data in result:
+			job_data = createJobDictionaryForTuple(data)
+			job_data["status"] = getJobStatus(data[3])
+			payload.append(job_data)
 
-	cursor.close()
-	temp_cnx.close()
+	connection.close()
+
 	return payload
 
 
 def getJobForUserId(jobId, userId):
-	temp_cnx = mysql.connector.connect(user='root', password='', database='azdna')
+	connection = Database.pool.get_connection()
 
-	cursor = temp_cnx.cursor(buffered=True)
-	cursor.execute(get_job_query, (jobId,))
-	result = cursor.fetchone()
+	result = None
 
-	cursor.close()
-	temp_cnx.close()
-	if(result is not None):
+	with connection.cursor() as cursor:
+		cursor.execute(get_job_query, (jobId,))
+		result = cursor.fetchone()
+
+	connection.close()
+
+	if result is not None:
 		return createJobDictionaryForTuple(result)
 	else:
 		return None
-
-
-
-#createJobForUserIdWithData(53, loldata)
-#getJobsForUserId(12)
-#createAnalysisForUserIdWithJob(1, "72a302e1-0efe-40ef-804e-dbffb4842b41")
-#getJobForUserId("72a302e1-0efe-40ef-804e-dbffb4842b41", 1)
 
 
 def runOneStepJob(job_directory):
@@ -412,36 +405,39 @@ def runOneStepJob(job_directory):
 def cancelJob(job_name):
 	subprocess.Popen(["scancel", "-n", job_name], stdout=subprocess.PIPE)
 
-	temp_cnx = mysql.connector.connect(user='root', password='', database='azdna')
-	cursor = temp_cnx.cursor(buffered=True)
+	connection = Database.pool.get_connection()
 
-	
-	cursor.execute(get_status, (job_name,))
-	result = cursor.fetchone()
-	prev_status = result[0]
+	prev_status = None
+
+	with connection.cursor() as cursor:
+		cursor.execute(get_status, (job_name,))
+		result = cursor.fetchone()
+		prev_status = result[0]
 
 	if prev_status == "Pending":
 		cursor.execute(update_status, (job_name, "Canceled",))
 
-	cursor.close()
-	temp_cnx.close()
+	connection.close()
 
 def deleteJob(job_uuid):
 	print("Deleting Job")
 	#need job name and user id
 	#get user id
-	temp_cnx = mysql.connector.connect(user='root', password='', database='azdna')
 
-	cursor = temp_cnx.cursor(buffered=True)
-	cursor.execute(get_userId_for_job_uuid, (job_uuid,))
-	result = cursor.fetchone()
-	userId = result[0]
+	user_id = None
 
-	cursor.execute(remove_job, (job_uuid,))
+	connection = Database.pool.get_connection()
 
-	temp_cnx.commit()
-	cursor.close()
-	temp_cnx.close()
+	with connection.cursor() as cursor:
+		cursor.execute(get_userId_for_job_uuid, (job_uuid,))
+		result = cursor.fetchone()
+		user_id = result[0]
+
+	with connection.cursor() as cursor:
+		cursor.execute(remove_job, (job_uuid,))
+
+	
+	connection.close()
 	
 
 	job_path = "/users/" + str(userId) + "/" + job_uuid
@@ -450,10 +446,9 @@ def deleteJob(job_uuid):
 
 
 
-def getJobStatus(job_name):
-	temp_cnx = mysql.connector.connect(user='root', password='', database='azdna')
-	cursor = temp_cnx.cursor(buffered=True)
-	
+def getJobStatus(job_name):	
+	connection = Database.pool.get_connection()
+
 	pipe = subprocess.Popen(["squeue", "-n", job_name], stdout=subprocess.PIPE)
 	output = pipe.communicate()[0].decode("ascii")[:-1]
 	if output == "":
@@ -476,18 +471,21 @@ def getJobStatus(job_name):
 	elif code == "CD":
 		status = "Completed"
 	elif code == "NONE":
-		cursor.execute(get_status, (job_name,))
-		result = cursor.fetchone()
-		status = result[0]
+
+		status = None
+		with connection.cursor() as cursor:
+			cursor.execute(get_status, (job_name,))
+			result = cursor.fetchone()
+			status = result[0]
+
+		#this makes no sense semantically
 		if status == None:
 			status = "Completed"
 		
-	
-	cursor.execute(update_status, (job_name, status,))	
+	with connection.cursor() as cursor:
+		cursor.execute(update_status, (job_name, status,))	
 
-	temp_cnx.commit()
-	cursor.close()
-	temp_cnx.close()
+	connection.close()
 	
 	return status
 

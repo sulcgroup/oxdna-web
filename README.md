@@ -14,7 +14,11 @@ The main entry-point of the application, where all the routes are defined, can b
 
 ## Running as a Production Server
 
+<<<<<<< HEAD
 If you invoke "python3 main.py" you will be running the development version of the Flask webserver, but it is not suitable for production, is not stable and does not scale. 
+=======
+If you invoke "python3 [main.py](main.py)" you will be running the development version of the Flask webserver, but it is not suitable for production, is not stable and does not scale. 
+>>>>>>> 010693ef151332b58bbea507820378d93b6204d7
 
 To run a proper production server, you will need to use [gunicorn](https://pypi.org/project/gunicorn/).
 
@@ -29,8 +33,38 @@ if __name__ == "__main__":
     app.run()
 ```
 
+<<<<<<< HEAD
+=======
+You then start gunicorn from the command line with:
+
+```
+gunicorn --bind 0.0.0.0:9000 wsgi:app --workers=3
+```
+
+>>>>>>> 010693ef151332b58bbea507820378d93b6204d7
 ## Interfacing with the Database
 
 This application makes use of the [pymysql](https://pypi.org/project/PyMySQL/) and [pymysql-pool](https://pypi.org/project/pymysql-pool/) libraries for interfacing with MySQL.
 
+<<<<<<< HEAD
 You can see how this interface is configured within the [Database](Database.py) module. 
+=======
+You can see how this interface is configured within the [Database](Database.py) module. Ten connections are created for interfacing with the MySQL database, these connections are then stored in a pool and re-used throughout  the lifecycle of the application.
+
+In order to use a connection, use the following procedure:
+```python
+import Database
+
+connection = Database.pool.get_connection()
+results = None
+
+with connection.cursor() as cursor:
+	cursor.execute("SELECT * FROM Users")
+	results = cursor.fetchall()
+
+#Remember this!
+connection.close()
+```
+
+Please be sure to close your connection, or else the server will crash if it exhausts the connection pool.
+>>>>>>> 010693ef151332b58bbea507820378d93b6204d7
