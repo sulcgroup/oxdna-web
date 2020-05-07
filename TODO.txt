@@ -1,3 +1,4 @@
+- Use proper templating so sidebar is dynamic!
 - Run production version of Flask server
 - Only allow analysis jobs to be ran after main job has finished
 - Show progress of analysis jobs
