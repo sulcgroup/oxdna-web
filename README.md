@@ -28,16 +28,12 @@ from main import app
 if __name__ == "__main__":
     app.run()
 ```
-
-<<<<<<< HEAD
 =======
 You then start gunicorn from the command line with:
 
 ```
 gunicorn --bind 0.0.0.0:9000 wsgi:app --workers=3
 ```
-
->>>>>>> 010693ef151332b58bbea507820378d93b6204d7
 ## Interfacing with the Database
 
 This application makes use of the [pymysql](https://pypi.org/project/PyMySQL/) and [pymysql-pool](https://pypi.org/project/pymysql-pool/) libraries for interfacing with MySQL.
