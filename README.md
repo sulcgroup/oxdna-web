@@ -50,4 +50,4 @@ with connection.cursor() as cursor:
 connection.close()
 ```
 
-Please be sure to close your connection, or else the server will crash if it exists the connection pool.
+Please be sure to close your connection, or else the server will crash if it exhausts the connection pool.
