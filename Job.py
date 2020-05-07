@@ -2,7 +2,13 @@ import os
 import time
 import uuid
 import subprocess
+
+
 import mysql.connector
+
+
+import Database
+
 
 
 cnx = mysql.connector.connect(user='root', password='', database='azdna')
@@ -342,25 +348,20 @@ def createJobDictionaryForTuple(data):
 
 
 def getJobsForUserId(userId):
-
-	temp_cnx = mysql.connector.connect(user='root', password='', database='azdna')
-	cursor = temp_cnx.cursor(buffered=True)
-
-	
-	cursor.execute(get_jobs_query, (int(userId),))
-	result = cursor.fetchall()
-
+	connection = Database.pool.get_connection()
 	payload = []
 
-	for data in result:
-		
-		job_data = createJobDictionaryForTuple(data)
-		job_data["status"] = getJobStatus(data[3])
-		payload.append(job_data)
+	with connection.cursor() as cursor:
+		cursor.execute(get_jobs_query, (int(userId),))
+		result = cursor.fetchall()
 
+		for data in result:
+			job_data = createJobDictionaryForTuple(data)
+			job_data["status"] = getJobStatus(data[3])
+			payload.append(job_data)
 
-	cursor.close()
-	temp_cnx.close()
+	connection.close()
+
 	return payload
 
 
@@ -377,13 +378,6 @@ def getJobForUserId(jobId, userId):
 		return createJobDictionaryForTuple(result)
 	else:
 		return None
-
-
-
-#createJobForUserIdWithData(53, loldata)
-#getJobsForUserId(12)
-#createAnalysisForUserIdWithJob(1, "72a302e1-0efe-40ef-804e-dbffb4842b41")
-#getJobForUserId("72a302e1-0efe-40ef-804e-dbffb4842b41", 1)
 
 
 def runOneStepJob(job_directory):
