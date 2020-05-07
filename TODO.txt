@@ -3,3 +3,4 @@
 - Account.py clean-up
 - File_Checker.py redo+clean-up
 - EmailScript.py redo+clean-up
+- Integrity constraints on cross-table references to ensure the state of the database is always consistent (users->user_id->jobs) for example

@@ -4,7 +4,6 @@ import mysql.connector
 import time
 import bcrypt
 
-
 import Database
 
 query = ("SELECT id, password, verified FROM Users WHERE username = %s")
@@ -53,27 +52,34 @@ def loginUser(username, password):
 
 
 def updatePasssword(userId, old_password, new_password):
-	cnx = mysql.connector.connect(user='root', password='', database='azdna')
-	cursor = cnx.cursor()
 
-	cursor.execute(find_by_user_id_query, (userId,))
+	connection = Database.pool.get_connection()
 
-	for (id, stored_password) in cursor:
-		stored_password = stored_password.encode("utf-8")
+	result = None
 
-		if(bcrypt.checkpw(old_password.encode("utf-8"), stored_password)):
+	with connection.cursor() as cursor:
+		cursor.execute(find_by_user_id_query, (userId,))
+		result = cursor.fetchone()
 
-			user_data = (
-				bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt()),
-				userId
-			)
+	if result is None:
+		return "There was an error with your account"
 
+	user_id, stored_password = result
+
+	password_check = bcrypt.checkpw(old_password.encode("utf8"), stored_password.encode("utf8"))
+
+	user_data = (
+		bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt()),
+		userId
+	)
+
+	if password_check:
+		with connection.cursor() as cursor:
 			cursor.execute(update_password_query, user_data)
-			cnx.commit()
-			cnx.close()
 
-			return "Password updated"
+	connection.close()
 
-		else:
-			return "Invalid password"
-
+	if password_check:
+		return "Password updated"
+	else:
+		return "Invalid password"

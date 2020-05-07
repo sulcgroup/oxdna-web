@@ -2,7 +2,6 @@ import os
 import time
 import uuid
 import subprocess
-import mysql.connector
 
 import Database
 
@@ -100,15 +99,18 @@ def getUsername(userId):
 def getUserId(username):
 	connection = Database.pool.get_connection()
 	
-	user_id = None
+	result = None
 
 	with connection.cursor() as cursor:
 		cursor.execute(get_userid_query, (username,))
-		user_id = cursor.fetchone()
+		result = cursor.fetchone()
 
 	connection.close()
 
-	return user_id
+	if result is not None:
+		return result[0]
+	else:
+		return None
 
 
 #checks verification code for user

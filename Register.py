@@ -1,6 +1,5 @@
 from __future__ import print_function
 from datetime import date, datetime, timedelta
-import mysql.connector
 import time
 import Login
 import Account
@@ -46,9 +45,4 @@ def registerUser(name, password, firstName, lastName, institution, requires_veri
 	return user_id
 
 
-'''
-import random
-letters = "abcdefghijklmnopqrstuvwxyz"
-random_name = "".join([random.choice(letters) for _ in range(5)])
-registerUser(random_name, "pass123")
-'''
+
