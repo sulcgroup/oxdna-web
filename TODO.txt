@@ -1,0 +1,9 @@
+- Run production version of Flask server
+- Only allow analysis jobs to be ran after main job has finished
+- Show progress of analysis jobs
+- I really wish "verified" or whatever was a BOOL type in the MySQL table
+- Would be nice to have all Slurm interfacing abstracted to a Slurm.py class
+- Account.py clean-up
+- File_Checker.py redo+clean-up
+- EmailScript.py redo+clean-up
+- Integrity constraints on cross-table references to ensure the state of the database is always consistent (users->user_id->jobs) for example

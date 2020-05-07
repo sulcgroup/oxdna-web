@@ -1,13 +1,9 @@
 from __future__ import print_function
 from datetime import date, datetime, timedelta
-import mysql.connector
 import time
 import bcrypt
 
-
-
-cnx = mysql.connector.connect(user='root', password='', database='azdna')
-cursor = cnx.cursor()
+import Database
 
 query = ("SELECT id, password, administrator FROM Users WHERE username = %s")
 adminQuery = ("SELECT administrator FROM Users WHERE id = %s")
@@ -19,44 +15,97 @@ userJobCountQuery = ("SELECT COUNT(*) FROM Jobs WHERE userId = %s")
 userIDQuery = ("SELECT id FROM Users WHERE username = %s")
 
 
-
 def getRecentlyAddedUsers():
-	cursor.execute(recentUsersQuery)
+	connection = Database.pool.get_connection()
 
-	newUsers = []
-	for (id, username) in cursor:
-		newUsers.append(username)
-	return newUsers
+	result = []
 
-def checkIfAdmin(uuid):
-	cursor.execute(adminQuery, (uuid,))
-	for (admin) in cursor:
-		return admin[0]
+	with connection.cursor() as cursor:
+		cursor.execute(recentUsersQuery)
+		result = cursor.fetchall()
+	
+	connection.close()
 
-def checkIfPrivaleged(uuid):
-	cursor.execute(privalegedQuery, (uuid,))
-	for (priv) in cursor:
-		return priv[0]
+	usernames = []
 
-def promoteToAdmin(uuid):
-	cursor.execute(updateToAdministrator, (uuid,))
-	cnx.commit()
+	for user_id, username in result:
+		usernames.append(username)
 
-def promoteToPrivaleged(uuid):
-	cursor.execute(updateToPrivaleged, (uuid,))
-	cnx.commit()
+	return usernames
 
-def getUserJobCount(uuid):
-	cursor.execute(userJobCountQuery, (uuid,))
-	for (count) in cursor:
-		return count[0]
+def checkIfAdmin(user_id):
+	connection = Database.pool.get_connection()
+
+	result = None
+	with connection.cursor() as cursor:
+		cursor.execute(adminQuery, (user_id,))
+		result = cursor.fetchone()
+
+	connection.close()
+
+	if result is not None:
+		return result[0]
+	else:
+		return False
+
+def checkIfPrivaleged(user_id):
+	connection = Database.pool.get_connection()
+
+	result = None
+	with connection.cursor() as cursor:
+		cursor.execute(privalegedQuery, (user_id,))
+		result = cursor.fetchone()
+
+	connection.close()
+
+	if result is not None:
+		return result[0]
+	else:
+		return False
+
+def promoteToAdmin(user_id):
+	connection = Database.pool.get_connection()
+
+	with connection.cursor() as cursor:
+		cursor.execute(updateToAdministrator, (user_id,))
+
+	connection.close()
+
+def promoteToPrivaleged(user_id):
+	connection = Database.pool.get_connection()
+
+	with connection.cursor() as cursor:
+		cursor.execute(updateToPrivaleged, (user_id,))
+
+	connection.close()
+
+def getUserJobCount(user_id):
+
+	connection = Database.pool.get_connection()
+
+	result = None
+	with connection.cursor() as cursor:
+		cursor.execute(userJobCountQuery, (user_id,))
+		result = cursor.fetchone()
+	connection.close()
+
+	if result is not None:
+		return result[0]
+	else:
+		return 0
 
 def getID(username):
-	print(username)
-	cursor.execute(userIDQuery, (username.encode("utf-8"),))
-	for (id) in cursor:
-		print(id)
-		return id[0]
-	return 0
+	connection = Database.pool.get_connection()
+
+	result = None
+	with connection.cursor() as cursor:
+		cursor.execute(userIDQuery, (username.encode("utf-8"),))
+		result = cursor.fetchone()
+	connection.close()
+
+	if result is not None:
+		return result[0]
+	else:
+		return 0
 
 #loginUser("david", "pass1234")

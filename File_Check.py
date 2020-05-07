@@ -17,6 +17,7 @@ from Job import getJobForUserId
 #    cursor.execute(find_username_by_id_query(userId))
 #    return cursor.username
 
+
 def isHex(string):
     try:
         int(string, 16)
