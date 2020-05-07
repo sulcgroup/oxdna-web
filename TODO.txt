@@ -1,0 +1,5 @@
+- I really wish "verified" or whatever was a BOOL type in the MySQL table
+- Would be nice to have all Slurm interfacing abstracted to a Slurm.py class
+- Account.py clean-up
+- File_Checker.py redo+clean-up
+- EmailScript.py redo+clean-up

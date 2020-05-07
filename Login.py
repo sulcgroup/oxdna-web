@@ -4,37 +4,46 @@ import mysql.connector
 import time
 import bcrypt
 
-query = ("SELECT id, password FROM Users WHERE username = %s")
+
+import Database
+
+query = ("SELECT id, password, verified FROM Users WHERE username = %s")
 find_by_user_id_query = ("SELECT id, password FROM Users WHERE id = %s")
 update_password_query = ("UPDATE Users SET password = %s WHERE id = %s")
 get_verified_query = ("SELECT verified FROM Users WHERE id = %s")
 
 def loginUser(username, password):
-	print("loggin in user")
-	cnx = mysql.connector.connect(user='root', password='', database='azdna')
-	cursor = cnx.cursor()
 
-	cursor.execute(query, (username.encode("utf-8"),))
+	print("Now logging in user:", username)
 
-	for (id, hashed_password) in cursor.fetchall():
-		hashed_password_encoded = hashed_password.encode("utf-8")
+	connection = Database.pool.get_connection()
 
-		isValidPassword = bcrypt.hashpw(password.encode("utf-8"), hashed_password_encoded) == hashed_password_encoded
+	user_id, password_hash, verified = None, None, None
+	verification_status = None
 
-		if isValidPassword:
-			print("Password is valid")
-			cursor.execute(get_verified_query, (id,))
-			isVerified =  cursor.fetchall()
-			if(isVerified):
-				isVerified = isVerified[0][0]
-			if isVerified == "True":
-				return id
-			else:
-				return -2
+	with connection.cursor() as cursor:
+		cursor.execute(query, (username,))
+		#res = cursor.fetchone()
+		user_id, password_hash, verified = cursor.fetchone()
+
+	if user_id is None or password_hash is None:
+		connection.close()
+		return -1
+
+	with connection.cursor() as cursor:
+		cursor.execute(get_verified_query, (user_id,))
+		res = cursor.fetchone()
+		
+	connection.close()
+
+	password_check = bcrypt.checkpw(password.encode("utf8"), password_hash.encode("utf8"))
+
+	if password_check:
+		if verified == "True":
+			return user_id
 		else:
-			return -1
+			return -2
 
-	cnx.close()
 
 	return -1
 
@@ -64,6 +73,3 @@ def updatePasssword(userId, old_password, new_password):
 		else:
 			return "Invalid password"
 
-
-
-#print(updatePasssword("1", "admin", "admin"))
