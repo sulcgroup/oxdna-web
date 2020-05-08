@@ -8,6 +8,20 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/7edb57c827.js" crossorigin="anonymous"></script>
+
+<script>
+	$(document).ready(function(){
+    $('[data-toggle=tooltip]').hover(function(){
+        // on mouseenter
+        $(this).tooltip('show');
+    }, function(){
+        // on mouseleave
+        $(this).tooltip('hide');
+    });
+});
+</script>
+
 
 <link rel="stylesheet" href="/static/style.css">
 <style>
@@ -110,10 +124,17 @@ table tr:nth-child(even) {
 				<div class="card">
 					<div class="card-body">
 
-						<h1>{{job.name}}</h1>
+						<h1>Analysis Options</h1>
 
+						<h2>Mean and RMSF <a href="#" style="color:#999" 
+										title="Calculates the mean structure and computes per-nucleotide root mean square fluctuation from the mean" 
+										data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
+						</h2>
+						
+						
 						<div ng-show="job.analysisJobId == null"> 
-							<button ng-click="startAnalysis()">Start analysis</button>	
+							<button type="button" ng-click="startAnalysis()" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
+							
 						</div>
 
 						<div ng-hide="job.analysisJobId == null">
@@ -122,6 +143,12 @@ table tr:nth-child(even) {
 							<a href="/job_output/{{job.uuid}}/mean" target="_blank" download={{job.name}}_mean.dat>Download mean</a><br>
 							<a href="/job_output/{{job.uuid}}/deviations" target="_blank" download={{job.name}}_devs.json>Download deviations</a>
 						</div>
+						<br>
+
+						<h2>Align Trajectory  <a href="#" style="color:#999" 
+											title="Aligns all frames in a trajectory to the first, creating a smoother viewing experience" 
+											data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
+						</h2>
 
 					</div>
 

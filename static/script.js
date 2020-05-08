@@ -206,6 +206,7 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
 
 	$scope.viewing_job_uuid = $location.absUrl().split("/").pop();
 
+	//retrieves job information from URL
 	JobService.getJob($scope.viewing_job_uuid, function(data) {
 		console.log("DATA!:", data);
 		$scope.job = data;
