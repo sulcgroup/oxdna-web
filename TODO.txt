@@ -1,3 +1,4 @@
+- Move file downloads to Nginx
 - Use proper templating in Flask so sidebar is dynamic!
 - Run production version of Flask server
 - Only allow analysis jobs to be ran after main job has finished
