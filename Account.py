@@ -78,6 +78,8 @@ def getVerificationCode(userId):
 		cursor.execute(get_verify_code_query, (userId,))
 		results = cursor.fetchall()
 
+	connection.close()
+
 	if results is not None:
 		return results[0][0]
 	else:
@@ -90,6 +92,8 @@ def getUsername(userId):
 	with connection.cursor() as cursor:
 		cursor.execute(get_username_query, (userId,))
 		results = cursor.fetchall()
+
+	connection.close()
 
 	if results is not None:
 		return results[0][0]
@@ -121,6 +125,8 @@ def verifyUser(userId, VerifyCode):
 	with connection.cursor() as cursor:
 		cursor.execute(get_verify_code_query, (userId,))
 		code = cursor.fetchall()
+
+	connection.close()
 
 	if code is not None and code[0][0] == VerifyCode:
 		with connection.cursor() as cursor:
