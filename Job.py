@@ -107,6 +107,8 @@ cd {job_directory}""".	format(
 	for f in input_files:
 		sbatch_file += "\n/opt/oxdna/oxDNA/build/bin/oxDNA {file_name}".format(file_name=f)
 
+	sbatch_file += "\npython3 /opt/zip_traj.py"
+
 	file_name = "sbatch.sh"
 	file_path = job_directory + file_name
 

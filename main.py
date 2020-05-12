@@ -334,7 +334,8 @@ def getJobOutput(uuid, desired_output):
 
 	desired_output_map = {
 		"energy":"energy.dat",
-		"trajectory":"trajectory.dat",
+		"trajectory_zip":"trajectory.zip",
+		"trajectory_txt":"trajectory.dat",
         "topology": "output.top",
 		"last_conf": "last_conf.dat",
 		"log":"job_out.log",
@@ -352,14 +353,12 @@ def getJobOutput(uuid, desired_output):
 	job_directory =  user_directory + uuid + "/"
 	desired_file_path = job_directory + desired_output_map[desired_output]
 
-	desired_file = open(desired_file_path, "r")
-
-
-
-
-	desired_file_contents = desired_file.read()
-
-	return Response(desired_file_contents, mimetype='text/plain')
+	if not "trajectory" in desired_output:
+		desired_file = open(desired_file_path, "r")
+		desired_file_contents = desired_file.read()
+		return Response(desired_file_contents, mimetype='text/plain')
+	else:
+		return send_file(desired_file_path)
 
 @app.route("/admin")
 def admin():
