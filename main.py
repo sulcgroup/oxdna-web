@@ -1,5 +1,5 @@
 import os
-from flask import Flask, Response, request, send_file, session, jsonify, redirect
+from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort
 import requests
 
 
@@ -354,11 +354,24 @@ def getJobOutput(uuid, desired_output):
 	desired_file_path = job_directory + desired_output_map[desired_output]
 
 	if not "trajectory" in desired_output:
-		desired_file = open(desired_file_path, "r")
-		desired_file_contents = desired_file.read()
-		return Response(desired_file_contents, mimetype='text/plain')
+		try:
+			desired_file = open(desired_file_path, "r")
+			desired_file_contents = desired_file.read()
+			return Response(desired_file_contents, mimetype='text/plain')
+		except:
+			abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=uuid))
+
 	else:
-		return send_file(desired_file_path)
+		#backwards compatibility for both compressed and uncompressed filess
+		try:
+			a = open(desired_file_path, "r")
+		except:
+			desired_file_path = job_directory + desired_output_map["trajectory_txt"]
+			try:
+				a = open(desired_file_path, "r")
+			except:
+				abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=uuid))
+		return send_file(desired_file_path, as_attachment=True)
 
 @app.route("/admin")
 def admin():
