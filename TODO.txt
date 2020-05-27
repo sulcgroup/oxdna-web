@@ -1,3 +1,5 @@
+- Move file downloads to Nginx
+- Use proper templating in Flask so sidebar is dynamic!
 - Run production version of Flask server
 - Only allow analysis jobs to be ran after main job has finished
 - Show progress of analysis jobs
@@ -7,3 +9,5 @@
 - File_Checker.py redo+clean-up
 - EmailScript.py redo+clean-up
 - Integrity constraints on cross-table references to ensure the state of the database is always consistent (users->user_id->jobs) for example
+- Move auths, and directories to ENV variables (for example "/users" folder)
+- Rename DB column, change Job->Analyses relational representation so that analyses/offspring jobs point to their parent

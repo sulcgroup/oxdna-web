@@ -1,5 +1,5 @@
 import os
-from flask import Flask, Response, request, send_file, session, jsonify, redirect
+from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort
 import requests
 
 
@@ -9,7 +9,6 @@ import Register
 import Account
 import Admin
 import Database
-import MyTest
 
 app = Flask(__name__, static_url_path='/static', static_folder="static")
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -224,24 +223,6 @@ def logout():
 	return "You have logged out"
 
 
-@app.route("/SomeOtherRoute", methods=["GET"])
-def someOtherRoute():
-
-	result = None
-	connection = Database.pool.get_connection()
-
-	with connection.cursor() as cursor:
-		cursor.execute("SELECT * FROM Jobs")
-		result = cursor.fetchall()
-
-	print(result)
-	return jsonify(result)
-
-@app.route("/MyTest", methods=["GET"])
-def someTest():
-	dat = MyTest.someFunctionIHopeWorks()
-	return jsonify(dat)
-
 @app.route("/account", methods=["GET"])
 def account():
 
@@ -345,6 +326,32 @@ def getJobs():
 	return jsonify(jobs)
 
 
+@app.route("/ufile/<uuid>/<desired_output>")
+def getUserfile(uuid, desired_output):
+	if session.get("user_id") is None:
+			return "You must be logged in to view the output of a job"
+
+	desired_output_map = {
+		"energy":"energy.dat",
+		"trajectory_zip":"trajectory.zip",
+		"trajectory_txt":"trajectory.dat",
+		"topology": "output.top",
+		"last_conf": "last_conf.dat",
+		"log":"job_out.log",
+		"analysis_log":"analysis_out.log",
+		"input":"input",
+		"mean":"mean.dat",
+		"deviations":"deviations.json"
+	}
+
+	if desired_output not in desired_output_map:
+		return "You must specify a valid desired output"
+
+	file_path =  "/userfiles/" + str(session["user_id"]) + "/" + uuid + "/" + desired_output_map[desired_output]
+
+	print(file_path)
+	return redirect(file_path)
+
 @app.route("/job_output/<uuid>/<desired_output>")
 def getJobOutput(uuid, desired_output):
 
@@ -353,7 +360,8 @@ def getJobOutput(uuid, desired_output):
 
 	desired_output_map = {
 		"energy":"energy.dat",
-		"trajectory":"trajectory.dat",
+		"trajectory_zip":"trajectory.zip",
+		"trajectory_txt":"trajectory.dat",
         "topology": "output.top",
 		"last_conf": "last_conf.dat",
 		"log":"job_out.log",
@@ -371,14 +379,25 @@ def getJobOutput(uuid, desired_output):
 	job_directory =  user_directory + uuid + "/"
 	desired_file_path = job_directory + desired_output_map[desired_output]
 
-	desired_file = open(desired_file_path, "r")
+	if not "trajectory" in desired_output:
+		try:
+			desired_file = open(desired_file_path, "r")
+			desired_file_contents = desired_file.read()
+			return Response(desired_file_contents, mimetype='text/plain')
+		except:
+			abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=uuid))
 
-
-
-
-	desired_file_contents = desired_file.read()
-
-	return Response(desired_file_contents, mimetype='text/plain')
+	else:
+		#backwards compatibility for both compressed and uncompressed filess
+		try:
+			a = open(desired_file_path, "r")
+		except:
+			desired_file_path = job_directory + desired_output_map["trajectory_txt"]
+			try:
+				a = open(desired_file_path, "r")
+			except:
+				abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=uuid))
+		return send_file(desired_file_path, as_attachment=True)
 
 @app.route("/admin")
 def admin():
@@ -445,4 +464,5 @@ def index():
 	else:
 		return redirect("/login")
 
-app.run(host="0.0.0.0", port=9000)
+if __name__ == '__main__':
+	app.run(host="0.0.0.0", port=9000)
