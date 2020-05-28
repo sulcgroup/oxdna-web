@@ -206,8 +206,8 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
 
 	$scope.viewing_job_uuid = $location.absUrl().split("/").pop();
 
-	//retrieves job information from URL
-	JobService.getJob($scope.viewing_job_uuid, function(data) {
+	//update the $scope variable to make HTML tables dynamic
+	updateJobScope = function (data) {
 		console.log("DATA!:", data);
 		$scope.job = data["job_data"][0];
 		$scope.associated_jobs = data["associated_jobs"];
@@ -218,8 +218,10 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
 		}
 		$scope.associated_jobs.sort((a, b) => parseInt(b["creation_date"]) - parseInt(a["creation_date"]))
 		$scope.mean = $scope.associated_jobs.filter(x => x["job_type"] == MEAN);
-		console.log($scope.associated_jobs)
-	})
+	}
+
+	//retrieves job information from URL
+	JobService.getJob($scope.viewing_job_uuid, updateJobScope);
 
 	$scope.startAnalysis = function() {
 
@@ -228,12 +230,13 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
 		//this callback function needs some meat (mostly to throw an error to the page)
 		JobService.startAnalysisForJob($scope.viewing_job_uuid, function(success, analysisId) {
 			if(success) {
-				console.log("started analysis, jobID =", analysisId);
+				console.log("started analysis, jobID =", analysisId);	
+				JobService.getJob($scope.viewing_job_uuid, updateJobScope);	
 			} else {
 				console.log("Failed to create analysis!");
 			}
 		})
-
+		
 	}
 
 })
