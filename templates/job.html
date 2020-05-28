@@ -136,7 +136,7 @@
 
 			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-					<h1 class="h2">Viewing Job: {{job.name}}</h1>
+					<h1 class="h2">Viewing Analyses for Job: {{job.name}}</h1>
 				</div>
 			
 
@@ -144,19 +144,20 @@
 				<div class="card">
 					<div class="card-body">
 
-						<h1>Analysis Options</h1>
-
 						<h2>Mean and RMSF <a href="#" style="color:#999" 
 										title="Calculates the mean structure and computes per-nucleotide root mean square fluctuation from the mean" 
 										data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
 						</h2>
 						
 						
-						<div> 
-							<button type="button" ng-click="startAnalysis()" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
+						<div ng-show="mean[0] == undefined"> 
+							<button type="button" ng-click="startAnalysis('mean')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
+						</div>
+						<div ng-hide="mean[0] == undefined"> 
+							<button type="button" ng-click="startAnalysis('mean')" ngbTooltip="Help?" placement="right" container="body"> Redo analysis</button>	
 						</div>
 
-						<div ng-hide="mean == null">
+						<div ng-hide="mean[0] == undefined">
 							<table>
 								<tr>
 									<td>Job Name</td>
@@ -189,6 +190,32 @@
 							title="Aligns all frames in a trajectory to the first, creating a smoother viewing experience" 
 							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
 						</h2>
+						<div ng-show="align[0] == undefined"> 
+							<button type="button" ng-click="startAnalysis('align')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
+						</div>
+						<div ng-hide="align[0] == undefined"> 
+							<button type="button" ng-click="startAnalysis('align')" ngbTooltip="Help?" placement="right" container="body"> Redo analysis</button>	
+						</div>
+
+						<div ng-hide="align[0] == undefined">
+							<table>
+								<tr>
+									<td>Job Name</td>
+									<td>Status</td>
+									<td>Started</td>
+									<td>Log</td>
+									<td>Aligned Trajectory</td>
+								</tr>
+								<tr ng-repeat="x in align">
+									<td>Align Trajectory</td>
+									<td><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
+									<td>{{ x.dateString }}</td>
+									<td><a href="/job_output/{{x.sim_job_id}}/analysis_log" target="_blank">View log</a></td>
+									<td><a href="/job_output/{{x.sim_job_id}}/aligned_traj" target="_blank" download={{job.name}}_aligned.dat>Download aligned trajectory</a></br>
+									</td>
+								</tr>
+							</table>
+						</div>
 					</div>
 				</div>
 

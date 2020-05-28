@@ -108,10 +108,8 @@ def job_status(jobId):
 	return status
 
 
-@app.route('/api/create_analysis/<jobId>', methods=['POST'])
-def create_analysis(jobId):
-
-	print("QUERIED!")
+@app.route('/api/create_analysis/<jobId>/<analysis_type>', methods=['POST'])
+def create_analysis(jobId, analysis_type):
 
 	if session.get("user_id") is None:
 		return "You must be logged in to submit a job!"
@@ -137,7 +135,7 @@ def create_analysis(jobId):
 
 	Job.createJobForUserIdWithData(user_id, job_data)'''
 
-	return Job.createAnalysisForUserIdWithJob(userId, jobId)
+	return Job.createAnalysisForUserIdWithJob(userId, jobId, analysis_type)
 
 	#return "Analysis created!"
 @app.route("/verify", methods = ["GET"])
@@ -334,7 +332,6 @@ def getJobs():
 def getUserfile(uuid, desired_output):
 	if session.get("user_id") is None:
 			return "You must be logged in to view the output of a job"
-
 	desired_output_map = {
 		"energy":"energy.dat",
 		"trajectory_zip":"trajectory.zip",
@@ -345,7 +342,8 @@ def getUserfile(uuid, desired_output):
 		"analysis_log":"analysis_out.log",
 		"input":"input",
 		"mean":"mean.dat",
-		"deviations":"deviations.json"
+		"deviations":"deviations.json",
+		"aligned_traj":"aligned.dat"
 	}
 
 	if desired_output not in desired_output_map:
@@ -372,7 +370,8 @@ def getJobOutput(uuid, desired_output):
 		"analysis_log":"analysis_out.log",
 		"input":"input",
 		"mean":"mean.dat",
-		"deviations":"deviations.json"
+		"deviations":"deviations.json",
+		"aligned_traj":"aligned.dat"
 	}
 
 	if desired_output not in desired_output_map:

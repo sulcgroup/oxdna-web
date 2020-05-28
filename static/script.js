@@ -2,6 +2,7 @@ var app = angular.module("app", [])
 
 //analysis codes
 var MEAN = 1;
+var ALIGN = 2;
 
 app.factory("JobService", function($http) {
 
@@ -21,10 +22,10 @@ app.factory("JobService", function($http) {
 		});
 	}
 
-	factory.startAnalysisForJob = function(jobId, cb) {
+	factory.startAnalysisForJob = function(jobId, type, cb) {
 		$http({
 			method: 'POST',
-			url: `/api/create_analysis/${jobId}`,
+			url: `/api/create_analysis/${jobId}/${type}`,
 		}).then(function success(analysisId) {
 			cb(true, analysisId);
 
@@ -217,18 +218,20 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
 			$scope.associated_jobs[job]["dateString"] = date;
 		}
 		$scope.associated_jobs.sort((a, b) => parseInt(b["creation_date"]) - parseInt(a["creation_date"]))
-		$scope.mean = $scope.associated_jobs.filter(x => x["job_type"] == MEAN);
+		$scope.mean = [$scope.associated_jobs.filter(x => x["job_type"] == MEAN)[0]];
+		$scope.align = [$scope.associated_jobs.filter(x => x["job_type"] == ALIGN)[0]];
+		console.log($scope.align);
 	}
 
 	//retrieves job information from URL
 	JobService.getJob($scope.viewing_job_uuid, updateJobScope);
 
-	$scope.startAnalysis = function() {
+	$scope.startAnalysis = function(type) {
 
 		console.log("Starting analysis now...");
 
 		//this callback function needs some meat (mostly to throw an error to the page)
-		JobService.startAnalysisForJob($scope.viewing_job_uuid, function(success, analysisId) {
+		JobService.startAnalysisForJob($scope.viewing_job_uuid, type, function(success, analysisId) {
 			if(success) {
 				console.log("started analysis, jobID =", analysisId);	
 				JobService.getJob($scope.viewing_job_uuid, updateJobScope);	

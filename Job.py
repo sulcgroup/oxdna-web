@@ -45,9 +45,13 @@ def startSlurmAnalysis(job_directory):
 
 
 
-def createSlurmAnalysisFile(job_directory, analysis_id):
+def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type):
 	job_output_file = job_directory + "analysis_out.log"
 
+	if analysis_type == "mean":
+		run_command = "compute_mean.py -p 1 -d deviations.json -f oxDNA -o mean.dat trajectory.dat output.top"
+	elif analysis_type == "align":
+		run_command = "align_trajectory.py trajectory.dat output.top aligned.dat"
 
 	sbatch_file = """#!/bin/bash
 #SBATCH --job-name={analysis_id}    # Job name
@@ -56,10 +60,11 @@ def createSlurmAnalysisFile(job_directory, analysis_id):
 #SBATCH --time=100:00:00               # Time limit hrs:min:sec
 #SBATCH --output={job_output_file}   # Standard output and error log
 cd {job_directory}
-python3 /opt/oxdna_analysis_tools/compute_mean.py -p 1 -d deviations.json -f oxDNA -o mean.dat trajectory.dat output.top""".format(
+python3 /opt/oxdna_analysis_tools/{run_command}""".format(
 	analysis_id=analysis_id,
 	job_directory=job_directory, 
-	job_output_file=job_output_file
+	job_output_file=job_output_file,
+	run_command=run_command
 )
 
 	file_name = "sbatch_analysis.sh"
@@ -201,14 +206,19 @@ def createOxDNAFile(parameters, job_directory, needs_relax=False):
 	
 
 
-def createAnalysisForUserIdWithJob(userId, jobId):
+def createAnalysisForUserIdWithJob(userId, jobId, analysis_type):
+	analysis_types = {
+		"mean" : 1,
+		"align" : 2
+	}
+
 	randomAnalysisId = str(uuid.uuid4())
 
 	user_directory = "/users/"+str(userId) + "/"
 	job_directory = user_directory + jobId + "/"
 
 	print("Now creating analysis file...")
-	createSlurmAnalysisFile(job_directory, randomAnalysisId)
+	createSlurmAnalysisFile(job_directory, randomAnalysisId, analysis_type)
 	job_number = startSlurmAnalysis(job_directory)
 
 	print("Creating analysis now..., received job number:", job_number)
@@ -225,7 +235,7 @@ def createAnalysisForUserIdWithJob(userId, jobId):
 		"analysis",
 		randomAnalysisId,
 		job_number,
-		1,
+		analysis_types[analysis_type],
 		jobId,
 		int(time.time())
 	)
