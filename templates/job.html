@@ -25,26 +25,46 @@
 
 <link rel="stylesheet" href="/static/style.css">
 <style>
-table, th , td {
-  border: 1px solid grey;
-  border-collapse: collapse;
-  padding: 15px;
-  width:100%;
-}
-
-table td {
-	width:15%;
-	text-align: center;
-}
-
-table tr:nth-child(odd) {
-  background-color: #f1f1f1;
-}
-
-table tr:nth-child(even) {
-  background-color: #ffffff;
-}
-</style>
+	table, th , td {
+	  border: 1px solid grey;
+	  border-collapse: collapse;
+	  padding: 15px;
+	  width:100%;
+	}
+	
+	table td {
+		width:15%;
+		text-align: center;
+	}
+	
+	table tr:nth-child(odd) {
+	  background-color: #f1f1f1;
+	}
+	
+	table tr:nth-child(even) {
+	  background-color: #ffffff;
+	}
+	
+	.running{
+		color: green;
+	}
+	
+	.completed{
+		color: black;
+	}
+	
+	.pending{
+		color: blue;
+	}
+	
+	.cancelled{
+		color: yellow;
+	}
+	
+	.error{
+		color: red;
+	}
+	</style>
 <body ng-controller="JobCtrl">
 	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
 		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">azDNA</a>
@@ -132,26 +152,45 @@ table tr:nth-child(even) {
 						</h2>
 						
 						
-						<div ng-show="job.mean == null"> 
+						<div ng-show="mean == null"> 
 							<button type="button" ng-click="startAnalysis()" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
 							
 						</div>
 
-						<div ng-hide="job.mean == null">
-							<a href="/job_output/{{job.uuid}}/analysis_log" target="_blank">View log</a><br>
-                            <a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{job.uuid}}/mean&topology=/job_output/{{job.uuid}}/topology&overlay=/job_output/{{job.uuid}}/deviations">View mean+deviations</a> <br>
-							<a href="/job_output/{{job.uuid}}/mean" target="_blank" download={{job.name}}_mean.dat>Download mean</a><br>
-							<a href="/job_output/{{job.uuid}}/deviations" target="_blank" download={{job.name}}_devs.json>Download deviations</a>
+						<div ng-hide="mean == null">
+							<table>
+								<tr>
+									<td>Job Name</td>
+									<td>Status</td>
+									<td>Started</td>
+									<td>Log</td>
+									<td>Mean+Deviations</td>
+								</tr>
+								<tr ng-repeat="x in mean">
+									<td>Compute Mean</td>
+									<td><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
+									<td>{{ x.dateString }}</td>
+									<td><a href="/job_output/{{x.sim_job_id}}/analysis_log" target="_blank">View log</a></td>
+									<td><a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{x.sim_job_id}}/mean&topology=/job_output/{{x.sim_job_id}}/topology&overlay=/job_output/{{x.sim_job_id}}/deviations">View mean+deviations</a></br>
+										<a href="/job_output/{{x.sim_job_id}}/mean" target="_blank" download={{job.name}}_mean.dat>Download mean</a></br>
+										<a href="/job_output/{{x.sim_job_id}}/deviations" target="_blank" download={{job.name}}_devs.json>Download deviations</a></br>
+									</td>
+								</tr>
+
+							</table>
 						</div>
 						<br>
 
-						<h2>Align Trajectory  <a href="#" style="color:#999" 
-											title="Aligns all frames in a trajectory to the first, creating a smoother viewing experience" 
-											data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
-						</h2>
-
 					</div>
 
+				</div>
+				<div class="card">
+					<div class="card-body">
+						<h2>Align Trajectory  <a href="#" style="color:#999" 
+							title="Aligns all frames in a trajectory to the first, creating a smoother viewing experience" 
+							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
+						</h2>
+					</div>
 				</div>
 
 			</main>

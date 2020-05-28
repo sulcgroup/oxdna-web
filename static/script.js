@@ -1,5 +1,8 @@
 var app = angular.module("app", [])
 
+//analysis codes
+var MEAN = 1;
+
 app.factory("JobService", function($http) {
 
 	var factory = {};
@@ -207,8 +210,15 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
 	JobService.getJob($scope.viewing_job_uuid, function(data) {
 		console.log("DATA!:", data);
 		$scope.job = data["job_data"][0];
-		$scope.associated_jobs = data["associated_jobs"]
-		console.log($scope.job)
+		$scope.associated_jobs = data["associated_jobs"];
+		for(job in $scope.associated_jobs) {
+			var timestamp = $scope.associated_jobs[job]["creation_date"];
+			var date = new Date(timestamp * 1000).toLocaleString("en-US");			
+			$scope.associated_jobs[job]["dateString"] = date;
+		}
+		$scope.associated_jobs.sort((a, b) => parseInt(b["creation_date"]) - parseInt(a["creation_date"]))
+		$scope.mean = $scope.associated_jobs.filter(x => x["job_type"] == MEAN);
+		console.log($scope.associated_jobs)
 	})
 
 	$scope.startAnalysis = function() {

@@ -385,6 +385,7 @@ def getJobOutput(uuid, desired_output):
 
 	if not "trajectory" in desired_output:
 		try:
+			print(desired_file_path)
 			desired_file = open(desired_file_path, "r")
 			desired_file_contents = desired_file.read()
 			return Response(desired_file_contents, mimetype='text/plain')
