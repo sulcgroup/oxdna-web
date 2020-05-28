@@ -305,9 +305,13 @@ def get_job_data(job_id):
 		return redirect("/login")
 
 	job_data = Job.getJobForUserId(job_id, session.get("user_id"))
+	associated_jobs = Job.getAssociatedJobs(job_data["uuid"])
 
 	if(job_data is not None):
-		return jsonify(job_data)
+		return jsonify({
+			"job_data" : [job_data],
+			"associated_jobs" : associated_jobs
+		})
 	else:
 		return "No job data."
 

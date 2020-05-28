@@ -132,12 +132,12 @@ table tr:nth-child(even) {
 						</h2>
 						
 						
-						<div ng-show="job.analysisJobId == null"> 
+						<div ng-show="job.mean == null"> 
 							<button type="button" ng-click="startAnalysis()" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
 							
 						</div>
 
-						<div ng-hide="job.analysisJobId == null">
+						<div ng-hide="job.mean == null">
 							<a href="/job_output/{{job.uuid}}/analysis_log" target="_blank">View log</a><br>
                             <a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{job.uuid}}/mean&topology=/job_output/{{job.uuid}}/topology&overlay=/job_output/{{job.uuid}}/deviations">View mean+deviations</a> <br>
 							<a href="/job_output/{{job.uuid}}/mean" target="_blank" download={{job.name}}_mean.dat>Download mean</a><br>

@@ -11,7 +11,6 @@ app.factory("JobService", function($http) {
 		}).then(function successCallback(response) {
 
 			var data = response.data;
-			console.log(data);
 
 			cb(data);
 		}, function errorCallback() {
@@ -24,11 +23,9 @@ app.factory("JobService", function($http) {
 			method: 'POST',
 			url: `/api/create_analysis/${jobId}`,
 		}).then(function success(analysisId) {
-			console.log("Created analysis!");
 			cb(true, analysisId);
 
 		}, function error() {
-			console.log("Failed to create analysis!");
 			cb(false);
 		});
 	}
@@ -51,12 +48,12 @@ app.factory("JobsService", function($http) {
 			var data = response.data;
 
 			for(job in data) {
-				var timestamp = data[job]["creationDate"];
+				var timestamp = data[job]["creation_date"];
 				var date = new Date(timestamp * 1000).toLocaleString("en-US");			
 				data[job]["dateString"] = date;
 			}
 
-			data.sort((a,b) => parseInt(b["creationDate"]) - parseInt(a["creationDate"]));
+			data.sort((a,b) => parseInt(b["creation_date"]) - parseInt(a["creation_date"]));
 			data = data.filter(x => x.job_type == 0);
 
 			cb(data);
@@ -209,20 +206,19 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
 	//retrieves job information from URL
 	JobService.getJob($scope.viewing_job_uuid, function(data) {
 		console.log("DATA!:", data);
-		$scope.job = data;
+		$scope.job = data["job_data"][0];
+		$scope.associated_jobs = data["associated_jobs"]
+		console.log($scope.job)
 	})
 
 	$scope.startAnalysis = function() {
 
 		console.log("Starting analysis now...");
 
+		//this callback function needs some meat (mostly to throw an error to the page)
 		JobService.startAnalysisForJob($scope.viewing_job_uuid, function(success, analysisId) {
 			if(success) {
-				console.log("started analysis!");
-
-				$timeout(function() {
-					$scope.job.analysisJobId = analysisId
-				}, 1000)
+				console.log("started analysis, jobID =", analysisId);
 			} else {
 				console.log("Failed to create analysis!");
 			}

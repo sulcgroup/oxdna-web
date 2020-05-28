@@ -2,21 +2,19 @@ import os
 import time
 import uuid
 import subprocess
+import sys
 
 import Database
 
-set_analysis_id_query = (
-	"UPDATE Jobs SET analysisJobId = %s WHERE uuid = %s"
-)
-
 add_job_query = (
 	"INSERT INTO Jobs "
-	"(`userId`, `name`, `uuid`, `slurmId`, `jobType`, `analysisJobId`, `creationDate`)"
+	"(`userId`, `name`, `uuid`, `slurmId`, `jobType`, `simJobId`, `creationDate`)"
 	"VALUES (%s, %s, %s, %s, %s, %s, %s)"
 )
 
 get_jobs_query = ("SELECT * FROM Jobs WHERE userId = %s")
 get_job_query = ("SELECT * FROM Jobs WHERE uuid = %s")
+get_associated_query = ("SELECT * FROM Jobs WHERE simJobId = %s")
 get_userId_for_job_uuid = ("SELECT userID FROM Jobs WHERE uuid = %s")
 remove_job = ("DELETE FROM Jobs WHERE uuid = %s")
 get_status = ("SELECT status FROM Jobs WHERE uuid = %s")
@@ -150,7 +148,7 @@ def createOxDNAInput(parameters, job_directory, file_name, needs_relax):
 		unique_parameters["backend"] = "CPU"
 		unique_parameters["dt"] = 0.05
 		unique_parameters["lastconf_file"] = "MC_relax.dat"
-		unique_parameters.update([("relax_type", "harmonic_force"), ("max_backbone_force", 10), ("delta_translation", 0.02), ("delta_rotation", 0.04)])
+		unique_parameters.update([("relax_type", "harmonic_force"), ("max_backbone_force", 10), ("delta_translation", 0.22), ("delta_rotation", 0.22)])
 
 	#the secondary relax is a set length and run in molecular dynamics using GPU if requested
 	if file_name == "input_relax_MD":
@@ -216,15 +214,11 @@ def createAnalysisForUserIdWithJob(userId, jobId):
 	print("Creating analysis now..., received job number:", job_number)
 
 	update_data = (
-		randomAnalysisId,
-		jobId
+		jobId,
+		randomAnalysisId
 	)
 
 	connection = Database.pool.get_connection()
-
-	with connection.cursor() as cursor:
-		cursor.execute(set_analysis_id_query, update_data)
-
 
 	analysis_data = (
 		int(userId),
@@ -232,7 +226,7 @@ def createAnalysisForUserIdWithJob(userId, jobId):
 		randomAnalysisId,
 		job_number,
 		1,
-		None,
+		jobId,
 		int(time.time())
 	)
 
@@ -328,18 +322,43 @@ def createJobForUserIdWithData(userId, jsonData):
 
 	return True, job_number
 
+def getAssociatedJobs(job_id):
+	associates = None
+	payload = []
 
+	#retrieve entries from SQL with sim_job_id == jobId
+	connection = Database.pool.get_connection()
+	with connection.cursor() as cursor:
+		cursor.execute(get_associated_query, (job_id,))
+		associates = cursor.fetchall()
+	connection.close()
+
+	if associates:
+		for job_data in associates:
+			data_dict = createAssociateDictionary(job_data)
+			data_dict["status"] = getJobStatus(data_dict["uuid"])
+			payload.append(data_dict)
+		return payload
+	else:
+		return None
+
+
+def createAssociateDictionary(data) :
+	keys = ["name", "uuid", "job_type", "sim_job_id", "creation_date", "status"]
+	data = [data[i] for i in [2, 3, 5, 6, 7, 8]]
+	schema = dict(zip(keys, data))
+
+	return schema
 
 def createJobDictionaryForTuple(data):
 
-	job_id, user_id, job_name, uuid, slurm_id, job_type, analysis_job_id, creation_date, status= data
+	job_id, user_id, job_name, uuid, slurm_id, job_type, sim_job_id, creation_date, status= data
 
 	schema = {
 		"name":job_name,
 		"uuid":uuid,
 		"job_type":job_type,
-		"analysisJobId":analysis_job_id,
-		"creationDate":creation_date,
+		"creation_date":creation_date,
 		"status":status,
 	}
 
