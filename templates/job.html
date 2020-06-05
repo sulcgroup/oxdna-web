@@ -64,6 +64,9 @@
 	.error{
 		color: red;
 	}
+	label.lpadded {
+		padding-left: 20px;
+	}
 	</style>
 <body ng-controller="JobCtrl">
 	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
@@ -142,7 +145,7 @@
 
 
 				<div class="card">
-					<div class="card-body">
+					<div id=meanCard class="card-body">
 
 						<h2>Mean and RMSF <a href="#" style="color:#999" 
 										title="Calculates the mean structure and computes per-nucleotide root mean square fluctuation from the mean" 
@@ -166,14 +169,14 @@
 									<td>Log</td>
 									<td>Mean+Deviations</td>
 								</tr>
-								<tr ng-repeat="x in mean">
+								<tr>
 									<td>Compute Mean</td>
-									<td><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
-									<td>{{ x.dateString }}</td>
-									<td><a href="/job_output/{{x.sim_job_id}}/analysis_log" target="_blank">View log</a></td>
-									<td><a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{x.sim_job_id}}/mean&topology=/job_output/{{x.sim_job_id}}/topology&overlay=/job_output/{{x.sim_job_id}}/deviations">View mean+deviations</a></br>
-										<a href="/job_output/{{x.sim_job_id}}/mean" target="_blank" download={{job.name}}_mean.dat>Download mean</a></br>
-										<a href="/job_output/{{x.sim_job_id}}/deviations" target="_blank" download={{job.name}}_devs.json>Download deviations</a></br>
+									<td><span ng-class="{'completed': mean[0].status == 'Completed', 'pending': mean[0].status == 'Pending', 'running': mean[0].status == 'Running'}">{{mean[0].status}}</span></td>
+									<td>{{ mean[0].dateString }}</td>
+									<td><a href="/job_output/{{mean[0].sim_job_id}}/mean_log" target="_blank">View log</a></td>
+									<td><a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{mean[0].sim_job_id}}/mean&topology=/job_output/{{mean[0].sim_job_id}}/topology&overlay=/job_output/{{mean[0].sim_job_id}}/deviations">View mean+deviations</a></br>
+										<a href="/job_output/{{mean[0].sim_job_id}}/mean" target="_blank" download={{job.name}}_mean.dat>Download mean</a></br>
+										<a href="/job_output/{{mean[0].sim_job_id}}/deviations" target="_blank" download={{job.name}}_devs.json>Download deviations</a></br>
 									</td>
 								</tr>
 
@@ -185,7 +188,7 @@
 
 				</div>
 				<div class="card">
-					<div class="card-body">
+					<div id=alignCard class="card-body">
 						<h2>Align Trajectory  <a href="#" style="color:#999" 
 							title="Aligns all frames in a trajectory to the first, creating a smoother viewing experience" 
 							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
@@ -206,13 +209,51 @@
 									<td>Log</td>
 									<td>Aligned Trajectory</td>
 								</tr>
-								<tr ng-repeat="x in align">
+								<tr>
 									<td>Align Trajectory</td>
-									<td><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
-									<td>{{ x.dateString }}</td>
-									<td><a href="/job_output/{{x.sim_job_id}}/analysis_log" target="_blank">View log</a></td>
-									<td><a href="/job_output/{{x.sim_job_id}}/aligned_traj" target="_blank" download={{job.name}}_aligned.dat>Download aligned trajectory</a></br>
+									<td><span ng-class="{'completed': mean[0].status == 'Completed', 'pending': mean[0].status == 'Pending', 'running': mean[0].status == 'Running'}">{{mean[0].status}}</span></td>
+									<td>{{ mean[0].dateString }}</td>
+									<td><a href="/job_output/{{mean[0].sim_job_id}}/align_log" target="_blank">View log</a></td>
+									<td><a href="/job_output/{{mean[0].sim_job_id}}/aligned_traj" target="_blank" download={{job.name}}_aligned.dat>Download aligned trajectory</a></br>
 									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="card">
+					<div id="distanceCard" class="card-body">
+						<h2> Distance <a href="#" style="color:#999" 
+							title="Calculate the distances between pairs of nucleotides" 
+							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
+						</h2>
+						<label for="name">Job Name</label>
+						<input type="text" value="distance" id="name" size=16 maxlength="16">
+						<label class="lpadded" for="p1">Particle 1s</label>
+						<input type="text" value="1 2 3" id="p1" size=6>
+						<label class = "lpadded" for="p2">Particle 2s</label>
+						<input type="text" value="4 5 6" id="p2" size=6>
+						<br>
+						<button type="button" ng-click="startAnalysis('distance')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
+						<div ng-hide="distance[0] == undefined">
+							<table>
+								<tr>
+									<td style="width:8%"">Job Name</td>
+									<td style="width:5%">Status</td>
+									<td style="width:5%">Started</td>
+									<td style="width:5%">Log</td>
+									<td style="width:8%">Distance Data</td>
+									<td>Histogram</td>
+									<td>Trajectory</td>
+								</tr>
+								<tr ng-repeat="x in distance">
+									<td style="width:8%"">{{ x.name }}</td>
+									<td style="width:5%"><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
+									<td style="width:5%">{{ x.dateString }}</td>
+									<td style="width:5%"><a href="/job_output/{{x.sim_job_id}}/analysis_log" target="_blank">View log</a></td>
+									<td style="width:8%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_data" target="_blank" download={{x.name}}.txt>Download distance as text</a></td>
+									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" target="_blank" download={{x.name}}_hist.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" width=100% height=100%></a></td>
+									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" target="_blank" download={{x.name}}_traj.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" width=100% height=100%></a></td>
 								</tr>
 							</table>
 						</div>

@@ -3,6 +3,7 @@ var app = angular.module("app", [])
 //analysis codes
 var MEAN = 1;
 var ALIGN = 2;
+var DISTANCE = 3;
 
 app.factory("JobService", function($http) {
 
@@ -23,15 +24,35 @@ app.factory("JobService", function($http) {
 	}
 
 	factory.startAnalysisForJob = function(jobId, type, cb) {
-		$http({
-			method: 'POST',
-			url: `/api/create_analysis/${jobId}/${type}`,
-		}).then(function success(analysisId) {
-			cb(true, analysisId);
+		let divId = type+"Card"
+		let parameters = $(`#${divId} input`).map(function(idx, elem) {
+			return [[$(elem).attr('id'), $(elem).val()]];
+		}).get();
 
-		}, function error() {
-			cb(false);
+		let request = new XMLHttpRequest();
+		request.open("POST", "/api/create_analysis");
+		request.setRequestHeader("Content-Type", "application/json");
+		let payload = {};
+		payload.jobId = jobId;
+		payload.type = type;
+		parameters.forEach((p) => {
+			payload[p[0]] = p[1];
 		});
+		request.send(JSON.stringify(payload));
+		request.onload = function() {
+			if (request.response = "Success") cb (true, analysisId)
+			else cb (false)
+		}
+
+		//$http({
+		//	method: 'POST',
+		//	url: `/api/create_analysis/${jobId}/${type}`
+		//}).then(function success(analysisId) {
+		//	cb(true, analysisId);
+
+		//}, function error() {
+		//	cb(false);
+		//});
 	}
 
 	return factory;
@@ -220,7 +241,7 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
 		$scope.associated_jobs.sort((a, b) => parseInt(b["creation_date"]) - parseInt(a["creation_date"]))
 		$scope.mean = [$scope.associated_jobs.filter(x => x["job_type"] == MEAN)[0]];
 		$scope.align = [$scope.associated_jobs.filter(x => x["job_type"] == ALIGN)[0]];
-		console.log($scope.align);
+		$scope.distance = $scope.associated_jobs.filter(x => x["job_type"] == DISTANCE);
 	}
 
 	//retrieves job information from URL

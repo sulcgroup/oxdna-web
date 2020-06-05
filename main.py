@@ -108,34 +108,17 @@ def job_status(jobId):
 	return status
 
 
-@app.route('/api/create_analysis/<jobId>/<analysis_type>', methods=['POST'])
-def create_analysis(jobId, analysis_type):
+@app.route('/api/create_analysis', methods=["POST"])#<jobId>/<analysis_type>', methods=['POST'])
+def create_analysis():#jobId, analysis_type):
 
 	if session.get("user_id") is None:
 		return "You must be logged in to submit a job!"
 
-	userId = session["user_id"]
-	print("Now creating a analysis on behalf of:", userId, " and for job id:", jobId)
-
-	'''
 	json_data = request.get_json()
 
-	parameters = json_data["parameters"]
-	files = json_data["files"]
+	userId = session["user_id"]
 
-	addDefaultParameters(parameters)
-
-	metadata = {}
-
-	job_data = {
-		"metadata":metadata,
-		"parameters": parameters, 
-		"files": files
-	}
-
-	Job.createJobForUserIdWithData(user_id, job_data)'''
-
-	return Job.createAnalysisForUserIdWithJob(userId, jobId, analysis_type)
+	return Job.createAnalysisForUserIdWithJob(userId, json_data)
 
 	#return "Analysis created!"
 @app.route("/verify", methods = ["GET"])
@@ -327,32 +310,30 @@ def getJobs():
 
 	return jsonify(jobs)
 
-
-@app.route("/ufile/<uuid>/<desired_output>")
-def getUserfile(uuid, desired_output):
+@app.route("/analysis_output/<uuid>/<analysis_id>/<desired_output>") 
+def getAnalysisOutput(uuid, analysis_id, desired_output):
 	if session.get("user_id") is None:
-			return "You must be logged in to view the output of a job"
+		return "You must be logged in to view the output of a job"
+
+	user_directory = "/users/" + str(session["user_id"]) + "/"
+	job_directory =  user_directory + uuid + "/"
+
 	desired_output_map = {
-		"energy":"energy.dat",
-		"trajectory_zip":"trajectory.zip",
-		"trajectory_txt":"trajectory.dat",
-		"topology": "output.top",
-		"last_conf": "last_conf.dat",
-		"log":"job_out.log",
-		"analysis_log":"analysis_out.log",
-		"input":"input",
-		"mean":"mean.dat",
-		"deviations":"deviations.json",
-		"aligned_traj":"aligned.dat"
+		"distance_data" : ".txt",
+		"distance_hist" : "_hist.png",
+		"distance_traj" : "_traj.png"
 	}
 
-	if desired_output not in desired_output_map:
-		return "You must specify a valid desired output"
+	job_data = Job.getAssociatedJobs(uuid)
+	for job in job_data:
+		if job["uuid"] == analysis_id:
+			desired_file_path = job_directory + job["name"] + desired_output_map[desired_output]
 
-	file_path =  "/userfiles/" + str(session["user_id"]) + "/" + uuid + "/" + desired_output_map[desired_output]
-
-	print(file_path)
-	return redirect(file_path)
+	print(desired_file_path)
+	if desired_file_path:
+		return send_file(desired_file_path, as_attachment=True)
+	else:
+		abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=analysis_id))
 
 @app.route("/job_output/<uuid>/<desired_output>")
 def getJobOutput(uuid, desired_output):
@@ -367,6 +348,8 @@ def getJobOutput(uuid, desired_output):
         "topology": "output.top",
 		"last_conf": "last_conf.dat",
 		"log":"job_out.log",
+		"mean_log":"mean.log",
+		"align_log":"align.log",
 		"analysis_log":"analysis_out.log",
 		"input":"input",
 		"mean":"mean.dat",

@@ -45,20 +45,34 @@ def startSlurmAnalysis(job_directory):
 
 
 
-def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type):
-	job_output_file = job_directory + "analysis_out.log"
+def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_parameters):
+	job_output_file = job_directory + analysis_type + ".log"
+	print("creating {type} analysis, id: {id}".format(type=analysis_type, id=analysis_id))
 
 	if analysis_type == "mean":
 		run_command = "compute_mean.py -p 1 -d deviations.json -f oxDNA -o mean.dat trajectory.dat output.top"
 	elif analysis_type == "align":
 		run_command = "align_trajectory.py trajectory.dat output.top aligned.dat"
+	elif analysis_type == "distance":
+		job_output_file = job_directory + analysis_parameters["name"] +".log"
+		p1s = analysis_parameters["p1"].split(" ")
+		p2s = analysis_parameters["p2"].split(" ")
+		plist = []
+		for pair in zip(p1s, p2s):
+			plist.extend(pair)
+		run_command = "distance.py -d {name}.txt -f both -o {name}.png -i input trajectory.dat {particles}".format(
+			name = analysis_parameters["name"],
+			particles = ' '.join(plist)
+		)
+		print(run_command)
 
 	sbatch_file = """#!/bin/bash
 #SBATCH --job-name={analysis_id}    # Job name
 #SBATCH --partition=CPU
 #SBATCH --ntasks=1                    # Run on a single CPU
 #SBATCH --time=100:00:00               # Time limit hrs:min:sec
-#SBATCH --output={job_output_file}   # Standard output and error log
+#SBATCH -o {job_output_file}
+#SBATCH -e {job_output_file}
 cd {job_directory}
 python3 /opt/oxdna_analysis_tools/{run_command}""".format(
 	analysis_id=analysis_id,
@@ -206,11 +220,15 @@ def createOxDNAFile(parameters, job_directory, needs_relax=False):
 	
 
 
-def createAnalysisForUserIdWithJob(userId, jobId, analysis_type):
+def createAnalysisForUserIdWithJob(userId, analysis_parameters):
 	analysis_types = {
 		"mean" : 1,
-		"align" : 2
+		"align" : 2,
+		"distance" : 3
 	}
+
+	jobId = analysis_parameters["jobId"]
+	analysis_type = analysis_parameters["type"]
 
 	randomAnalysisId = str(uuid.uuid4())
 
@@ -218,7 +236,7 @@ def createAnalysisForUserIdWithJob(userId, jobId, analysis_type):
 	job_directory = user_directory + jobId + "/"
 
 	print("Now creating analysis file...")
-	createSlurmAnalysisFile(job_directory, randomAnalysisId, analysis_type)
+	createSlurmAnalysisFile(job_directory, randomAnalysisId, analysis_type, analysis_parameters)
 	job_number = startSlurmAnalysis(job_directory)
 
 	print("Creating analysis now..., received job number:", job_number)
@@ -232,7 +250,7 @@ def createAnalysisForUserIdWithJob(userId, jobId, analysis_type):
 
 	analysis_data = (
 		int(userId),
-		"analysis",
+		analysis_parameters["name"],
 		randomAnalysisId,
 		job_number,
 		analysis_types[analysis_type],
