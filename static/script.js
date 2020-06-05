@@ -328,6 +328,10 @@ app.controller("MainCtrl", function($scope, $http) {
 		$scope.data["interaction_type"]= "DNA";
 		$scope.data["print_conf_interval"] = 5e5;
 		$scope.data["print_energy_every"] = 5e4;
+		$scope.data["MC_steps"] = 1e5;
+		$scope.data["MD_steps"] = 1e7;
+		$scope.data["MD_dt"] = 0.0001;
+		$scope.data["relax_force"] = 1.5;
 	}
 
 	$scope.parseData();

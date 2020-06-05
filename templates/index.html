@@ -157,20 +157,52 @@
 
 							<p>
 								<h6>Relaxation</h6>
-								<div class="form-check form-check-inline">
-									<input ng-model="data.needs_relax" class="form-check-input" type="checkbox" name="needs_relax" id="inlinecheckbox1" value="true">
-									<label class="form-check-label" for="inlinecheckbox1">Needs Relax</label>
-								</div></p>
+								<p>
+									<div class="form-check form-check-inline">
+										<input ng-model="data.needs_relax" class="form-check-input" type="checkbox" name="needs_relax" id="inlinecheckbox1" value="true">
+										<label class="form-check-label" for="inlinecheckbox1">Needs Relax</label>
+									</div>
+								</p>
+
+								<p>
+									<a class="btn btn-primary" data-toggle="collapse" href="#relaxParams" role="button" aria-expanded="false" aria-controls="relaxParams">View relax parameters</a>
+									
+									<div class="collapse" id="relaxParams">
+										<h4>Relax Parameters</h4>
+
+										<p>
+											<div class="input-group mb-3">
+												<div class="input-group-prepend">
+													<span class="input-group-text" id="MC_steps">MC steps</span>
+												</div>
+												<input ng-model="data.MC_steps" type="number" class="form-control" placeholder="The number of Monte Carlo steps in the initial relax" aria-label="The number of Monte Carlo steps in the initial relax" aria-describedby="basic">
+											</div>
+										</p>
+										<p>
+											<div class="input-group mb-3">
+												<div class="input-group-prepend">
+													<span class="input-group-text" id="MD_steps">MD steps</span>
+												</div>
+												<input ng-model="data.MD_steps" type="number" class="form-control" placeholder="The number of molecular dynamics steps in the secondary relax" aria-label="The number of molecular dynamics steps in the secondary relax" aria-describedby="basic">
+											</div>
+										</p>
+										<p>
+											<div class="input-group mb-3">
+												<div class="input-group-prepend">
+													<span class="input-group-text" id="MD_dt">MD timestep</span>
+												</div>
+												<input ng-model="data.MD_dt" type="number" step=0.00001 class="form-control" placeholder="The timestep of the MD simulation" aria-label="The timestep of the MD simulation" aria-describedby="basic">
+											</div>
+										</p>
+									</div>
+								</p>
+							</p>
 
 							<p>
 								<a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">View advanced parameters</a>
 
-
-
-
 								<div class="collapse" id="multiCollapseExample1">
 									<h4>Advanced Parameters</h4>
-
 
 									<p>
 										<h6>Backend</h6>
@@ -181,9 +213,10 @@
 										<div class="form-check form-check-inline">
 											<input ng-model="data.backend" class="form-check-input" type="radio" name="backend" id="inlineRadio2" value="CUDA">
 											<label class="form-check-label" for="inlineRadio2">CUDA</label>
-										</div></p>
+										</div>
+									</p>
 
-
+									<p>
 										<h6>Mismatch Repulsion</h6>
 										<div class="form-check form-check-inline">
 											<input ng-model="auxillary.mismatch_repulsion" class="form-check-input" type="radio" name="mismatch_repulsion" id="inlineRadio1" value="true">
@@ -192,9 +225,10 @@
 										<div class="form-check form-check-inline">
 											<input ng-model="auxillary.mismatch_repulsion" class="form-check-input" type="radio" name="mismatch_repulsion" id="inlineRadio2" value="false">
 											<label class="form-check-label" for="inlineRadio2">No</label>
-										</div></p>
+										</div>
+									</p>
 
-
+									<p>
 										<div class="input-group mb-3">
 											<div class="input-group-prepend">
 												<span class="input-group-text" id="basic-addon1">Print conf_interval</span>
@@ -207,24 +241,25 @@
 												<span class="input-group-text" id="basic-addon1">Print energy_every</span>
 											</div>
 											<input ng-model="data.print_energy_every" type="number" class="form-control" placeholder="The time steps between the outputting of energy" aria-label="sets the salt concentration in M" aria-describedby="basic">
-
 										</div>
-									</div>
-
-									<p>
-										<button ng-click="submitJob()" type="submit" class="btn btn-primary">Submit Job</button>
 									</p>
-
-									<div ng-if="hasSubmitted">
-										<h3>Job Submitted!</h3>
-									</div>
-
-									<div ng-if="error != ''">
-										<h3>Error</h3>
-										<p>{{error}}</p>
-									</div>
-
 								</div>
+							</p>
+
+							<p>
+								<button ng-click="submitJob()" type="submit" class="btn btn-primary">Submit Job</button>
+							</p>
+
+							<div ng-if="hasSubmitted">
+								<h3>Job Submitted!</h3>
+							</div>
+
+							<div ng-if="error != ''">
+								<h3>Error</h3>
+								<p>{{error}}</p>
+							</div>
+
+							</div>
 
 
 							</div>
