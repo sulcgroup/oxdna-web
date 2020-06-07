@@ -327,7 +327,7 @@ def getJobs():
 
 
 @app.route("/ufile/<uuid>/<desired_output>")
-def getJobOutput(uuid, desired_output):
+def getUserfile(uuid, desired_output):
 
 	if session.get("user_id") is None:
 		return "You must be logged in to view the output of a job"
