@@ -326,6 +326,37 @@ def getJobs():
 	return jsonify(jobs)
 
 
+@app.route("/ufile/<uuid>/<desired_output>")
+def getJobOutput(uuid, desired_output):
+
+	if session.get("user_id") is None:
+		return "You must be logged in to view the output of a job"
+
+	desired_output_map = {
+		"energy":"energy.dat",
+		"trajectory_zip":"trajectory.zip",
+		"trajectory_txt":"trajectory.dat",
+        "topology": "output.top",
+		"last_conf": "last_conf.dat",
+		"log":"job_out.log",
+		"analysis_log":"analysis_out.log",
+		"input":"input",
+		"mean":"mean.dat",
+		"deviations":"deviations.json"
+	}
+
+	if desired_output not in desired_output_map:
+		return "You must specify a valid desired output"
+	
+
+	user_directory = "/users/" + str(session["user_id"]) + "/"
+	job_directory =  user_directory + uuid + "/"
+
+	file_path =  "/userfiles/" + str(session["user_id"]) + "/" + uuid + "/" + desired_output_map[desired_output]
+
+	print(file_path)
+	return redirect(file_path)
+
 @app.route("/job_output/<uuid>/<desired_output>")
 def getJobOutput(uuid, desired_output):
 
