@@ -90,7 +90,7 @@ python3 /opt/oxdna_analysis_tools/{run_command}""".format(
 	file = open(file_path, "w+")
 	file.write(sbatch_file)
 
-def createSlurmJobFile(job_directory, job_name, backend, input_files):
+def createSlurmJobFile(job_directory, job_name, backend, input_files, force=1.5):
 	#job_output_location = job_directory
 	job_output_file = job_directory + "job_out.log"
 	if backend == "CPU":
@@ -123,7 +123,9 @@ cd {job_directory}""".	format(
 
 	for f in input_files:
 		sbatch_file += "\n/opt/oxdna/oxDNA/build/bin/oxDNA {file_name}".format(file_name=f)
-
+		if f == "input_relax_MC":
+			sbatch_file += "\n/opt/oxdna_analysis_tools/generate_force.py -o force.txt input_relax_MC MC_relax.dat"
+			sbatch_file += '\nsed -i "s/0.9/{force}/g" force.txt'.format(force=force)
 	sbatch_file += "\npython3 /opt/zip_traj.py"
 
 	file_name = "sbatch.sh"
@@ -135,6 +137,9 @@ cd {job_directory}""".	format(
 
 def createOxDNAInput(parameters, job_directory, file_name, needs_relax):
 	unique_parameters = parameters.copy()
+	unique_parameters.pop("MC_steps")
+	unique_parameters.pop("MD_steps")
+	unique_parameters.pop("MD_dt")
 
 	input_file_data = ""
 
@@ -152,7 +157,7 @@ def createOxDNAInput(parameters, job_directory, file_name, needs_relax):
 			unique_parameters["dt"] = 0.05
 			unique_parameters["lastconf_file"] = "MC_relax.dat"
 			unique_parameters["sim_type"] = "MC"
-			unique_parameters.update([("relax_type", "harmonic_force"), ("max_backbone_force", 10), ("delta_translation", 0.02), ("delta_rotation", 0.04)])
+			unique_parameters.update([("relax_type", "harmonic_force"), ("max_backbone_force", 10), ("delta_translation", 0.22), ("delta_rotation", 0.22)])
 
 
 	#the initial relax is a set length, in monte-carlo on a CPU.
@@ -162,7 +167,7 @@ def createOxDNAInput(parameters, job_directory, file_name, needs_relax):
 		elif unique_parameters["interaction_type"] == "RNA2":
 			unique_parameters["interaction_type"] = "RNA_relax"
 		unique_parameters["sim_type"] = "MC"
-		unique_parameters["steps"] = 100000
+		unique_parameters["steps"] = parameters["MC_steps"]
 		unique_parameters["print_conf_interval"] = 50000
 		unique_parameters["backend"] = "CPU"
 		unique_parameters["dt"] = 0.05
@@ -171,15 +176,15 @@ def createOxDNAInput(parameters, job_directory, file_name, needs_relax):
 
 	#the secondary relax is a set length and run in molecular dynamics using GPU if requested
 	if file_name == "input_relax_MD":
-		unique_parameters["steps"] = 10000000
+		unique_parameters["steps"] = parameters["MD_steps"]
 		unique_parameters["print_energy_interval"] = 5000000
-		unique_parameters["dt"] = 0.0001
+		unique_parameters["dt"] = parameters["MD_dt"]
 		unique_parameters["thermostat"] = "bussi"
 		unique_parameters["T"] = "0C"
 		unique_parameters["conf_file"] = "MC_relax.dat"
 		unique_parameters["lastconf_file"] = "MD_relax.dat"
 		unique_parameters["restart_step_counter"] = 0
-		unique_parameters.update([("max_backbone_force", 1000), ("bussi_tau", 1)])
+		unique_parameters.update([("max_backbone_force", 1000), ("bussi_tau", 1), ("external_force", 1), ("external_force_file", "force.txt")])
 		if unique_parameters["backend"] == "CUDA":
 			unique_parameters["backend_precision"] = "mixed"
 
@@ -293,8 +298,13 @@ def createJobForUserIdWithData(userId, jsonData):
 
 	#needs_relax comes in as part of the simulation parameters, but it doesn't belong there.
 	try:
+		print("here")
 		needs_relax = parameters["needs_relax"]
 		parameters.pop("needs_relax")
+		print("there")
+		relax_force = parameters["relax_force"]
+		parameters.pop("relax_force")
+		print("where")
 	except:
 		needs_relax = False
 		pass
@@ -318,7 +328,7 @@ def createJobForUserIdWithData(userId, jsonData):
 
 
 	input_files = createOxDNAFile(parameters, job_directory, needs_relax)
-	createSlurmJobFile(job_directory, randomJobId, backend, input_files)
+	createSlurmJobFile(job_directory, randomJobId, backend, input_files, force=relax_force)
 		
 	
 	#delay until we've ran one step job!
