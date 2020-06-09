@@ -2,21 +2,19 @@ import os
 import time
 import uuid
 import subprocess
+import sys
 
 import Database
 
-set_analysis_id_query = (
-	"UPDATE Jobs SET analysisJobId = %s WHERE uuid = %s"
-)
-
 add_job_query = (
 	"INSERT INTO Jobs "
-	"(`userId`, `name`, `uuid`, `slurmId`, `jobType`, `analysisJobId`, `creationDate`)"
+	"(`userId`, `name`, `uuid`, `slurmId`, `jobType`, `simJobId`, `creationDate`)"
 	"VALUES (%s, %s, %s, %s, %s, %s, %s)"
 )
 
 get_jobs_query = ("SELECT * FROM Jobs WHERE userId = %s")
 get_job_query = ("SELECT * FROM Jobs WHERE uuid = %s")
+get_associated_query = ("SELECT * FROM Jobs WHERE simJobId = %s")
 get_userId_for_job_uuid = ("SELECT userID FROM Jobs WHERE uuid = %s")
 remove_job = ("DELETE FROM Jobs WHERE uuid = %s")
 get_status = ("SELECT status FROM Jobs WHERE uuid = %s")
@@ -47,21 +45,39 @@ def startSlurmAnalysis(job_directory):
 
 
 
-def createSlurmAnalysisFile(job_directory, analysis_id):
-	job_output_file = job_directory + "analysis_out.log"
+def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_parameters):
+	job_output_file = job_directory + analysis_type + ".log"
+	print("creating {type} analysis, id: {id}".format(type=analysis_type, id=analysis_id))
 
+	if analysis_type == "mean":
+		run_command = "compute_mean.py -p 1 -d deviations.json -f oxDNA -o mean.dat trajectory.dat output.top"
+	elif analysis_type == "align":
+		run_command = "align_trajectory.py trajectory.dat output.top aligned.dat"
+	elif analysis_type == "distance":
+		job_output_file = job_directory + analysis_parameters["name"] +".log"
+		p1s = analysis_parameters["p1"].split(" ")
+		p2s = analysis_parameters["p2"].split(" ")
+		plist = []
+		for pair in zip(p1s, p2s):
+			plist.extend(pair)
+		run_command = "distance.py -d {name}.txt -f both -o {name}.png -i input trajectory.dat {particles}".format(
+			name = analysis_parameters["name"],
+			particles = ' '.join(plist)
+		)
 
 	sbatch_file = """#!/bin/bash
 #SBATCH --job-name={analysis_id}    # Job name
 #SBATCH --partition=CPU
 #SBATCH --ntasks=1                    # Run on a single CPU
 #SBATCH --time=100:00:00               # Time limit hrs:min:sec
-#SBATCH --output={job_output_file}   # Standard output and error log
+#SBATCH -o {job_output_file}
+#SBATCH -e {job_output_file}
 cd {job_directory}
-python3 /opt/oxdna_analysis_tools/compute_mean.py -p 1 -d deviations.json -f oxDNA -o mean.dat trajectory.dat output.top""".format(
+python3 /opt/oxdna_analysis_tools/{run_command}""".format(
 	analysis_id=analysis_id,
 	job_directory=job_directory, 
-	job_output_file=job_output_file
+	job_output_file=job_output_file,
+	run_command=run_command
 )
 
 	file_name = "sbatch_analysis.sh"
@@ -155,7 +171,7 @@ def createOxDNAInput(parameters, job_directory, file_name, needs_relax):
 		unique_parameters["backend"] = "CPU"
 		unique_parameters["dt"] = 0.05
 		unique_parameters["lastconf_file"] = "MC_relax.dat"
-		unique_parameters.update([("relax_type", "harmonic_force"), ("max_backbone_force", 10), ("delta_translation", 0.02), ("delta_rotation", 0.04)])
+		unique_parameters.update([("relax_type", "harmonic_force"), ("max_backbone_force", 10), ("delta_translation", 0.22), ("delta_rotation", 0.22)])
 
 	#the secondary relax is a set length and run in molecular dynamics using GPU if requested
 	if file_name == "input_relax_MD":
@@ -208,36 +224,47 @@ def createOxDNAFile(parameters, job_directory, needs_relax=False):
 	
 
 
-def createAnalysisForUserIdWithJob(userId, jobId):
+def createAnalysisForUserIdWithJob(userId, analysis_parameters):
+	analysis_types = {
+		"mean" : 1,
+		"align" : 2,
+		"distance" : 3
+	}
+
+	jobId = analysis_parameters["jobId"]
+	analysis_type = analysis_parameters["type"]
+	print(analysis_type)
+	print(analysis_parameters)
+	if analysis_type == "mean":
+		analysis_parameters["name"] = "mean"
+	elif analysis_type == "align":
+		analysis_parameters["name"] = "align"
+
 	randomAnalysisId = str(uuid.uuid4())
 
 	user_directory = "/users/"+str(userId) + "/"
 	job_directory = user_directory + jobId + "/"
 
 	print("Now creating analysis file...")
-	createSlurmAnalysisFile(job_directory, randomAnalysisId)
+	createSlurmAnalysisFile(job_directory, randomAnalysisId, analysis_type, analysis_parameters)
 	job_number = startSlurmAnalysis(job_directory)
 
 	print("Creating analysis now..., received job number:", job_number)
 
 	update_data = (
-		randomAnalysisId,
-		jobId
+		jobId,
+		randomAnalysisId
 	)
 
 	connection = Database.pool.get_connection()
 
-	with connection.cursor() as cursor:
-		cursor.execute(set_analysis_id_query, update_data)
-
-
 	analysis_data = (
 		int(userId),
-		"analysis",
+		analysis_parameters["name"],
 		randomAnalysisId,
 		job_number,
-		1,
-		None,
+		analysis_types[analysis_type],
+		jobId,
 		int(time.time())
 	)
 
@@ -276,13 +303,10 @@ def createJobForUserIdWithData(userId, jsonData):
 
 	#needs_relax comes in as part of the simulation parameters, but it doesn't belong there.
 	try:
-		print("here")
 		needs_relax = parameters["needs_relax"]
 		parameters.pop("needs_relax")
-		print("there")
 		relax_force = parameters["relax_force"]
 		parameters.pop("relax_force")
-		print("where")
 	except:
 		needs_relax = False
 		pass
@@ -338,18 +362,43 @@ def createJobForUserIdWithData(userId, jsonData):
 
 	return True, job_number
 
+def getAssociatedJobs(job_id):
+	associates = None
+	payload = []
 
+	#retrieve entries from SQL with sim_job_id == jobId
+	connection = Database.pool.get_connection()
+	with connection.cursor() as cursor:
+		cursor.execute(get_associated_query, (job_id,))
+		associates = cursor.fetchall()
+	connection.close()
+
+	if associates:
+		for job_data in associates:
+			data_dict = createAssociateDictionary(job_data)
+			data_dict["status"] = getJobStatus(data_dict["uuid"])
+			payload.append(data_dict)
+		return payload
+	else:
+		return None
+
+
+def createAssociateDictionary(data) :
+	keys = ["name", "uuid", "job_type", "sim_job_id", "creation_date", "status"]
+	data = [data[i] for i in [2, 3, 5, 6, 7, 8]]
+	schema = dict(zip(keys, data))
+
+	return schema
 
 def createJobDictionaryForTuple(data):
 
-	job_id, user_id, job_name, uuid, slurm_id, job_type, analysis_job_id, creation_date, status= data
+	job_id, user_id, job_name, uuid, slurm_id, job_type, sim_job_id, creation_date, status= data
 
 	schema = {
 		"name":job_name,
 		"uuid":uuid,
 		"job_type":job_type,
-		"analysisJobId":analysis_job_id,
-		"creationDate":creation_date,
+		"creation_date":creation_date,
 		"status":status,
 	}
 

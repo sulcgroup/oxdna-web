@@ -108,36 +108,19 @@ def job_status(jobId):
 	return status
 
 
-@app.route('/api/create_analysis/<jobId>', methods=['POST'])
-def create_analysis(jobId):
-
-	print("QUERIED!")
+@app.route('/api/create_analysis', methods=["POST"])#<jobId>/<analysis_type>', methods=['POST'])
+def create_analysis():#jobId, analysis_type):
 
 	if session.get("user_id") is None:
 		return "You must be logged in to submit a job!"
 
-	userId = session["user_id"]
-	print("Now creating a analysis on behalf of:", userId, " and for job id:", jobId)
-
-	'''
 	json_data = request.get_json()
+	from sys import stderr
+	print(json_data, file=stderr)
 
-	parameters = json_data["parameters"]
-	files = json_data["files"]
+	userId = session["user_id"]
 
-	addDefaultParameters(parameters)
-
-	metadata = {}
-
-	job_data = {
-		"metadata":metadata,
-		"parameters": parameters, 
-		"files": files
-	}
-
-	Job.createJobForUserIdWithData(user_id, job_data)'''
-
-	return Job.createAnalysisForUserIdWithJob(userId, jobId)
+	return Job.createAnalysisForUserIdWithJob(userId, json_data)
 
 	#return "Analysis created!"
 @app.route("/verify", methods = ["GET"])
@@ -305,9 +288,13 @@ def get_job_data(job_id):
 		return redirect("/login")
 
 	job_data = Job.getJobForUserId(job_id, session.get("user_id"))
+	associated_jobs = Job.getAssociatedJobs(job_data["uuid"])
 
 	if(job_data is not None):
-		return jsonify(job_data)
+		return jsonify({
+			"job_data" : [job_data],
+			"associated_jobs" : associated_jobs
+		})
 	else:
 		return "No job data."
 
@@ -325,35 +312,34 @@ def getJobs():
 
 	return jsonify(jobs)
 
+@app.route("/analysis_output/<uuid>/<analysis_id>/<desired_output>") 
+def getAnalysisOutput(uuid, analysis_id, desired_output):
+	if session.get("user_id") is None:
+		return "You must be logged in to view the output of a job"
+
+	user_directory = "/users/" + str(session["user_id"]) + "/"
+	job_directory =  user_directory + uuid + "/"
+
+	desired_output_map = {
+		"distance_data" : ".txt",
+		"distance_hist" : "_hist.png",
+		"distance_traj" : "_traj.png",
+		"distance_log" :  ".log"
+	}
+
+	job_data = Job.getAssociatedJobs(uuid)
+	if job_data:
+		for job in job_data:
+			if job["uuid"] == analysis_id:
+				desired_file_path = job_directory + job["name"] + desired_output_map[desired_output]
+
+	try:
+		return send_file(desired_file_path, as_attachment=True)
+	except:
+		abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=analysis_id))
 
 @app.route("/ufile/<uuid>/<desired_output>")
 def getUserfile(uuid, desired_output):
-	if session.get("user_id") is None:
-			return "You must be logged in to view the output of a job"
-
-	desired_output_map = {
-		"energy":"energy.dat",
-		"trajectory_zip":"trajectory.zip",
-		"trajectory_txt":"trajectory.dat",
-		"topology": "output.top",
-		"last_conf": "last_conf.dat",
-		"log":"job_out.log",
-		"analysis_log":"analysis_out.log",
-		"input":"input",
-		"mean":"mean.dat",
-		"deviations":"deviations.json"
-	}
-
-	if desired_output not in desired_output_map:
-		return "You must specify a valid desired output"
-
-	file_path =  "/userfiles/" + str(session["user_id"]) + "/" + uuid + "/" + desired_output_map[desired_output]
-
-	print(file_path)
-	return redirect(file_path)
-
-@app.route("/job_output/<uuid>/<desired_output>")
-def getJobOutput(uuid, desired_output):
 
 	if session.get("user_id") is None:
 		return "You must be logged in to view the output of a job"
@@ -377,10 +363,45 @@ def getJobOutput(uuid, desired_output):
 
 	user_directory = "/users/" + str(session["user_id"]) + "/"
 	job_directory =  user_directory + uuid + "/"
+
+	file_path =  "/userfiles/" + str(session["user_id"]) + "/" + uuid + "/" + desired_output_map[desired_output]
+
+	print(file_path)
+	return redirect(file_path)
+
+@app.route("/job_output/<uuid>/<desired_output>")
+def getJobOutput(uuid, desired_output):
+
+	if session.get("user_id") is None:
+		return "You must be logged in to view the output of a job"
+
+	desired_output_map = {
+		"energy":"energy.dat",
+		"trajectory_zip":"trajectory.zip",
+		"trajectory_txt":"trajectory.dat",
+        "topology": "output.top",
+		"last_conf": "last_conf.dat",
+		"log":"job_out.log",
+		"mean_log":"mean.log",
+		"align_log":"align.log",
+		"analysis_log":"analysis_out.log",
+		"input":"input",
+		"mean":"mean.dat",
+		"deviations":"deviations.json",
+		"aligned_traj":"aligned.dat"
+	}
+
+	if desired_output not in desired_output_map:
+		return "You must specify a valid desired output"
+	
+
+	user_directory = "/users/" + str(session["user_id"]) + "/"
+	job_directory =  user_directory + uuid + "/"
 	desired_file_path = job_directory + desired_output_map[desired_output]
 
 	if not "trajectory" in desired_output:
 		try:
+			print(desired_file_path)
 			desired_file = open(desired_file_path, "r")
 			desired_file_contents = desired_file.read()
 			return Response(desired_file_contents, mimetype='text/plain')
