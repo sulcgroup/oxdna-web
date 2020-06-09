@@ -234,6 +234,12 @@ def createAnalysisForUserIdWithJob(userId, analysis_parameters):
 
 	jobId = analysis_parameters["jobId"]
 	analysis_type = analysis_parameters["type"]
+	print(analysis_type)
+	print(analysis_parameters)
+	if analysis_type == "mean":
+		analysis_parameters["name"] = "mean"
+	elif analysis_type == "align":
+		analysis_parameters["name"] = "align"
 
 	randomAnalysisId = str(uuid.uuid4())
 
@@ -298,13 +304,10 @@ def createJobForUserIdWithData(userId, jsonData):
 
 	#needs_relax comes in as part of the simulation parameters, but it doesn't belong there.
 	try:
-		print("here")
 		needs_relax = parameters["needs_relax"]
 		parameters.pop("needs_relax")
-		print("there")
 		relax_force = parameters["relax_force"]
 		parameters.pop("relax_force")
-		print("where")
 	except:
 		needs_relax = False
 		pass

@@ -115,6 +115,8 @@ def create_analysis():#jobId, analysis_type):
 		return "You must be logged in to submit a job!"
 
 	json_data = request.get_json()
+	from sys import stderr
+	print(json_data, file=stderr)
 
 	userId = session["user_id"]
 
@@ -325,14 +327,14 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 	}
 
 	job_data = Job.getAssociatedJobs(uuid)
-	for job in job_data:
-		if job["uuid"] == analysis_id:
-			desired_file_path = job_directory + job["name"] + desired_output_map[desired_output]
+	if job_data:
+		for job in job_data:
+			if job["uuid"] == analysis_id:
+				desired_file_path = job_directory + job["name"] + desired_output_map[desired_output]
 
-	print(desired_file_path)
-	if desired_file_path:
+	try:
 		return send_file(desired_file_path, as_attachment=True)
-	else:
+	except:
 		abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=analysis_id))
 
 @app.route("/ufile/<uuid>/<desired_output>")

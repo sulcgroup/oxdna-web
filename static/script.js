@@ -25,6 +25,7 @@ app.factory("JobService", function($http) {
 
 	factory.startAnalysisForJob = function(jobId, type, cb) {
 		let divId = type+"Card"
+		//get all input elements from the form
 		let parameters = $(`#${divId} input`).map(function(idx, elem) {
 			return [[$(elem).attr('id'), $(elem).val()]];
 		}).get();
@@ -39,7 +40,7 @@ app.factory("JobService", function($http) {
 			payload[p[0]] = p[1];
 		});
 		request.send(JSON.stringify(payload));
-		request.onload = function() {
+		request.onload = function(analysisId) {
 			if (request.response = "Success") cb (true, analysisId)
 			else cb (false)
 		}
