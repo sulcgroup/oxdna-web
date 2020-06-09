@@ -64,7 +64,6 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 			name = analysis_parameters["name"],
 			particles = ' '.join(plist)
 		)
-		print(run_command)
 
 	sbatch_file = """#!/bin/bash
 #SBATCH --job-name={analysis_id}    # Job name

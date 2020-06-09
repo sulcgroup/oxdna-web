@@ -323,7 +323,8 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 	desired_output_map = {
 		"distance_data" : ".txt",
 		"distance_hist" : "_hist.png",
-		"distance_traj" : "_traj.png"
+		"distance_traj" : "_traj.png",
+		"distance_log" :  ".log"
 	}
 
 	job_data = Job.getAssociatedJobs(uuid)
