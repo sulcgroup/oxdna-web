@@ -539,6 +539,8 @@ def getJobStatus(job_name):
 	if cache_entry: 
 		print("Found CompletedJobsCache entry for:", job_name)
 		return cache_entry
+	else:
+		print("Did not find entry for:", job_name)
 
 	connection = Database.pool.get_connection()
 	
