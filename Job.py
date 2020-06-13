@@ -551,6 +551,7 @@ def getJobStatus(job_name):
 				cursor.execute(get_status, (job_name,))
 				result = cursor.fetchone()
 				status = result[0]
+				print(status)
 		
 		#if it was still not found,
 		#we can assume the job has completed
