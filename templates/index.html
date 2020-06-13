@@ -217,7 +217,17 @@
 									</p>
 
 									<p>
-										<h6>Mismatch Repulsion</h6>
+										<h6>Simulation timestep</h6>
+										<div class="input-group mb-3">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="basic-addon1">dt</span>
+											</div>
+											<input ng-model="data.dt" type="number" step=0.0001 class="form-control" placeholder="The timestep of integration for the simulation" aria-label="The timestep of integration for the simulation" aria-describedby="basic-addon1">
+										</div>
+									</p>
+
+									<p>
+										<h6>Mismatch Repulsion (RNA only)</h6>
 										<div class="form-check form-check-inline">
 											<input ng-model="auxillary.mismatch_repulsion" class="form-check-input" type="radio" name="mismatch_repulsion" id="inlineRadio1" value="true">
 											<label class="form-check-label" for="inlineRadio1">Yes</label>

@@ -19,7 +19,6 @@ def addDefaultParameters(parameters):
 		"time_scale":"linear",
 		"ensemble":"NVT",
 		"thermostat":"john",
-		"dt":"0.001",
 		"diff_coeff":2.5,
 		"backend_precision":"double",
 		"lastconf_file":"last_conf.dat",

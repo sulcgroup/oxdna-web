@@ -309,6 +309,7 @@ def createJobForUserIdWithData(userId, jsonData):
 		relax_force = parameters["relax_force"]
 		parameters.pop("relax_force")
 	except:
+		relax_force = 0
 		needs_relax = False
 		pass
 	
