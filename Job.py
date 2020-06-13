@@ -5,6 +5,7 @@ import subprocess
 import sys
 
 import Database
+import Cache
 
 add_job_query = (
 	"INSERT INTO Jobs "
@@ -504,17 +505,11 @@ def deleteJob(job_uuid):
 	job_path = "/users/" + str(userId) + "/" + job_uuid
 	subprocess.Popen(["rm", "-R", job_path], stdout=subprocess.PIPE)
 
-
-
-
-def getJobStatus(job_name):	
-	connection = Database.pool.get_connection()
-
+def getJobStatusFromSlurm(job_name):
 	pipe = subprocess.Popen(["squeue", "-n", job_name], stdout=subprocess.PIPE)
 	output = pipe.communicate()[0].decode("ascii")[:-1]
 	if output == "":
 		return "None"
-	
 	try:
 		code = output.split()[12]
 	except:
@@ -532,22 +527,44 @@ def getJobStatus(job_name):
 	elif code == "CD":
 		status = "Completed"
 	elif code == "NONE":
-
 		status = None
-		with connection.cursor() as cursor:
-			cursor.execute(get_status, (job_name,))
-			result = cursor.fetchone()
-			status = result[0]
 
-		#this makes no sense semantically
+	return status
+	
+
+def getJobStatus(job_name):	
+	#Check the cache for completed jobs
+	#we can save on doing the Slurm/MySQL interfacing
+	cache_entry = Cache.CompletedJobsCache.get(job_name)
+	if cache_entry: return cache_entry
+
+	connection = Database.pool.get_connection()
+	
+	status = getJobStatusFromSlurm(job_name)
+
+	#If we didn't get a status back from Slurm,
+	#let's check MySQL
+	if status == None
+		with connection.cursor() as cursor:
+				cursor.execute(get_status, (job_name,))
+				result = cursor.fetchone()
+				status = result[0]
+		
+		#if it was still not found,
+		#we can assume the job has completed
+		#and we won't see further updates
 		if status == None:
 			status = "Completed"
-		
+			Cache.CompletedJobsCache.set(job_name, status)
+
+	#update the job status
+	#maybe we can eventually have a cronjob running to actually handle these updates
+	#that would make this interface a lot more REST-y too
+	#would just query MySQL only, without ever having to look at the squeue
 	with connection.cursor() as cursor:
 		cursor.execute(update_status, (job_name, status,))	
 
 	connection.close()
-	
 	return status
 
 	
