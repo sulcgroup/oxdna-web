@@ -548,15 +548,16 @@ def getJobStatus(job_name):
 	#let's check MySQL
 	if status == None:
 		with connection.cursor() as cursor:
-				cursor.execute(get_status, (job_name,))
-				result = cursor.fetchone()
-				status = result[0]
-				print(status)
-		
+			cursor.execute(get_status, (job_name,))
+			result = cursor.fetchone()
+			status = result[0]
+			print(status)
+		print("status2:", status)
 		#if it was still not found,
 		#we can assume the job has completed
 		#and we won't see further updates
 		if status == None:
+			print("putting into cache!")
 			status = "Completed"
 			Cache.CompletedJobsCache.set(job_name, status)
 
