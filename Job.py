@@ -537,7 +537,7 @@ def getJobStatus(job_name):
 	#we can save on doing the Slurm/MySQL interfacing
 	cache_entry = Cache.CompletedJobsCache.get(job_name)
 	if cache_entry: 
-		print("Found cache entry for:", job_name)
+		print("Found CompletedJobsCache entry for:", job_name)
 		return cache_entry
 
 	connection = Database.pool.get_connection()
@@ -551,13 +551,11 @@ def getJobStatus(job_name):
 			cursor.execute(get_status, (job_name,))
 			result = cursor.fetchone()
 			status = result[0]
-			print(status)
-		print("status2:", status)
+
 		#if it was still not found,
 		#we can assume the job has completed
 		#and we won't see further updates
 		if status == None:
-			print("putting into cache!")
 			status = "Completed"
 			Cache.CompletedJobsCache.set(job_name, status)
 
