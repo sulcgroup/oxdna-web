@@ -1,7 +1,6 @@
 import os
 from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort
 import requests
-
 import Login
 import Job
 import Register
@@ -11,8 +10,6 @@ import Database
 
 app = Flask(__name__, static_url_path='/static', static_folder="static")
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-
-JobStatusCache = Cache()
 
 def addDefaultParameters(parameters):
 	default_parameters = {

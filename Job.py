@@ -544,7 +544,7 @@ def getJobStatus(job_name):
 
 	#If we didn't get a status back from Slurm,
 	#let's check MySQL
-	if status == None
+	if status == None:
 		with connection.cursor() as cursor:
 				cursor.execute(get_status, (job_name,))
 				result = cursor.fetchone()
@@ -570,11 +570,5 @@ def getJobStatus(job_name):
 	
 	
 
-
-	
-
-
-#runOneStepJob("jobfiles/1/67423c24-6ee2-420e-af00-14f1e62c3362/")
-#runOneStepJob("jobfiles/1/f776a944-54d4-4ff0-a6c1-65906be3872c")
 
 	
