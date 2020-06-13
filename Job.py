@@ -536,7 +536,9 @@ def getJobStatus(job_name):
 	#Check the cache for completed jobs
 	#we can save on doing the Slurm/MySQL interfacing
 	cache_entry = Cache.CompletedJobsCache.get(job_name)
-	if cache_entry: return cache_entry
+	if cache_entry: 
+		print("Found cache entry for:", job_name)
+		return cache_entry
 
 	connection = Database.pool.get_connection()
 	
