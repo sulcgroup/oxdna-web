@@ -367,6 +367,7 @@ app.controller("MainCtrl", function($scope, $http) {
 		$scope.data["MD_steps"] = 1e7;
 		$scope.data["MD_dt"] = 0.0001;
 		$scope.data["relax_force"] = 1.5;
+		$scope.data["dt"] = 0.001;
 	}
 
 	$scope.parseData();
