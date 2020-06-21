@@ -146,6 +146,7 @@ app.controller("AdminCtrl", function($scope, $http) {
 	$scope.recentUsers = [];
 
 	$scope.searchInput = "";
+	$scope.jobLimitInput = 4;
 
 	$scope.selectedUserName = ""
 	$scope.selectedUserID = -1;
@@ -155,6 +156,7 @@ app.controller("AdminCtrl", function($scope, $http) {
 	$scope.privalegedButtonText = "Make Privaleged";
 	$scope.adminButtonText = "Make Admin";
 	$scope.message = ""
+	$scope.jobMessage= "";
 
 	$scope.getRecentUsers = function(){
 		$http({
@@ -215,6 +217,18 @@ app.controller("AdminCtrl", function($scope, $http) {
 			url: '/admin/promoteToPrivaleged/' + $scope.selectedUserName
 		}).then(function successCallback(response){
 			$scope.message = response.data
+		})
+	}
+
+	$scope.setJobLimit = function(){
+		console.log("script.js")
+		console.log($scope.jobLimitInput)
+		// $scope.getUserInfo($scope.jobLimitInput)
+		$http({
+			method: "GET",
+			url: `/admin/setJobLimit/${$scope.selectedUserName}/${$scope.jobLimitInput}`
+		}).then(function successCallback(response){
+			$scope.jobMessage = response.data;
 		})
 	}
 

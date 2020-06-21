@@ -10,10 +10,11 @@ import EmailScript
 
 import Database
 
+defaultJobLimit = 4
 add_user_query = (
 "INSERT INTO Users"
-"(`username`, `password`, `group`, `creationDate`, `verifycode`, `verified`, `firstName`, `lastName`, `institution`)"
-"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+"(`username`, `password`, `group`, `creationDate`, `verifycode`, `verified`, `firstName`, `lastName`, `institution`, `jobLimit`)"
+"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 )
 
 #needs input cleaning/escaping/validation
@@ -27,10 +28,10 @@ def registerUser(name, password, firstName, lastName, institution, requires_veri
 		return -2 #value that is not none means user is in the database. return -2 error code.
 
 	verifycode = binascii.b2a_hex(os.urandom(15)).decode("utf-8")
-	user_data = (name, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), 0, int(time.time()), verifycode, "False", firstName, lastName, institution)
+	user_data = (name, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), 0, int(time.time()), verifycode, "False", firstName, lastName, institution, defaultJobLimit)
 
 	if requires_verification == False:
-		user_data = (name, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), 0, int(time.time()), verifycode, "True", firstName, lastName, institution)
+		user_data = (name, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), 0, int(time.time()), verifycode, "True", firstName, lastName, institution, defaultJobLimit)
 
 	with connection.cursor() as cursor:
 		cursor.execute(add_user_query, user_data)

@@ -429,7 +429,7 @@ def recentlyAddedUsers():
 	users = tuple(newUsers)
 	return jsonify(users)
 
-@app.route("/admin/promoteToAdmin/<username>")
+@app.route("/admin/Admin/<username>")
 def promoteToAdmin(username):
 	loggedInUserID = session.get("user_id")
 	isAdmin = Admin.checkIfAdmin(loggedInUserID)
@@ -446,6 +446,15 @@ def promoteToPrivaleged(username):
 		userID = Admin.getID(username)
 		Admin.promoteToPrivaleged(userID)
 		return username + " promoted to privaleged"
+
+@app.route("/admin/setJobLimit/<username>/<jobLimit>")
+def setJobLimit(username, jobLimit):
+	loggedInUserID = session.get("user_id")
+	isAdmin = Admin.checkIfAdmin(loggedInUserID)
+	if isAdmin == 1:
+		userID = Admin.getID(username)
+		Admin.setJobLimit(userID, jobLimit)
+		return username + "'s job limit set to " + jobLimit
 
 @app.route("/admin/getUserID/<username>")
 def getUserID(username):
