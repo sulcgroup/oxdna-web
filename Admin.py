@@ -11,6 +11,7 @@ privalegedQuery = ("SELECT privaleged FROM Users WHERE id = %s")
 recentUsersQuery = ("SELECT id, username FROM Users ORDER BY creationDate DESC LIMIT 5")
 updateToAdministrator = ("UPDATE Users SET administrator = 1 WHERE id = %s")
 updateToPrivaleged = ("UPDATE Users SET privaleged = 1 WHERE id = %s")
+jobLimitQuery = ("SELECT jobLimit FROM Users WHERE id = %s")
 updateJobLimit = ("UPDATE Users SET jobLimit = %s WHERE id = %s")
 userJobCountQuery = ("SELECT COUNT(*) FROM Jobs WHERE userId = %s")
 userIDQuery = ("SELECT id FROM Users WHERE username = %s")
@@ -79,6 +80,20 @@ def promoteToPrivaleged(user_id):
 		cursor.execute(updateToPrivaleged, (user_id,))
 
 	connection.close()
+
+def getJobLimit(user_id):
+	connection = Database.pool.get_connection()
+	result = None
+
+	with connection.cursor() as cursor:
+		cursor.execute(jobLimitQuery, (user_id,))
+		result = cursor.fetchone()
+	connection.close()
+
+	if result is not None:
+		return result[0]
+	else:
+		return 0
 
 def setJobLimit(user_id, jobs):
 	connection = Database.pool.get_connection()
