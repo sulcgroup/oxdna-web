@@ -14,6 +14,7 @@ updateToPrivaleged = ("UPDATE Users SET privaleged = 1 WHERE id = %s")
 jobLimitQuery = ("SELECT jobLimit FROM Users WHERE id = %s")
 updateJobLimit = ("UPDATE Users SET jobLimit = %s WHERE id = %s")
 userJobCountQuery = ("SELECT COUNT(*) FROM Jobs WHERE userId = %s")
+userJobStatusCountQuery = ("SELECT COUNT(*) FROM Jobs WHERE userId = %s AND status = %s")
 userIDQuery = ("SELECT id FROM Users WHERE username = %s")
 
 
@@ -104,7 +105,6 @@ def setJobLimit(user_id, jobs):
 	connection.close()
 
 def getUserJobCount(user_id):
-
 	connection = Database.pool.get_connection()
 
 	result = None
@@ -117,6 +117,23 @@ def getUserJobCount(user_id):
 		return result[0]
 	else:
 		return 0
+
+def getUserJobStatusCount(user_id, status):
+	connection = Database.pool.get_connection()
+
+	result = None
+	with connection.cursor() as cursor:
+		cursor.execute(userJobStatusCountQuery, (user_id, status,))
+		result = cursor.fetchone()
+	connection.close()
+
+	if result is not None:
+		return result[0]
+	else:
+		return 0
+
+def getUserActiveJobCount(user_id):
+	return getUserJobStatusCount(user_id, "Pending") + getUserJobStatusCount(user_id, "Running") + getUserJobStatusCount(user_id, "Suspended") + getUserJobStatusCount(user_id, "Completing")
 
 def getID(username):
 	connection = Database.pool.get_connection()

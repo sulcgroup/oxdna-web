@@ -40,6 +40,11 @@ def handle_form():
 		return "You must be logged in to submit a job!"
 
 	user_id = session["user_id"]
+	activeJobCount = Admin.getUserActiveJobCount(user_id)
+	jobLimit = Admin.getJobLimit(user_id)
+	if (activeJobCount >= jobLimit):
+		return "You have reached the maximum number of running jobs."
+
 	print("Now creating a job on behalf of:", user_id)
 
 	json_data = request.get_json()
@@ -460,6 +465,12 @@ def setJobLimit(username, jobLimit):
 	loggedInUserID = session.get("user_id")
 	isAdmin = Admin.checkIfAdmin(loggedInUserID)
 	if isAdmin == 1:
+		try:
+			jobLimitInt = int(jobLimit)
+		except ValueError:
+			return "Failure: enter an integer value"
+		if jobLimitInt > 127 or jobLimitInt < -127:
+			return "Failure: maximum value is 127"
 		userID = Admin.getID(username)
 		Admin.setJobLimit(userID, jobLimit)
 		return username + "'s job limit set to " + jobLimit
