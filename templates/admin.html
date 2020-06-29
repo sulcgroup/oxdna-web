@@ -139,6 +139,8 @@
 						<h3>{{selectedUserName}}</h3>
 						Number of jobs: {{selectedUserJobCount}}
 						<br>
+						Job limit: {{selectedUserJobLimit}}
+						<br>
 						Admin: {{selectedUserIsAdmin}}
 						<br>
 						Privaleged: {{selectedUserIsPrivaleged}}
@@ -147,6 +149,12 @@
 						<button ng-click="promoteToAdmin()">Make Admin</button>
 						<br>
 						{{message}}
+						<br>
+						<h5>Set job limit</h5>
+						<input ng-model="jobLimitInput"><button ng-click="setJobLimit()">Set</button>
+						<br>
+						{{jobMessage}}
+						<br>
 
 
 					</div>

@@ -424,7 +424,6 @@ def getJobsForUserId(userId):
 
 	return payload
 
-
 def getJobForUserId(jobId, userId):
 	connection = Database.pool.get_connection()
 
@@ -478,7 +477,7 @@ def cancelJob(job_name):
 		prev_status = result[0]
 
 	if prev_status == "Pending":
-		cursor.execute(update_status, (job_name, "Canceled",))
+		cursor.execute(update_status, ("Canceled", job_name,))
 
 	connection.close()
 
@@ -567,13 +566,8 @@ def getJobStatus(job_name):
 	#that would make this interface a lot more REST-y too
 	#would just query MySQL only, without ever having to look at the squeue
 	with connection.cursor() as cursor:
-		cursor.execute(update_status, (job_name, status,))	
+		print("JOB NAME: ", job_name)
+		cursor.execute(update_status, (status, job_name,))	
 
 	connection.close()
 	return status
-
-	
-	
-
-
-	
