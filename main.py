@@ -231,17 +231,23 @@ def resetPassword():
 	if request.method == "GET":
 		token = request.args.get('token')
 		userId = Account.checkToken(token)
-		if (userId <= 0):
+		if userId == 0:
 			return "Invalid URL"
-		return send_file("templates/password/reset.html")
+		elif userId == -1:
+			return "Reset token expired: please try again"
+		else:
+			return send_file("templates/password/reset.html")
 	
 	if request.method == "POST":
 		token = request.json["token"]
 		userId = Account.checkToken(token)
-		if (userId <= 0):
+		if userId == 0:
 			return "Invalid URL"
-		newPassword = request.json["newPassword"]
-		return Account.resetPassword(userId, newPassword)
+		elif userId == -1:
+			return "Reset token expired: please try again"
+		else:
+			newPassword = request.json["newPassword"]
+			return Account.resetPassword(userId, newPassword)
 
 @app.route("/account/update_password", methods=["POST"])
 def updatePassword():

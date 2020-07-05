@@ -18,6 +18,8 @@ get_userid_query = ("SELECT id FROM Users WHERE username = %s")
 set_reset_token = ("UPDATE Users SET resetToken = %s WHERE username = %s")
 check_reset_token = ("SELECT id FROM Users WHERE resetToken = %s")
 reset_password = ("UPDATE Users SET password = %s WHERE id = %s")
+set_reset_token_expiration = ("UPDATE Users SET resetTokenExpiration = %s WHERE username = %s")
+get_reset_token_expiration = ("SELECT resetTokenExpiration FROM Users WHERE id = %s")
 
 
 
@@ -144,9 +146,11 @@ def verifyUser(userId, VerifyCode):
 def sendResetToken(username):
 	connection = Database.pool.get_connection()
 	token = str(uuid.uuid4())
+	day = time.time() + 86400
 
 	with connection.cursor() as cursor:
 		cursor.execute(set_reset_token, (token, username,))
+		cursor.execute(set_reset_token_expiration, (day, username,))
 	
 	### UPDATE LINK WHEN DOMAIN GOES PUBLIC ###
 	verifylink = "http://localhost:9000/password/reset?token={token}".format(token = token)
@@ -158,6 +162,7 @@ def sendResetToken(username):
 def checkToken(token):
 	connection = Database.pool.get_connection()
 	userId = 0
+	expirationTime = 0
 
 	with connection.cursor() as cursor:
 		cursor.execute(check_reset_token, (token,))
@@ -166,9 +171,17 @@ def checkToken(token):
 	if not userId:
 		connection.close()
 		return 0
-
-	connection.close()
-	return userId[0]
+	
+	with connection.cursor() as cursor:
+		cursor.execute(get_reset_token_expiration, userId[0])
+		expirationTime = cursor.fetchone()
+	
+	if time.time() > expirationTime[0]:
+		connection.close()
+		return -1
+	else:
+		connection.close()
+		return userId[0]
 
 
 def resetPassword(userId, newPassword):
