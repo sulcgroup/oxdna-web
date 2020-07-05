@@ -160,6 +160,10 @@ def register():
 		firstName = request.form["firstName"]
 		lastName = request.form["lastName"]
 		institution = request.form["institution"]
+		registrationCode = request.form["registrationCode"]
+	
+	if registrationCode != "BetaCodeDNA":
+		return "Incorrect registration code."
 
 	if username[-4:] != ".edu":
 		 return "We are currently only accepting .edu registrations at this time."
