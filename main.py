@@ -1,8 +1,6 @@
 import os
 from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort
 import requests
-
-
 import Login
 import Job
 import Register
@@ -13,9 +11,6 @@ import Database
 app = Flask(__name__, static_url_path='/static', static_folder="static")
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
-def getDatabaseConnection():
-	return pool.get_connection()
-
 def addDefaultParameters(parameters):
 	default_parameters = {
 		"sim_type":"MD",
@@ -24,7 +19,6 @@ def addDefaultParameters(parameters):
 		"time_scale":"linear",
 		"ensemble":"NVT",
 		"thermostat":"john",
-		"dt":"0.001",
 		"diff_coeff":2.5,
 		"backend_precision":"double",
 		"lastconf_file":"last_conf.dat",
@@ -46,6 +40,11 @@ def handle_form():
 		return "You must be logged in to submit a job!"
 
 	user_id = session["user_id"]
+	activeJobCount = Admin.getUserActiveJobCount(user_id)
+	jobLimit = Admin.getJobLimit(user_id)
+	if (activeJobCount >= jobLimit):
+		return "You have reached the maximum number of running jobs."
+
 	print("Now creating a job on behalf of:", user_id)
 
 	json_data = request.get_json()
@@ -453,6 +452,29 @@ def promoteToPrivaleged(username):
 		Admin.promoteToPrivaleged(userID)
 		return username + " promoted to privaleged"
 
+@app.route("/admin/setJobLimit/<username>")
+def getJobLimit(username):
+	loggedInUserID = session.get("user_id")
+	isAdmin = Admin.checkIfAdmin(loggedInUserID)
+	if isAdmin == 1:
+		userID = Admin.getID(username)
+		return Admin.getJobLimit(userID)
+
+@app.route("/admin/setJobLimit/<username>/<jobLimit>")
+def setJobLimit(username, jobLimit):
+	loggedInUserID = session.get("user_id")
+	isAdmin = Admin.checkIfAdmin(loggedInUserID)
+	if isAdmin == 1:
+		try:
+			jobLimitInt = int(jobLimit)
+		except ValueError:
+			return "Failure: enter an integer value"
+		if jobLimitInt > 127 or jobLimitInt < -127:
+			return "Failure: maximum value is 127"
+		userID = Admin.getID(username)
+		Admin.setJobLimit(userID, jobLimit)
+		return username + "'s job limit set to " + jobLimit
+
 @app.route("/admin/getUserID/<username>")
 def getUserID(username):
 	userID = Admin.getID(username)
@@ -473,8 +495,9 @@ def getUserInfo(username):
 		isPrivaleged = "True"
 	else:
 		isPrivaleged = "False"
+	jobLimit = Admin.getJobLimit(userID)
 	jobCount = Admin.getUserJobCount(userID)
-	info = (jobCount, isAdmin, isPrivaleged)
+	info = (jobCount, jobLimit, isAdmin, isPrivaleged)
 	return jsonify(info)
 
 @app.route("/")

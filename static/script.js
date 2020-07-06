@@ -142,19 +142,22 @@ app.controller("AccountCtrl", function($scope, $http) {
 
 app.controller("AdminCtrl", function($scope, $http) {
 
-	console.log("Now in the admin ctrl2!");
+	console.log("Now in the admin ctrl!");
 	$scope.recentUsers = [];
 
 	$scope.searchInput = "";
+	$scope.jobLimitInput = "";
 
 	$scope.selectedUserName = ""
 	$scope.selectedUserID = -1;
 	$scope.selectedUserJobCount = "";
+	$scope.selectedUserJobLimit = -1;
 	$scope.selectedUserIsAdmin = false
 	$scope.selectedUserIsPrivaleged = false
 	$scope.privalegedButtonText = "Make Privaleged";
 	$scope.adminButtonText = "Make Admin";
 	$scope.message = ""
+	$scope.jobMessage= "";
 
 	$scope.getRecentUsers = function(){
 		$http({
@@ -174,8 +177,9 @@ app.controller("AdminCtrl", function($scope, $http) {
 			console.log(response)
 			$scope.selectedUserName = userID
 			$scope.selectedUserJobCount = response.data[0]
-			$scope.selectedUserIsAdmin = response.data[1]
-			$scope.selectedUserIsPrivaleged = response.data[2]
+			$scope.selectedUserJobLimit = response.data[1]
+			$scope.selectedUserIsAdmin = response.data[2]
+			$scope.selectedUserIsPrivaleged = response.data[3]
 		})
 	}
 
@@ -215,6 +219,24 @@ app.controller("AdminCtrl", function($scope, $http) {
 			url: '/admin/promoteToPrivaleged/' + $scope.selectedUserName
 		}).then(function successCallback(response){
 			$scope.message = response.data
+		})
+	}
+
+	$scope.getJobLimit = function(){
+		$http({
+			method: "GET",
+			url: '/admin/getJobLimit/' + $scope.selectedUserName
+		}).then(function successCallback(response){
+			$scope.selectedUserJobLimit = response.data;
+		})
+	}
+ 
+	$scope.setJobLimit = function(){
+		$http({
+			method: "GET",
+			url: `/admin/setJobLimit/${$scope.selectedUserName}/${$scope.jobLimitInput}`
+		}).then(function successCallback(response){
+			$scope.jobMessage = response.data;
 		})
 	}
 
@@ -366,6 +388,7 @@ app.controller("MainCtrl", function($scope, $http) {
 		$scope.data["MD_steps"] = 1e7;
 		$scope.data["MD_dt"] = 0.0001;
 		$scope.data["relax_force"] = 1.5;
+		$scope.data["dt"] = 0.001;
 	}
 
 	$scope.parseData();
