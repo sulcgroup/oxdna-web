@@ -1,0 +1,119 @@
+<html ng-app="app" ng-controller="AppCtrl">
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    </head>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/7edb57c827.js" crossorigin="anonymous"></script>
+
+    <body ng-controller="LandingCtrl">
+        <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+            <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">oxDNA.org</a>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                    <div class="sidebar-sticky">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/">
+                                    <span data-feather="home"></span>
+                                    Home <span class="sr-only">(current)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">
+                                    <span data-feather="list"></span>
+                                    Login
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/database">
+                                    <span data-feather="list"></span>
+                                    Database
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                        <h1 class="h1">Welcome to oxDNA.org!</h1>
+                    </div>
+
+                    <div class="card">
+                        <div id=welcomeCard class="card-body">
+                            <h2>
+                                Services we provide:
+                            </h2>
+                            <p>
+                                Welcome to oxDNA.org, a service of the Sulc and Yan labs at Arizona State University.  Our goal is to facilitate development of more advance and complex
+                                designs in the fields of DNA and RNA nanotechnology.  On this server, we offer two services: 
+                                oxDNA coarse-grained modeling and a database of experimentally verified structures.
+                                The simulations this server supports are equlibrium sampling of assembled designs, meant to 
+                                assist users in understanding the dynamics of their designs before taking them to the lab.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div id=FAQCard class="card-body">
+                            <h2>
+                                Simulation FAQ:
+                            </h2>
+                            <p>
+                                <b>How large of structures can I simulate?</b>  
+                                These simulations are run on NVIDIA 2080 RTX GPUs, which easily handle origami-sized (10-20k bases) designs.
+                                Designs with more than 50k bases may not finish in the time allotted to each job. <br>
+                                <b>Can I submit my own oxDNA input files?</b>  
+                                For security reasons, we do not allow users to submit their own input files. <br>
+                                <b>Can I run VMMC/FFS/PT/Umbrella sampling simulations?</b>
+                                No. This service is meant to provide simulation support for experimental labs and so only provides equlibrium MD simulations. <br>
+                                <b>How do I get my design into oxDNA format?</b> The <a href="http://tacoxdna.sissa.it/">TacoxDNA webserver</a>
+                                provides a variety of conversion tools from popular DNA nanotechnology design platforms to the oxDNA format.  Some tools, such as vHelix 
+                                and MagicDNA have built in oxDNA outputs.  Designs from CaDNAno often need to be relaxed using rigid-body dynamics prior to simulation, 
+                                this can be done in <a href="https://github.com/sulcgroup/oxdna-viewer">oxView</a> (hit the "try it!" link in the description). <br>
+                                <b>What is the real-time correlation of these simulations?</b> Coarse-grained simulations such as oxDNA speed up different processes
+                                by different amounts.  These simulations will be run for 1e9 steps with a timestep of 0.001, which by conservative estimation corresponds
+                                to 3.03 &mu;s.  However, based on simulated rates of hairpin hybridization, this corresponds to a timescale on the order of 1 ms. <br>
+                                <b>My simulation log shows an error!  What do I do??</b> Errors are most frequently due to the model encountering unpysical states because of
+                                insufficient relaxation.  Structures exported from design tools are rarely in a physically viable state and must be relaxed prior to production
+                                simulation.  We have tried to provide a reasonable relaxation protocol automatically, but for some structures it is insufficient.
+                                  Try resubmitting your job and increasing the length of the relaxation steps or decreasing the dt of the MD relaxation. <br>
+                                <b>I am interested in learning more about oxDNA!  Where can I do that?</b> Check out this <a href="https://arxiv.org/pdf/2004.05052.pdf">book chapter</a> for a comprehensive introduction 
+                                and take a look at the <a href="https://dna.physics.ox.ac.uk/index.php/Main_Page">documentation</a> for detailed information on installation and running simulations.<br>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div id=LegalCard class="card-body">
+                            <h2>Legal Stuff</h2>
+                            <h3>Terms of Use</h3>
+                            <p>
+                                By using the oxDNA.org web application you are agreeing to be bound by the Terms of Use.  The oxDNA.org web application may be used for commercial or academic purposes, subject to the usage limit and disclaimer stated below. 
+                            </p>
+                            <br>
+                            <h3>Usage Limit</h3>
+                            <p>
+                                Users are limited to submitting x jobs at a time.  We reserve the right to limit the usage of any user. 
+                            </p>
+                            <br>
+                            <h3>Disclaimer</h3>
+                            <p>
+                                The oxDNA.org web application is provided by the copyright holders and contributors "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.  In no event shall the copyright holder or contributors be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of the oxDNA.org web application, even if advised of the possibility of such damage. 
+                            </p>
+                            <br>
+                            <h3>License</h3>
+                            <p>
+                                The oxDNA.org web application is provided under a GNU Public License.  The sourcecode is available on our <a href="https://github.com/rjro/azDNA">GitHub</a>
+                            </p>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </body>
+</html>

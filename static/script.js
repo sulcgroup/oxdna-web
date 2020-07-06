@@ -266,7 +266,6 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
 
 })
 
-
 app.controller("JobsCtrl", function($scope, JobsService) {
 
 	$scope.jobs = [];
@@ -437,4 +436,8 @@ app.controller("MainCtrl", function($scope, $http) {
 			}
 		}
 	}
+})
+
+app.controller("LandingCtrl", function($scope){
+	
 })
