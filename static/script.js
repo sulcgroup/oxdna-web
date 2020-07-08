@@ -461,3 +461,55 @@ app.controller("MainCtrl", function($scope, $http) {
 		}
 	}
 })
+
+app.controller("ForgotPasswordCtrl", function($scope, $http) {
+	$scope.status = null;
+
+	$scope.sendResetToken = function(email) {
+		if (email == undefined) {
+			$scope.status = "Please fill out the field";
+			return;
+		}
+		else if (!email.endsWith(".edu")) {
+			$scope.status = "Must be an edu email";
+			return;
+		}
+		$scope.status = "Loading...";
+		$http({
+			method: 'POST',
+			data: { "email": email },
+			url: '/password/forgot/send_reset_token'
+		}).then(response => $scope.status = response.data)
+	}
+
+	$scope.submit = function() {
+		$scope.sendResetToken($scope.email);
+	}
+})
+
+app.controller("ResetCtrl", function($scope, $http) {
+	$scope.status = null;
+	$scope.resetPassword = function(newPassword, confirmPassword) {
+		if (newPassword == undefined || newPassword == "") {
+			$scope.status = "Please fill out both fields"
+			return;
+		}
+		else if (newPassword != confirmPassword) {
+			$scope.status = "Passwords do not match";
+			return;
+		}
+		const token = new URLSearchParams(window.location.search).get("token");
+		$http({
+			method: 'POST',
+			data: {
+				"newPassword": newPassword,
+				"token": token
+			},
+			url: '/password/reset'
+		}).then(response => $scope.status = response.data);
+	}
+
+	$scope.submit = function() {
+		$scope.resetPassword($scope.newPassword, $scope.confirmPassword);
+	}
+})

@@ -546,20 +546,12 @@ def getJobStatus(job_name):
 	
 	status = getJobStatusFromSlurm(job_name)
 
-	#If we didn't get a status back from Slurm,
-	#let's check MySQL
+	#if it was still not found,
+	#we can assume the job has completed
+	#and we won't see further updates
 	if status == None:
-		with connection.cursor() as cursor:
-			cursor.execute(get_status, (job_name,))
-			result = cursor.fetchone()
-			status = result[0]
-
-		#if it was still not found,
-		#we can assume the job has completed
-		#and we won't see further updates
-		if status == None:
-			status = "Completed"
-			Cache.CompletedJobsCache.set(job_name, status)
+		status = "Completed"
+		Cache.CompletedJobsCache.set(job_name, status)
 
 	#update the job status
 	#maybe we can eventually have a cronjob running to actually handle these updates
