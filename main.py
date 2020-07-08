@@ -206,7 +206,7 @@ def login():
 @app.route("/logout")
 def logout():
 	session["user_id"] = None
-	return "You have logged out"
+	return redirect("/")
 
 
 @app.route("/account", methods=["GET"])
