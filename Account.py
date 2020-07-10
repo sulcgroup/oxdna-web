@@ -8,7 +8,7 @@ import EmailScript
 import Database
 
 find_email_by_user_id_query = ("SELECT username FROM Users WHERE id = %s")
-set_email = ("UPDATE Users SET email = %s WHERE id = %s")
+set_email = ("UPDATE Users SET username = %s WHERE id = %s")
 find_date_by_user_id_query = ("SELECT creationDate FROM Users WHERE id = %s")
 find_status_by_user_id_query = ("SELECT status FROM Users WHERE id = %s")
 get_verify_code_query = ("SELECT verifycode FROM Users WHERE id = %s")

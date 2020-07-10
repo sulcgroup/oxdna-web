@@ -1,21 +1,10 @@
 import sys
 import os
 from datetime import datetime
-import mysql.connector
 
 #external python script/modules
 from Account import getEmail, getUsername
 from Job import getJobForUserId
-
-
-#cnx = mysql.connector.connect(user='root', password='', database='azdna')
-#cursor = cnx.cursor()
-
-#find_username_by_id_query = ("SELECT username FROM Users WHERE id = %s")
-
-#def getUsername(userId):
-#    cursor.execute(find_username_by_id_query(userId))
-#    return cursor.username
 
 
 def isHex(string):
@@ -26,7 +15,7 @@ def isHex(string):
         return False
 
 
-DEFAULT_SIZE_LIMIT = 1024 #One kilobyte
+DEFAULT_SIZE_LIMIT = 1000000 #1MB
 DEFAULT_TIME_LIMIT = 432000  #five days, notification threshold.
 DELETION_TIME_LIMIT = 604800 #one week, deletion threshold.
 
@@ -34,7 +23,7 @@ OUTPUT_FILE_NAME = "results.txt"
 
 
 class User:
-    def __init__(self, mum, path):
+    def __init__(self, num, path):
         self.num = num
         self.files = []
         self.deletedfiles = []
@@ -50,6 +39,7 @@ class User:
     #user - the user for which files in the current directory belong to
     #size_limit - size_limit in bytes
     #time_limit - time_limit in bytes
+    #-d - debug mode flag
 #OUTPUT:
     #dirsize - size of the directory specified by input dir in bytes.
 
@@ -61,7 +51,7 @@ def SearchDirectory(dir, results, size_limit, time_limit, user, offending_users,
         user = User(int(pwd), dir)
         offending_users.append(user)
     #variable to keep track of directory size.
-    dirsize = 0;
+    dirsize = 0
     #get the current time
     currentdt = datetime.now()
     #iterate through each item in the current directory
@@ -70,7 +60,7 @@ def SearchDirectory(dir, results, size_limit, time_limit, user, offending_users,
         #check if an item is a directory
         if(os.path.isdir(path)):
             #if so, search that directory recursively. (this is equivalent to depth first search)
-            dirsize += SearchDirectory(path, results, size_limit, time_limit, user, DELETE_TIME, DEBUG)
+            dirsize += SearchDirectory(path, results, size_limit, time_limit, user, offending_users, DELETE_TIME, DEBUG)
         else:
             #if the item is a file.
             #get its statistics
@@ -80,7 +70,7 @@ def SearchDirectory(dir, results, size_limit, time_limit, user, offending_users,
             #calculate time since last modified
             filedt = datetime.fromtimestamp(filestats.st_atime)
             lastmodified = currentdt - filedt
-            #check if the size or time modified exceed the limit
+            #check if the size and time modified exceed the limit
             if (lastmodified.total_seconds() > time_limit and fsize > size_limit):
                 #results[1].append(str(path))
                 #check if the file is old enough to be deleted
@@ -95,12 +85,12 @@ def SearchDirectory(dir, results, size_limit, time_limit, user, offending_users,
                 #issue the user a warning.
                 elif(not user is None):
                     user.files.append(str(path))
-    #outside loop
+
     if(dirsize > size_limit):
         #results[0].append(str(path))
         pass
     #check if the user has offending files and if so, add them to the list if they haven't been
-    if(not user is None and (not user.files.isempty() or user.deletedfiles.isempty()) and not user in offending_users):
+    if(not user is None and (user.files or user.deletedfiles) and not user in offending_users):
         offending_users.append(user)
     return dirsize
 
@@ -157,7 +147,7 @@ except:
     exit(0)
 
 results = []
-
+print("DEBUG: ", DEBUG)
 SearchDirectory(root, results, size_limit, time_limit, None, results, DELETION_TIME_LIMIT, DEBUG)
 
 
@@ -188,7 +178,8 @@ for i in results:
         deletedfilestring = deletedfilestring + "\n" + record
 
     #construct access url
-    domain_name = "www.oxdna.org"
+    ### UPDATE LINK WHEN DOMAIN GOES PUBLIC ###
+    domain_name = "http://localhost:9000"
     url = domain_name + "/jobs"
 
     # call emailing script, assuming it is in the same directory
@@ -198,12 +189,12 @@ for i in results:
         os.system("python3 /vagrant/azDNA/EmailScript.py -t 4 -n " + username + " -d " + user_email + " -l " + deletedfilestring)
 
     if(DEBUG):
-        for (file in i.files):
-            outpufile.write(file)
-            outpufile.write("\r\n")
-        for (file in i.deletedfiles):
-            outpufile.write(file)
-            outpufile.write("\r\n")
+        for file in i.files:
+            outputfile.write(file)
+            outputfile.write("\r\n")
+        for file in i.deletedfiles:
+            outputfile.write(file)
+            outputfile.write("\r\n")
     #print(files)
     #print(deletedfiles)
 
