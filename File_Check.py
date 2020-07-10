@@ -42,6 +42,9 @@ class User:
     #-d - debug mode flag
 #OUTPUT:
     #dirsize - size of the directory specified by input dir in bytes.
+#EXAMPLE:
+    #command: python3 File_Check.py /users/2 5000 432000 resultsTest -d
+    #output: resultsTest folder contains output files
 
 def SearchDirectory(dir, results, size_limit, time_limit, user, offending_users, DELETE_TIME, DEBUG):
     pwd = os.path.basename(os.path.normpath(dir))
@@ -52,14 +55,13 @@ def SearchDirectory(dir, results, size_limit, time_limit, user, offending_users,
         offending_users.append(user)
     #variable to keep track of directory size.
     dirsize = 0
-    #get the current time
     currentdt = datetime.now()
-    #iterate through each item in the current directory
+    
     for x in os.listdir(dir):
         path = os.path.join(dir,x)
-        #check if an item is a directory
+
         if(os.path.isdir(path)):
-            #if so, search that directory recursively. (this is equivalent to depth first search)
+            #search that directory recursively. (this is equivalent to depth first search)
             dirsize += SearchDirectory(path, results, size_limit, time_limit, user, offending_users, DELETE_TIME, DEBUG)
         else:
             #if the item is a file.
@@ -77,7 +79,7 @@ def SearchDirectory(dir, results, size_limit, time_limit, user, offending_users,
                 if(lastmodified.total_seconds() > DELETE_TIME):
                     #delete the file and keep track of the name to notify user.
                     if(not DEBUG):
-                        os.remove(path) #test to make sure everything works properly in a virtual machine before release.
+                        os.remove(path)
 
                     if(not user is None):
                         user.deletedfiles.append(str(path))
@@ -147,7 +149,6 @@ except:
     exit(0)
 
 results = []
-print("DEBUG: ", DEBUG)
 SearchDirectory(root, results, size_limit, time_limit, None, results, DELETION_TIME_LIMIT, DEBUG)
 
 
@@ -195,9 +196,6 @@ for i in results:
         for file in i.deletedfiles:
             outputfile.write(file)
             outputfile.write("\r\n")
-    #print(files)
-    #print(deletedfiles)
-
 
 outputfile.close()
 exit(0)
