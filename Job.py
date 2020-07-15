@@ -13,6 +13,7 @@ add_job_query = (
 	"VALUES (%s, %s, %s, %s, %s, %s, %s)"
 )
 
+get_job_name_for_uuid = ("SELECT name FROM Jobs WHERE uuid = %s")
 get_jobs_query = ("SELECT * FROM Jobs WHERE userId = %s")
 get_job_query = ("SELECT * FROM Jobs WHERE uuid = %s")
 get_associated_query = ("SELECT * FROM Jobs WHERE simJobId = %s")
@@ -440,6 +441,21 @@ def getJobForUserId(jobId, userId):
 	else:
 		return None
 
+def getJobNameForUuid(uuid):
+	connection = Database.pool.get_connection()
+
+	result = None
+
+	with connection.cursor() as cursor:
+		cursor.execute(get_job_name_for_uuid, (uuid,))
+		result = cursor.fetchone()
+	
+	connection.close()
+	
+	if result is not None:
+		return result[0]
+	else:
+		return None
 
 def runOneStepJob(job_directory):
 	pipe = subprocess.Popen(
