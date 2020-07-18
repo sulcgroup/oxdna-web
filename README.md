@@ -1,5 +1,3 @@
-# azDNA
-
 <p align="center">
 <img src="https://user-images.githubusercontent.com/3137957/87845100-0f35bf00-c879-11ea-8d57-bb7411f0ae6a.png">
 </p>
