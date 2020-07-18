@@ -4,6 +4,7 @@ import uuid
 import subprocess
 import sys
 
+from user_scripts import Delete_User_Files
 import Database
 import Cache
 
@@ -19,6 +20,7 @@ get_job_query = ("SELECT * FROM Jobs WHERE uuid = %s")
 get_associated_query = ("SELECT * FROM Jobs WHERE simJobId = %s")
 get_userId_for_job_uuid = ("SELECT userID FROM Jobs WHERE uuid = %s")
 remove_job = ("DELETE FROM Jobs WHERE uuid = %s")
+remove_jobs_for_user_id = ("DELETE FROM Jobs WHERE userId = %s")
 get_status = ("SELECT status FROM Jobs WHERE uuid = %s")
 update_status = ("UPDATE Jobs SET status = %s WHERE uuid = %s")
 
@@ -518,8 +520,17 @@ def deleteJob(job_uuid):
 	connection.close()
 	
 
-	job_path = "/users/" + str(userId) + "/" + job_uuid
+	job_path = "/users/" + str(user_id) + "/" + job_uuid
 	subprocess.Popen(["rm", "-R", job_path], stdout=subprocess.PIPE)
+
+def deleteJobsForUser(user_id):
+	Delete_User_Files.deleteUser(user_id)
+
+	connection = Database.pool.get_connection()
+	with connection.cursor() as cursor:
+		cursor.execute(remove_jobs_for_user_id, (user_id,))
+	
+	connection.close()
 
 def getJobStatusFromSlurm(job_name):
 	pipe = subprocess.Popen(["squeue", "-n", job_name], stdout=subprocess.PIPE)

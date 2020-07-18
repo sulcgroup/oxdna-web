@@ -514,6 +514,14 @@ def setJobLimit(username, jobLimit):
 		Admin.setJobLimit(userID, jobLimit)
 		return username + "'s job limit set to " + jobLimit
 
+@app.route("/admin/deleteUser/<user_id>")
+def deleteUser(user_id):
+	loggedInUserID = session.get("user_id")
+	isAdmin = Admin.checkIfAdmin(loggedInUserID)
+	
+	if isAdmin == 1:
+		return Admin.deleteUser(user_id)
+
 @app.route("/admin/getUserID/<username>")
 def getUserID(username):
 	userID = Admin.getID(username)
@@ -536,7 +544,7 @@ def getUserInfo(username):
 		isPrivaleged = "False"
 	jobLimit = Admin.getJobLimit(userID)
 	jobCount = Admin.getUserJobCount(userID)
-	info = (jobCount, jobLimit, isAdmin, isPrivaleged)
+	info = (jobCount, jobLimit, isAdmin, isPrivaleged, userID)
 	return jsonify(info)
 
 @app.route("/")

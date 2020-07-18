@@ -4,6 +4,7 @@ import time
 import bcrypt
 
 import Database
+import Job
 
 query = ("SELECT id, password, administrator FROM Users WHERE username = %s")
 adminQuery = ("SELECT administrator FROM Users WHERE id = %s")
@@ -16,6 +17,7 @@ updateJobLimit = ("UPDATE Users SET jobLimit = %s WHERE id = %s")
 userJobCountQuery = ("SELECT COUNT(*) FROM Jobs WHERE userId = %s")
 userJobStatusCountQuery = ("SELECT COUNT(*) FROM Jobs WHERE userId = %s AND status = %s")
 userIDQuery = ("SELECT id FROM Users WHERE username = %s")
+remove_user = ("DELETE FROM Users WHERE id = %s")
 
 
 def getRecentlyAddedUsers():
@@ -134,6 +136,19 @@ def getUserJobStatusCount(user_id, status):
 
 def getUserActiveJobCount(user_id):
 	return getUserJobStatusCount(user_id, "Pending") + getUserJobStatusCount(user_id, "Running") + getUserJobStatusCount(user_id, "Suspended") + getUserJobStatusCount(user_id, "Completing")
+
+def deleteUser(user_id):
+	try:
+		Job.deleteJobsForUser(user_id)
+	except:
+		return "Couldn't delete user's job files"
+	
+	connection = Database.pool.get_connection()
+
+	with connection.cursor() as cursor:
+		cursor.execute(remove_user, (user_id))
+
+	return "User has been deleted"
 
 def getID(username):
 	connection = Database.pool.get_connection()
