@@ -39,7 +39,7 @@ OxDNA File Deletion Notice
 <HEADER>
 
 You have files that are approaching the one-week time limit and will soon be deleted. You can access the files here <u>
-The files are <l>
+The files are <j>
 
 <TAIL>
 ;;
@@ -48,8 +48,15 @@ OxDNA Files Deleted
 <HEADER>
 
 We have deleted some of your simulation files as per our policy. 
-The following files were deleted <l>
+The following files were deleted:  <j>
 
 <TAIL>
 ;;
+OxDNA Password Reset
+::
+<HEADER>
 
+You can reset your password at the following link <u>. The link will expire in 24 hours. If you did not request a password reset, you can safely ignore this email.
+
+<TAIL>
+;;

@@ -157,7 +157,8 @@ app.controller("AdminCtrl", function($scope, $http) {
 	$scope.privalegedButtonText = "Make Privaleged";
 	$scope.adminButtonText = "Make Admin";
 	$scope.message = ""
-	$scope.jobMessage= "";
+	$scope.jobMessage = "";
+	$scope.deleteUserMessage = "";
 
 	$scope.getRecentUsers = function(){
 		$http({
@@ -180,6 +181,7 @@ app.controller("AdminCtrl", function($scope, $http) {
 			$scope.selectedUserJobLimit = response.data[1]
 			$scope.selectedUserIsAdmin = response.data[2]
 			$scope.selectedUserIsPrivaleged = response.data[3]
+			$scope.selectedUserID = response.data[4]
 		})
 	}
 
@@ -189,7 +191,6 @@ app.controller("AdminCtrl", function($scope, $http) {
 			url: '/admin/getUserID/' + $scope.selectedUserName
 		}).then(function successCallback(response){
 			$scope.selectedUserID = response.data[0]
-			console.log($scope.selectedUserID)
 			return response.data[0]
 		})
 	}
@@ -238,6 +239,21 @@ app.controller("AdminCtrl", function($scope, $http) {
 		}).then(function successCallback(response){
 			$scope.jobMessage = response.data;
 		})
+	}
+
+	$scope.deleteUser = function(userId){
+		$http({
+			method: "GET",
+			url: `/admin/deleteUser/${userId}`
+		}).then(function successCallback(response) {
+			$scope.deleteUserMessage = response.data
+		})
+	}
+
+	$scope.confirmDeleteUser = function(){
+		if (confirm("Are you sure you want to delete " + $scope.selectedUserName + "?\nThis will delete all of their jobs.")) {
+			$scope.deleteUser($scope.selectedUserID)
+		}
 	}
 
 	$scope.getRecentUsers();
@@ -332,7 +348,7 @@ app.controller("JobsCtrl", function($scope, JobsService) {
 	}
 
 	$scope.confirmDelete = function(job) {
-		var r = confirm("Are you sure you want to delete job " + job.name + ".\nAll files related to this job will no longer be available.");
+		var r = confirm("Are you sure you want to delete job " + job.name + "?\nAll files related to this job will no longer be available.");
 		if (r == true) {
 		  $scope.deleteJob(job);
 		} 
@@ -461,6 +477,58 @@ app.controller("MainCtrl", function($scope, $http) {
 	}
 })
 
+
 app.controller("LandingCtrl", function($scope){
 	
+}
+app.controller("ForgotPasswordCtrl", function($scope, $http) {
+	$scope.status = null;
+
+	$scope.sendResetToken = function(email) {
+		if (email == undefined) {
+			$scope.status = "Please fill out the field";
+			return;
+		}
+		else if (!email.endsWith(".edu")) {
+			$scope.status = "Must be an edu email";
+			return;
+		}
+		$scope.status = "Loading...";
+		$http({
+			method: 'POST',
+			data: { "email": email },
+			url: '/password/forgot/send_reset_token'
+		}).then(response => $scope.status = response.data)
+	}
+
+	$scope.submit = function() {
+		$scope.sendResetToken($scope.email);
+	}
+})
+
+app.controller("ResetCtrl", function($scope, $http) {
+	$scope.status = null;
+	$scope.resetPassword = function(newPassword, confirmPassword) {
+		if (newPassword == undefined || newPassword == "") {
+			$scope.status = "Please fill out both fields"
+			return;
+		}
+		else if (newPassword != confirmPassword) {
+			$scope.status = "Passwords do not match";
+			return;
+		}
+		const token = new URLSearchParams(window.location.search).get("token");
+		$http({
+			method: 'POST',
+			data: {
+				"newPassword": newPassword,
+				"token": token
+			},
+			url: '/password/reset'
+		}).then(response => $scope.status = response.data);
+	}
+
+	$scope.submit = function() {
+		$scope.resetPassword($scope.newPassword, $scope.confirmPassword);
+	}
 })

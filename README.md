@@ -1,6 +1,9 @@
-# azDNA
+<p align="center">
+<img src="https://user-images.githubusercontent.com/3137957/87845100-0f35bf00-c879-11ea-8d57-bb7411f0ae6a.png">
+</p>
+# oxDNA.org
 
-Welcome to azDNA, this is a repository for running a user-friendly oxDNA webserver. 
+Welcome to oxdna.org, this is a repository for running a user-friendly oxDNA webserver. 
 
 Note, you are free to run the server as-is, by cloning and running main.py, but it is available as a packaged Vagrant virtualbox, allowing you to easily setup a proper environment with all necessary libraries and software (MySQL, Flask, Slurm, etc...). The environment can be seen here: https://github.com/rjro/azDNA_env
 

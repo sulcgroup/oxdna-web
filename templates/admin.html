@@ -33,7 +33,7 @@
 </style>
 <body ng-app="app" ng-controller="AdminCtrl">
 	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">azDNA</a>
+		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">oxDNA.org</a>
 		<input class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
 		<ul class="navbar-nav px-3">
 			<li class="nav-item text-nowrap">
@@ -155,7 +155,11 @@
 						<br>
 						{{jobMessage}}
 						<br>
-
+						<h5>Delete User</h5>
+						<button ng-click="confirmDeleteUser()">Delete</button>
+						<br>
+						{{deleteUserMessage}}
+						<br>
 
 					</div>
 

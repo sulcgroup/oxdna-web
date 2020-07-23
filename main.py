@@ -160,6 +160,10 @@ def register():
 		firstName = request.form["firstName"]
 		lastName = request.form["lastName"]
 		institution = request.form["institution"]
+		registrationCode = request.form["registrationCode"]
+	
+	if registrationCode != "BetaCodeDNA":
+		return "Incorrect registration code."
 
 	if username[-4:] != ".edu":
 		 return "We are currently only accepting .edu registrations at this time."
@@ -202,17 +206,52 @@ def login():
 @app.route("/logout")
 def logout():
 	session["user_id"] = None
-	return "You have logged out"
+	return redirect("/")
 
 
 @app.route("/account", methods=["GET"])
 def account():
-
 	if session.get("user_id") is None:
 		return "You must be logged in to modify your account"
 
 	if request.method == "GET":
 		return send_file("templates/account.html")
+
+@app.route("/password/forgot", methods=["GET"])
+def forgotPassword():
+	if session.get("user_id"):
+		return "You must be logged out"
+
+	if request.method == "GET":
+		return send_file("templates/password/forgot.html")
+
+@app.route("/password/forgot/send_reset_token", methods=["POST"])
+def sendResetToken():
+	username = request.json["email"]
+	return Account.sendResetToken(username)
+
+@app.route("/password/reset", methods=["GET", "POST"])
+def resetPassword():
+	if request.method == "GET":
+		token = request.args.get('token')
+		userId = Account.checkToken(token)
+		if userId == 0:
+			return "Invalid URL"
+		elif userId == -1:
+			return "Reset token expired: please try again"
+		else:
+			return send_file("templates/password/reset.html")
+	
+	if request.method == "POST":
+		token = request.json["token"]
+		userId = Account.checkToken(token)
+		if userId == 0:
+			return "Invalid URL"
+		elif userId == -1:
+			return "Reset token expired: please try again"
+		else:
+			newPassword = request.json["newPassword"]
+			return Account.resetPassword(userId, newPassword)
 
 @app.route("/account/update_password", methods=["POST"])
 def updatePassword():
@@ -475,6 +514,14 @@ def setJobLimit(username, jobLimit):
 		Admin.setJobLimit(userID, jobLimit)
 		return username + "'s job limit set to " + jobLimit
 
+@app.route("/admin/deleteUser/<user_id>")
+def deleteUser(user_id):
+	loggedInUserID = session.get("user_id")
+	isAdmin = Admin.checkIfAdmin(loggedInUserID)
+	
+	if isAdmin == 1:
+		return Admin.deleteUser(user_id)
+
 @app.route("/admin/getUserID/<username>")
 def getUserID(username):
 	userID = Admin.getID(username)
@@ -497,7 +544,7 @@ def getUserInfo(username):
 		isPrivaleged = "False"
 	jobLimit = Admin.getJobLimit(userID)
 	jobCount = Admin.getUserJobCount(userID)
-	info = (jobCount, jobLimit, isAdmin, isPrivaleged)
+	info = (jobCount, jobLimit, isAdmin, isPrivaleged, userID)
 	return jsonify(info)
 
 @app.route("/")

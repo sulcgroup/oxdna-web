@@ -1,14 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Login</title>
-</head>
-<body>
-
-</body>
-</html>
-
-
 <html ng-app="app" ng-controller="AppCtrl">
 <head>
 	<title></title>
@@ -42,7 +31,7 @@
 		background-color: #ffffff;
 	}
 </style>
-<body ng-controller="LoginCtrl">
+<body ng-controller="ForgotPasswordCtrl">
 	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
 		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">oxDNA.org</a>
 		<input ng-model="searchText" class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
@@ -85,7 +74,6 @@
 							</a>
 						</li>
 						-->
-
 						<li class="nav-item">
 							<a class="nav-link active" href="/account">
 								<span data-feather="user"></span>
@@ -100,57 +88,55 @@
 						</a>
 					</h6>
 					<ul class="nav flex-column mb-2">
-						<ul class="nav flex-column mb-2">
-							<li ng-repeat="job in job_history | filter: searchText">
-								<a class="nav-link" href="/job/{{job.uuid}}">
-									<span data-feather="file-text"></span>
-									{{job.name}}
-								</a>
-							</li>
-						</ul>
-					</div>
-				</nav>
+					<ul class="nav flex-column mb-2">
+						<li ng-repeat="job in job_history | filter: searchText">
+							<a class="nav-link" href="/job/{{job.uuid}}">
+								<span data-feather="file-text"></span>
+								{{job.name}}
+							</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
 
-				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-					<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-						<h1 class="h2">Register</h1>
-					</div>
-
-
+			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+					<h1 class="h2">Forgot password</h1>
+				</div>
 
 
-					<div class="card">
-						<div class="card-body">
+				<div class="card">
+					<div class="card-body">
 
-							<form action="/register" method="POST">
-								First Name: <input ng-model="firstName" name="firstName" id="firstName" type="text"><br>
-								Last Name: <input ng-model="lastName" name="lastName" id="lastName" type="text"><br>
-								Institution: <input ng-model="institution" name="institution" id="institution" type="text"><br>
-								<br>
-								Email: <input ng-model="email" name="username" id="username" type="text">
-								<br>
-								Password: &nbsp; <input name="password" id="password" type="password">
-								<br><br>
-								Registration Code: <input ng-model="registrationCode" name="registrationCode" id="registrationCode" type="text">
-								<br><br>
-								<input ng-disabled="email.substring(email.length-4) != '.edu'" type="submit">
-							</form>
-							<br>
-							<p>We are currently only accepting registrations from .edu emails</p>
+						Enter your email below, and we will email you a link that allows you to reset your password.
 
+						<br><br>
+
+						<div class="row">
+							<div class="col-6">
+                                <div ng-if="status != null"><h6>{{status}}</h6></div>
+								<div>
+									<br>
+									Email: <input type="text" ng-model="email">
+									<br><br>
+									<button ng-click="submit()">Reset password</button>
+									</div>
+								</div>
+							</div>
 
 						</div>
 
-					</div>
-				</main>
+					</main>
+				</div>
+			</div>
 
 
-			</body>
+				</body>
 
-			<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-			<script>
-				feather.replace()
-			</script>
-			<script src="/static/angular.min.js"></script>
-			<script src="/static/script.js"></script>
-			</html>
+				<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+				<script>
+					feather.replace()
+				</script>
+				<script src="/static/angular.min.js"></script>
+				<script src="/static/script.js"></script>
+				</html>
