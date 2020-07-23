@@ -1,5 +1,6 @@
 import sys
 import os
+import argparse
 from ast import literal_eval
 from time import time
 from copy import deepcopy
@@ -8,19 +9,21 @@ import EmailScript
 from Account import getUsername
 from Job import getJobNameForUuid
 
-# Purpose: Delete or notify user of large files that are too old by searching the user directory
-# INPUTS (all optional):
-    # dir = directory to begin searching, default "/users"
-    # size_limit = files smaller will be ignored, bytes
-    # warning_time = files older will be sent to user in a warning email, seconds
-    # deletion_time = files older will be deleted if the user has been warned, seconds
-    # output_dir = directory for output files, default is dir or "/users" if dir is missing
-    # -d = flag for debug mode, files will not be deleted
+
+# Purpose: Notify users, delete large & old files by searching the user directory
+# OPTIONS (all optional):
+    # -d = directory to search, default /users
+    # -s = size limit in bytes, files smaller will be ignored
+    # -w = warning time in seconds, files older will be sent to user in a warning email
+    # -x = deletion time in seconds, files older will be deleted if the user has been warned
+    # -o = output directory for results.txt, default /users
+    # -b = flag for debug mode, files will not be deleted
 # OUTPUT
     # Results dictionary of the following form: {user id: ([warning files], [])}
     # The second empty list is temp storage during execution; it holds files to be deleted
 # EXAMPLE COMMAND:
-    # python File_Check.py /users 100000 432000 604800 results -d
+    # python File_Check.py -d /users -s 100000 -w 432000 -x 604800 -o results -b
+
 
 DEFAULT_SIZE_LIMIT = 1000000 # 1MB
 DEFAULT_WARNING_TIME = 432000 # five days
@@ -28,6 +31,12 @@ DEFAULT_DELETION_TIME = 604800 # one week
 DEFAULT_DIR = "/users"
 OUTPUT_FILE = "results.txt"
 CURRENT_TIME = time()
+
+def is_dir(dir):
+    if os.path.isdir(dir):
+        return dir
+    raise argparse.ArgumentTypeError("Must be a valid directory")
+
 
 def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
     output_path = os.path.join(output_dir, OUTPUT_FILE)
@@ -61,7 +70,7 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
         email_deletion_files = []
 
         email = getUsername(user)
-        url = "http://localhost:9000/jobs"
+        url = "http://10.126.22.10/jobs"
 
         # format job files for warning
         for job_path in warning_files:
@@ -112,6 +121,7 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
     print("Success: File check complete!")
     return results
 
+
 # Update results dictionary with jobs to be warned to the user and jobs to be deleted
 def searchDirectory(dir, results, size_limit, warning_time, deletion_time):
     for item in os.listdir(dir):
@@ -147,7 +157,7 @@ def searchDirectory(dir, results, size_limit, warning_time, deletion_time):
                 deletion_files = results[user][1]
                 problem_file = '/'.join(path_list[3:])
 
-                # core logic of the script
+                # core logic of script
                 if elapsed_time > deletion_time and problem_file in warning_files:
                     warning_files.remove(problem_file)
                     deletion_files.append(problem_file)
@@ -159,62 +169,26 @@ def searchDirectory(dir, results, size_limit, warning_time, deletion_time):
                 results.update({ user: (warning_files, deletion_files) })
 
 
-size_limit = DEFAULT_SIZE_LIMIT
-warning_time = DEFAULT_WARNING_TIME
-deletion_time = DEFAULT_DELETION_TIME
-dir = output_dir = DEFAULT_DIR
-debug = False
+# parse command line arguments
+parser = argparse.ArgumentParser(description='Notify users, delete large & old files by searching the user directory.')
 
-args = len(sys.argv)
+parser.add_argument('-d', metavar='dir', type=is_dir, nargs=1, default=DEFAULT_DIR, help='directory to search, default {}'.format(DEFAULT_DIR))
+parser.add_argument('-s', metavar='size_limit', type=int, nargs=1, default=DEFAULT_SIZE_LIMIT, help='in bytes, files smaller will be ignored, default {}'.format(DEFAULT_SIZE_LIMIT))
+parser.add_argument('-w', metavar='warning_time', type=int, nargs=1, default=DEFAULT_WARNING_TIME, help='in seconds, files older will be sent to user in a warning email, default {}'.format(DEFAULT_WARNING_TIME))
+parser.add_argument('-x', metavar='deletion_time', type=int, nargs=1, default=DEFAULT_DELETION_TIME, help='in seconds, files older will be deleted if the user has been warned. default {}'.format(DEFAULT_DELETION_TIME))
+parser.add_argument('-o', metavar='output_dir', type=is_dir, nargs=1, default=DEFAULT_DIR, help='directory for output files, default is dir or "/users" if dir is missing. default {}'.format(DEFAULT_DIR))
+parser.add_argument('-b', action='store_true', help='debug mode, files will not be deleted, emails will not be sent, default False')
 
-# Input validation
-# sys.argv[0] = script name, no need to validate
-if args > 1:
-    try:
-        dir = output_dir = sys.argv[1]
-    except:
-        print("Failed: First argument invalid. Try \"/users\".")
-    if not os.path.isdir(dir):
-        print("Failed: First argument is not a directory. Try \"/users\".")
-        exit(0)
+args = parser.parse_args()
 
-if args > 2:
-    try:
-        size_limit = int(sys.argv[2])
-    except:
-        print("Failed: Second argument invalid, represents size limit in bytes.")
-        exit(0)
+dir = args.d[0] if isinstance(args.d, list) else args.d
+size_limit = args.s[0] if isinstance(args.s, list) else args.s
+warning_time = args.w[0] if isinstance(args.w, list) else args.w
+deletion_time = args.x[0] if isinstance(args.x, list) else args.x
+output_dir = args.o[0] if isinstance(args.o, list) else args.o
+debug = args.b[0] if isinstance(args.b, list) else args.b
 
-if args > 3:
-    try:
-        warning_time = int(sys.argv[3])
-    except:
-        print("Failed: Third argument invalid, represents warning time in seconds.")
-        exit(0)
 
-if args > 4:
-    try:
-        deletion_time = int(sys.argv[4])
-    except:
-        print("Failed: Fourth argument invalid, represents deletion time in seconds.")
-        exit(0)
-
-if args > 5:
-    try:
-        output_dir = sys.argv[4]
-    except:
-        print("Failed: Fifth argument invalid. Try \"/users\".")
-        exit(0)
-    if not os.path.isdir(output_dir):
-        print("Failed: Fifth argument not a directory. Try \"/users\".")
-        exit(0)
-
-if args > 5:
-    debug = True if "-d" in sys.argv[5] else False
-
-if warning_time > deletion_time:
-    print("Failed: Warning time cannot be greater than the deletion time.")
-    exit(0)
-
+# execute script
 main(dir, size_limit, warning_time, deletion_time, output_dir, debug)
 exit(0)

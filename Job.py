@@ -4,7 +4,7 @@ import uuid
 import subprocess
 import sys
 
-from user_scripts import Delete_User_Files
+import Delete_User_Files
 import Database
 import Cache
 
