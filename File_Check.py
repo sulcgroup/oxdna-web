@@ -70,7 +70,7 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
         email_deletion_files = []
 
         email = getUsername(user)
-        url = "http://localhost:9000/jobs"
+        url = "http://10.126.22.10/jobs"
 
         # format job files for warning
         for job_path in warning_files:

@@ -104,6 +104,7 @@ def getUsername(userId):
 	connection.close()
 
 	if results is not None:
+		print(results)
 		return results[0][0]
 	else:
 		return None
