@@ -12,6 +12,11 @@
     <body ng-controller="LandingCtrl">
         <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
             <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">oxDNA.org</a>
+            <ul class="navbar-nav px-3">
+                <li class="nav-item text-nowrap">
+				    <a class="nav-link" href="/logout">Sign out</a>
+                </li>
+            </ul>
         </nav>
         <div class="container-fluid">
             <div class="row">
@@ -30,12 +35,12 @@
                                     Login
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <!--<li class="nav-item">
                                 <a class="nav-link" href="/database">
                                     <span data-feather="list"></span>
                                     Database
                                 </a>
-                            </li>
+                            </li>-->
                         </ul>
                     </div>
                 </nav>
@@ -52,8 +57,7 @@
                             </h2>
                             <p>
                                 Welcome to oxDNA.org, a service of the Sulc and Yan labs at Arizona State University.  Our goal is to facilitate development of more advance and complex
-                                designs in the fields of DNA and RNA nanotechnology.  On this server, we offer two services: 
-                                oxDNA coarse-grained modeling and a database of experimentally verified structures.
+                                designs in the fields of DNA and RNA nanotechnology by facilitating non-experts to run simple simulations.
                                 The simulations this server supports are equlibrium sampling of assembled designs, meant to 
                                 assist users in understanding the dynamics of their designs before taking them to the lab.
                             </p>
@@ -78,13 +82,35 @@
                                 this can be done in <a href="https://github.com/sulcgroup/oxdna-viewer">oxView</a> (hit the "try it!" link in the description). <br>
                                 <b>What is the real-time correlation of these simulations?</b> Coarse-grained simulations such as oxDNA speed up different processes
                                 by different amounts.  These simulations will be run for 1e9 steps with a timestep of 0.001, which by conservative estimation corresponds
-                                to 3.03 &mu;s.  However, based on simulated rates of hairpin hybridization, this corresponds to a timescale on the order of 1 ms. <br>
+                                to 3.03 &mu;s.  However, based on simulated rates of hairpin hybridization, this corresponds to an actual timescale on the order of 1 ms. <br>
                                 <b>My simulation log shows an error!  What do I do??</b> Errors are most frequently due to the model encountering unpysical states because of
                                 insufficient relaxation.  Structures exported from design tools are rarely in a physically viable state and must be relaxed prior to production
                                 simulation.  We have tried to provide a reasonable relaxation protocol automatically, but for some structures it is insufficient.
                                   Try resubmitting your job and increasing the length of the relaxation steps or decreasing the dt of the MD relaxation. <br>
                                 <b>I am interested in learning more about oxDNA!  Where can I do that?</b> Check out this <a href="https://arxiv.org/pdf/2004.05052.pdf">book chapter</a> for a comprehensive introduction 
                                 and take a look at the <a href="https://dna.physics.ox.ac.uk/index.php/Main_Page">documentation</a> for detailed information on installation and running simulations.<br>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div id=ContactCard class="card-body">
+                            <h2>
+                                Questions? Issues!:
+                            </h2>
+                            <p>
+                                If you have bug reports/issues/feature requests, please post them in the <a href=https://github.com/rjro/azDNA/issues">issues page</a> of our GitHub. We will get to them as soon as possible.<br>
+                                You can also email us at <a href="mailto:oxdna.help@gmail.com">oxdna.help@gmail.com</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div id=CitationCard class="card-body">
+                            <H2>
+                                Citation:
+                            </H2>
+                            <p>
+                                Citation for this server coming soon!  For now, please cite our paper that covers the visualization and analysis tools offered as part of this webpage: <br>
+                                Erik Poppleton, Joakim Bohlin, Michael Matthies, Shuchi Sharma, Fei Zhang, Petr Šulc: Design, optimization and analysis of large DNA and RNA nanostructures through interactive visualization, editing and molecular simulation, Nucleic Acids Research, Volume 48, Issue 12, 09 July 2020, Page e72 (<a href= https://doi.org/10.1093/nar/gkaa417>https://doi.org/10.1093/nar/gkaa417</a>)
                             </p>
                         </div>
                     </div>
@@ -98,7 +124,7 @@
                             <br>
                             <h3>Usage Limit</h3>
                             <p>
-                                Users are limited to submitting x jobs at a time.  We reserve the right to limit the usage of any user. 
+                                Users are limited to submitting 4 jobs at a time.  We reserve the right to limit the usage of any user. 
                             </p>
                             <br>
                             <h3>Disclaimer</h3>
