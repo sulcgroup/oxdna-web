@@ -490,10 +490,6 @@ app.controller("ForgotPasswordCtrl", function($scope, $http) {
 			$scope.status = "Please fill out the field";
 			return;
 		}
-		else if (!email.endsWith(".edu")) {
-			$scope.status = "Must be an edu email";
-			return;
-		}
 		$scope.status = "Loading...";
 		$http({
 			method: 'POST',

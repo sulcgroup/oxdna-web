@@ -39,7 +39,7 @@ def registerUser(name, password, firstName, lastName, institution, requires_veri
 	user_id = Account.getUserId(name)
 
 	if requires_verification:
-		verifylink = "http://10.126.22.10/verify?id={userId}&verify={verifycode}".format(userId = user_id, verifycode = verifycode)
+		verifylink = "http://oxdna.org/verify?id={userId}&verify={verifycode}".format(userId = user_id, verifycode = verifycode)
 		EmailScript.SendEmail("-t 0 -n {username} -u {verifylink} -d {email}".format(username = name, verifylink = verifylink, email = name).split(" "))
 
 	connection.close()
