@@ -478,9 +478,10 @@ app.controller("MainCtrl", function($scope, $http) {
 })
 
 
-app.controller("LandingCtrl", function($scope){
+app.controller("LandingCtrl", function(){
 	
-}
+})
+
 app.controller("ForgotPasswordCtrl", function($scope, $http) {
 	$scope.status = null;
 
