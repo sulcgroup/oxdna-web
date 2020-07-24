@@ -1,5 +1,6 @@
 import sys
 import os
+import re
 import argparse
 from ast import literal_eval
 from time import time
@@ -37,23 +38,31 @@ def is_dir(dir):
         return dir
     raise argparse.ArgumentTypeError("Must be a valid directory")
 
+# Regex from here https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/
+regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+def isValidEmail(email):
+    return True if re.search(regex, email) else False
+
 
 def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
     output_path = os.path.join(output_dir, OUTPUT_FILE)
 
     # create new results.txt if running for the first time (or in different directory)
     if OUTPUT_FILE in os.listdir(output_dir):
-        print("Updating results.txt...")
         file = open(output_path, "r")
         try:
             old_results = literal_eval(file.read())
-        except SyntaxError:
+            if not isinstance(old_results, dict):
+                print("Failure: Contents of results.txt must be a dictionary. Please delete it and run again.")
+                exit(0)
+        except:
             print("Failure: Can't read results.txt. Please delete it and run again.")
             exit(0)
+        print("Updating results.txt...")
     else:
-        print("Creating new output file...")
         file = open(output_path, "w")
         old_results = {}
+        print("Creating new output file...")
 
     file.close()
     results = deepcopy(old_results)
@@ -62,6 +71,7 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
 
     # results.txt contains a dict where keys are userIds and values are tuples ([warning_files list], [deletion_files list]).
     # warning_files is replaced by new files for emailing users and possible deletion next time the script is run
+    bad_emails = []
     for user in results.keys():
         files_tuple = results[user]
         warning_files = files_tuple[0]
@@ -69,8 +79,14 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
         email_warning_files = []
         email_deletion_files = []
 
-        email = getUsername(user)
         url = "http://10.126.22.10/jobs"
+        email = getUsername(user)
+        
+        if not isValidEmail(email):
+            print(email, " is not a valid email. User ", user, " will not be notified.")
+            bad_emails.append(email)
+            continue
+        
 
         # format job files for warning
         for job_path in warning_files:
@@ -80,7 +96,7 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
             email_warning_files.append("{}: {}".format(job_name, job_file))
         # send warning email
         if email_warning_files and not debug:
-            email_warning_files = ', '.join(email_warning_files)
+            email_warning_files = ',\n'.join(email_warning_files)
             EmailScript.SendEmail("-t``4``-n``{username}``-u``{url}``-d``{email}``-j``{files}".format(username = email, url = url, email = email, files = email_warning_files).split("``"))
 
         # format job files for deletion & delete the files
@@ -119,6 +135,8 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
     file.write(str(results))
     file.close()
     print("Success: File check complete!")
+    if bad_emails:
+        print("The following emails are not valid and were not notified: ", bad_emails)
     return results
 
 
