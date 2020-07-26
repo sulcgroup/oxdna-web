@@ -141,6 +141,8 @@
 						<br>
 						Job limit: {{selectedUserJobLimit}}
 						<br>
+						Time limit: {{selectedUserHours}} hours {{selectedUserMinutes}} minutes {{selectedUserSeconds}} seconds remaining
+						<br>
 						Admin: {{selectedUserIsAdmin}}
 						<br>
 						Privaleged: {{selectedUserIsPrivaleged}}
@@ -150,10 +152,15 @@
 						<br>
 						{{message}}
 						<br>
-						<h5>Set job limit</h5>
+						<h5>Set job limit (# of jobs)</h5>
 						<input ng-model="jobLimitInput"><button ng-click="setJobLimit()">Set</button>
 						<br>
 						{{jobMessage}}
+						<br>
+						<h5>Set time limit (hours/month)</h5>
+						<input ng-model="timeLimitInput"><button ng-click="setTimeLimit()">Set</button>
+						<br>
+						{{timeMessage}}
 						<br>
 						<h5>Delete User</h5>
 						<button ng-click="confirmDeleteUser()">Delete</button>

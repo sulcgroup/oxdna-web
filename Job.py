@@ -7,6 +7,7 @@ import sys
 import Delete_User_Files
 import Database
 import Cache
+import Admin
 
 add_job_query = (
 	"INSERT INTO Jobs "
@@ -18,7 +19,7 @@ get_job_name_for_uuid = ("SELECT name FROM Jobs WHERE uuid = %s")
 get_jobs_query = ("SELECT * FROM Jobs WHERE userId = %s")
 get_job_query = ("SELECT * FROM Jobs WHERE uuid = %s")
 get_associated_query = ("SELECT * FROM Jobs WHERE simJobId = %s")
-get_userId_for_job_uuid = ("SELECT userID FROM Jobs WHERE uuid = %s")
+get_userId_for_job_uuid = ("SELECT userId FROM Jobs WHERE uuid = %s")
 remove_job = ("DELETE FROM Jobs WHERE uuid = %s")
 remove_jobs_for_user_id = ("DELETE FROM Jobs WHERE userId = %s")
 get_status = ("SELECT status FROM Jobs WHERE uuid = %s")
@@ -130,6 +131,7 @@ cd {job_directory}""".	format(
 			sbatch_file += "\n/opt/oxdna_analysis_tools/generate_force.py -o force.txt input_relax_MC MC_relax.dat"
 			sbatch_file += '\nsed -i "s/0.9/{force}/g" force.txt'.format(force=force)
 	sbatch_file += "\npython3 /opt/zip_traj.py"
+	sbatch_file += "\npython3 /vagrant/azDNA/Update_Status.py"
 
 	file_name = "sbatch.sh"
 	file_path = job_directory + file_name

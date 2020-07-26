@@ -152,6 +152,10 @@ app.controller("AdminCtrl", function($scope, $http) {
 	$scope.selectedUserID = -1;
 	$scope.selectedUserJobCount = "";
 	$scope.selectedUserJobLimit = -1;
+	$scope.selectedUserTimeLimit = 0;
+	$scope.selectedUserHours = 0;
+	$scope.selectedUserMinutes = 0;
+	$scope.selectedUserSeconds = 0;
 	$scope.selectedUserIsAdmin = false
 	$scope.selectedUserIsPrivaleged = false
 	$scope.privalegedButtonText = "Make Privaleged";
@@ -179,9 +183,14 @@ app.controller("AdminCtrl", function($scope, $http) {
 			$scope.selectedUserName = userID
 			$scope.selectedUserJobCount = response.data[0]
 			$scope.selectedUserJobLimit = response.data[1]
-			$scope.selectedUserIsAdmin = response.data[2]
-			$scope.selectedUserIsPrivaleged = response.data[3]
-			$scope.selectedUserID = response.data[4]
+			$scope.selectedUserTimeLimit = response.data[2]
+			$scope.selectedUserIsAdmin = response.data[3]
+			$scope.selectedUserIsPrivaleged = response.data[4]
+			$scope.selectedUserID = response.data[5]
+
+			$scope.selectedUserHours = Math.floor($scope.selectedUserTimeLimit / 3600);
+			$scope.selectedUserMinutes = Math.floor(($scope.selectedUserTimeLimit % 3600) / 60);
+			$scope.selectedUserSeconds = $scope.selectedUserTimeLimit % 60;
 		})
 	}
 
@@ -238,6 +247,15 @@ app.controller("AdminCtrl", function($scope, $http) {
 			url: `/admin/setJobLimit/${$scope.selectedUserName}/${$scope.jobLimitInput}`
 		}).then(function successCallback(response){
 			$scope.jobMessage = response.data;
+		})
+	}
+
+	$scope.setTimeLimit = function(){
+		$http({
+			method: "GET",
+			url: `/admin/setTimeLimit/${$scope.selectedUserName}/${$scope.timeLimitInput * 3600}`
+		}).then(function successCallback(response){
+			$scope.timeMessage = response.data;
 		})
 	}
 
@@ -480,7 +498,7 @@ app.controller("MainCtrl", function($scope, $http) {
 
 app.controller("LandingCtrl", function($scope){
 	
-}
+})
 app.controller("ForgotPasswordCtrl", function($scope, $http) {
 	$scope.status = null;
 
