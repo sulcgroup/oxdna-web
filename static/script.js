@@ -4,6 +4,9 @@ var app = angular.module("app", [])
 var MEAN = 1;
 var ALIGN = 2;
 var DISTANCE = 3;
+var BOND = 4;
+var ANGLE_FIND = 5;
+var ANGLE_PLOT = 6;
 
 app.factory("JobService", function($http) {
 
@@ -281,6 +284,9 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
 		$scope.mean = [$scope.associated_jobs.filter(x => x["job_type"] == MEAN)[0]];
 		$scope.align = [$scope.associated_jobs.filter(x => x["job_type"] == ALIGN)[0]];
 		$scope.distance = $scope.associated_jobs.filter(x => x["job_type"] == DISTANCE);
+		$scope.bond = [$scope.associated_jobs.filter(x => x["job_type"] == BOND)[0]];
+		$scope.angle_find = [$scope.associated_jobs.filter(x => x["job_type"] == ANGLE_FIND)[0]];
+		$scope.angle_plot = $scope.associated_jobs.filter(x => x["job_type"] == ANGLE_PLOT);
 	}
 
 	//retrieves job information from URL
