@@ -483,11 +483,39 @@ def runOneStepJob(job_directory):
 		return False, stderr
 	else:
 		return True, None
+	
+def updateStatus(user_id, job_uuid):
+	connection = Database.pool.get_connection()
+
+	with connection.cursor() as cursor:
+		cursor.execute("UPDATE Jobs SET status = \"Completed\" WHERE uuid = %s", (job_uuid))
+
+	with connection.cursor() as cursor:
+		cursor.execute("SELECT creationDate FROM Jobs WHERE uuid = %s", (job_uuid,))
+		creation_time = int(cursor.fetchone()[0])
+
+	elapsed_time = time.time() - creation_time
+	new_time_limit = Admin.getTimeLimit(user_id) - elapsed_time
+	if new_time_limit < 0:
+		new_time_limit = 0
+
+	with connection.cursor() as cursor:
+		cursor.execute("UPDATE Users SET timeLimit = %s WHERE id = %s", (new_time_limit, user_id))
+
+	connection.close()
+	print("Remaining monthly time limit: ", str(new_time_limit), " seconds")
 
 def cancelJob(job_name):
 	subprocess.Popen(["scancel", "-n", job_name], stdout=subprocess.PIPE)
 
 	connection = Database.pool.get_connection()
+
+	user_id = None
+	with connection.cursor() as cursor:
+		cursor.execute(get_userId_for_job_uuid, (job_name,))
+		result = cursor.fetchone()
+		user_id = result[0]
+	updateStatus(user_id, job_name)
 
 	prev_status = None
 
