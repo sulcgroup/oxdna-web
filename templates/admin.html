@@ -167,6 +167,8 @@
 						<br>
 						{{deleteUserMessage}}
 						<br>
+						<h3>All Users</h3>
+						<button ng-repeat="x in allUsers" ng-click="selectRecentUser(x)">{{x}}</button>
 
 					</div>
 

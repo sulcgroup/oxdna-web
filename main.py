@@ -477,6 +477,12 @@ def recentlyAddedUsers():
 	users = tuple(newUsers)
 	return jsonify(users)
 
+@app.route("/admin/all_users")
+def allUsers():
+	allUsers = Admin.getAllUsers()
+	users = tuple(allUsers)
+	return jsonify(users)
+
 @app.route("/admin/promoteToAdmin/<username>")
 def promoteToAdmin(username):
 	loggedInUserID = session.get("user_id")

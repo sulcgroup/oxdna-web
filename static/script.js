@@ -144,6 +144,7 @@ app.controller("AdminCtrl", function($scope, $http) {
 
 	console.log("Now in the admin ctrl!");
 	$scope.recentUsers = [];
+	$scope.allUsers = [];
 
 	$scope.searchInput = "";
 	$scope.jobLimitInput = "";
@@ -170,7 +171,17 @@ app.controller("AdminCtrl", function($scope, $http) {
 			url: '/admin/recentlyaddedusers'
 		}).then(function successCallback(response){
 			$scope.recentUsers = response.data;
-			$scope.getUserInfo(response.data[0]);		
+			$scope.getUserInfo(response.data[0]);	
+		});
+	}
+
+	$scope.getAllUsers = function(){
+		$http({
+			method: 'GET',
+			url: '/admin/all_users'
+		}).then(function successCallback(response){
+			$scope.allUsers = response.data;
+			$scope.getUserInfo(response.data[0]);
 		});
 	}
 
@@ -275,7 +286,7 @@ app.controller("AdminCtrl", function($scope, $http) {
 	}
 
 	$scope.getRecentUsers();
-
+	$scope.getAllUsers();
 })
 
 app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {

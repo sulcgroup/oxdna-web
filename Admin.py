@@ -10,6 +10,7 @@ query = ("SELECT id, password, administrator FROM Users WHERE username = %s")
 adminQuery = ("SELECT administrator FROM Users WHERE id = %s")
 privalegedQuery = ("SELECT privaleged FROM Users WHERE id = %s")
 recentUsersQuery = ("SELECT id, username FROM Users ORDER BY creationDate DESC LIMIT 5")
+allUsersQuery = ("SELECT id, username FROM Users ORDER BY username ASC")
 updateToAdministrator = ("UPDATE Users SET administrator = 1 WHERE id = %s")
 updateToPrivaleged = ("UPDATE Users SET privaleged = 1 WHERE id = %s")
 jobLimitQuery = ("SELECT jobLimit FROM Users WHERE id = %s")
@@ -30,6 +31,24 @@ def getRecentlyAddedUsers():
 
 	with connection.cursor() as cursor:
 		cursor.execute(recentUsersQuery)
+		result = cursor.fetchall()
+	
+	connection.close()
+
+	usernames = []
+
+	for user_id, username in result:
+		usernames.append(username)
+
+	return usernames
+
+def getAllUsers():
+	connection = Database.pool.get_connection()
+
+	result = []
+
+	with connection.cursor() as cursor:
+		cursor.execute(allUsersQuery)
 		result = cursor.fetchall()
 	
 	connection.close()
