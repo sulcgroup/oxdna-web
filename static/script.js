@@ -260,7 +260,7 @@ app.controller("AdminCtrl", function($scope, $http) {
 
 })
 
-app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
+app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $http) {
 	console.log("Now loading job...");
 	$scope.job = {};
 	$scope.job.name = "";
@@ -300,6 +300,18 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
 			}
 		})
 		
+	}
+
+	$scope.updateJobName = function() {
+		const name = document.getElementById('job-name').value;
+		if (!name) return;
+		$scope.job.name = name;
+		console.log($scope.job.name)
+
+		$http({
+			method: "GET",
+			url: '/job/update_name/' + name
+		}).then(() => location.reload());
 	}
 
 })
