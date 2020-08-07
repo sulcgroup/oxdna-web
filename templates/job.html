@@ -346,9 +346,9 @@
 						<label for="name">Job Name: </label>
 						<input type="text" value="angle" id="name_angle" size=16 maxlength="16">
 						<label class="lpadded" for="p1">Particle 1: </label>
-						<input type="text" maxlength="1" value="1" id="p1" size=1>
+						<input type="text" value="" id="p1_angle" size=16 maxlength="16">
 						<label class = "lpadded" for="p2">Particle 2: </label>
-						<input type="text" maxlength="1" value="4" id="p2" size=1>
+						<input type="text" value="" id="p2_angle" size=16 maxlength="16">
 						<br>
 						<button type="button" ng-click="startAnalysis('angle_plot')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
 						<div ng-hide="angle_plot[0] == undefined">

@@ -78,19 +78,15 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 		run_command = "duplex_angle_finder.py -p 1 -o duplex_angle.txt input trajectory.dat"
 	elif analysis_type == "angle_plot":
 		analysis_parameters["name"] = analysis_parameters["name_angle"]
-		job_output_file = job_directory + analysis_parameters["name"] +".log"
-		print("ANALYSIS PARAMATERS IANSIUEFALISEUFALIEUFALIWEUFHALISUEFHALISUEHFILFHAILUF")
-		print("ANALYSIS PARAMATERS IANSIUEFALISEUFALIEUFALIWEUFHALISUEFHALISUEHFILFHAILUF")
-		print("ANALYSIS PARAMATERS IANSIUEFALISEUFALIEUFALIWEUFHALISUEFHALISUEHFILFHAILUF")
-		print(analysis_parameters)
-		print(analysis_id)
-		print(analysis_type)
-		p1 = analysis_parameters["p1"]
-		p2 = analysis_parameters["p2"]
-		plist = [p1, p2]
-		run_command = "duplex_angle_plotter.py -f both -o {name}.png -i duplex_angle.txt {particles}".format(
+		job_output_file = job_directory + analysis_parameters["name"] + ".log"
+		p1 = analysis_parameters["p1_angle"].split(" ")
+		p2 = analysis_parameters["p2_angle"].split(" ")
+		p_input = []
+		for pair in zip(p1, p2):
+			p_input.append("-i duplex_angle.txt " + " ".join(pair))
+		run_command = "duplex_angle_plotter.py -f both -o {name}.png {particle_input}".format(
 			name = analysis_parameters["name"],
-			particles = ' '.join(plist)
+			particle_input = ' '.join(p_input)
 		)
 
 	sbatch_file = """#!/bin/bash
