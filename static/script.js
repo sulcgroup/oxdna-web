@@ -306,11 +306,10 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 		const name = document.getElementById('job-name').value;
 		if (!name) return;
 		$scope.job.name = name;
-		console.log($scope.job.name)
 
 		$http({
 			method: "GET",
-			url: '/job/update_name/' + name
+			url: `/job/update_name/${name}/${$scope.job.uuid}`
 		}).then(() => location.reload());
 	}
 

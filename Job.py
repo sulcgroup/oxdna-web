@@ -19,7 +19,7 @@ get_jobs_query = ("SELECT * FROM Jobs WHERE userId = %s")
 get_job_query = ("SELECT * FROM Jobs WHERE uuid = %s")
 get_associated_query = ("SELECT * FROM Jobs WHERE simJobId = %s")
 get_userId_for_job_uuid = ("SELECT userID FROM Jobs WHERE uuid = %s")
-update_job_name = ("UPDATE Jobs SET name = %s WHERE userId = %s")
+update_job_name = ("UPDATE Jobs SET name = %s WHERE uuid = %s")
 remove_job = ("DELETE FROM Jobs WHERE uuid = %s")
 remove_jobs_for_user_id = ("DELETE FROM Jobs WHERE userId = %s")
 get_status = ("SELECT status FROM Jobs WHERE uuid = %s")
@@ -460,11 +460,11 @@ def getJobNameForUuid(uuid):
 	else:
 		return None
 
-def updateJobName(name, user_id):
+def updateJobName(name, uuid):
 	connection = Database.pool.get_connection()
 
 	with connection.cursor() as cursor:
-		cursor.execute(update_job_name, (name, user_id,))
+		cursor.execute(update_job_name, (name, uuid,))
 	
 	connection.close()
 	

@@ -259,7 +259,7 @@
 									<td>Histogram</td>
 									<td>Trajectory</td>
 								</tr>
-								<tr ng-repeat="x in distance">
+								<tr ng-cloak ng-repeat="x in distance">
 									<td style="width:8%"">{{ x.name }}</td>
 									<td style="width:5%"><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
 									<td style="width:5%">{{ x.dateString }}</td>

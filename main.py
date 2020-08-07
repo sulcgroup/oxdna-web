@@ -325,13 +325,13 @@ def view_job(job_id):
 	else:
 		return send_file("templates/job.html")
 
-@app.route("/job/update_name/<name>")
-def update_job_name(name):
+@app.route("/job/update_name/<name>/<uuid>")
+def update_job_name(name, uuid):
 	user_id = session.get("user_id")
 	if user_id is None:
 		return redirect("/login")
 	
-	return Job.updateJobName(name, user_id)
+	return Job.updateJobName(name, uuid)
 
 @app.route("/api/job/<job_id>")
 def get_job_data(job_id):
