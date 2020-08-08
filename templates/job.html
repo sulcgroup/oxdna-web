@@ -153,6 +153,7 @@
 					<input class="h2 d-inline-block" id="job-name" type="text" value={{job.name}} size={{job.name.length}}
 						   onkeydown="this.size = this.value.length < 1 ? 1 : this.value.length">
 					<button type="button" ng-click="updateJobName()">Change Name</button>
+					<a class="h2 d-inline-block text-primary float-right" target="_blank" href="/static/oxdna-viewer/index.html?configuration=/ufile/{{job.uuid}}/last_conf&topology=/ufile/{{job.uuid}}/topology">View Last Configuration</a>
 				</div>
 			
 
