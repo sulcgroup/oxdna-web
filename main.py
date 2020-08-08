@@ -67,6 +67,11 @@ def handle_form():
 	parameters.update(json_data["parameters"])
 	files = json_data["files"]
 
+	if "force_file" in json_data:
+		force_file_name = json_data["parameters"]["external_forces_file"]
+		files[force_file_name] = json_data["force_file"]
+
+
 	addDefaultParameters(parameters)
 
 	metadata = {}
