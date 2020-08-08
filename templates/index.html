@@ -34,7 +34,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-				<div class="sidebar-sticky">
+				<div class="sidebar-sticky" ng-cloak>
 					<ul class="nav flex-column">
 						<li class="nav-item">
 							<a class="nav-link" href="#">
@@ -275,11 +275,11 @@
 								<button ng-click="submitJob()" type="submit" class="btn btn-primary">Submit Job</button>
 							</p>
 
-							<div ng-if="hasSubmitted">
+							<div ng-if="hasSubmitted" ng-cloak>
 								<h3>Job Submitted!</h3>
 							</div>
 
-							<div ng-if="error != ''">
+							<div ng-if="error != ''" ng-cloak>
 								<h3>Error</h3>
 								<p>{{error}}</p>
 							</div>

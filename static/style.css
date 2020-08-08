@@ -8,6 +8,10 @@ body {
   vertical-align: text-bottom;
 }
 
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
 /*
  * Sidebar
  */

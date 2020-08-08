@@ -92,7 +92,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-				<div class="sidebar-sticky">
+				<div class="sidebar-sticky" ng-cloak>
 					<ul class="nav flex-column">
 						<li class="nav-item">
 							<a class="nav-link" href="/">
@@ -147,7 +147,7 @@
 				</div>
 			</nav>
 
-			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4" ng-cloak>
 				<div class="pb-2 mb-3 border-bottom">
 					<h1 class="h2 d-inline-block">Viewing Analyses for Job:</h1>
 					<input class="h2 d-inline-block" id="job-name" type="text" value={{job.name}} size={{job.name.length}}
