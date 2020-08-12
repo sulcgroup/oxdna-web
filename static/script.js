@@ -8,6 +8,13 @@ var BOND = 4;
 var ANGLE_FIND = 5;
 var ANGLE_PLOT = 6;
 
+//make number elements not scroll
+document.addEventListener("wheel", function(event){
+    if(document.activeElement.type === "number"){
+        document.activeElement.blur();
+    }
+});
+
 app.factory("JobService", function($http) {
 
 	var factory = {};
