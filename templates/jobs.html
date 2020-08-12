@@ -1,5 +1,15 @@
 <html ng-app="app" ng-controller="AppCtrl">
 <head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-173472997-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-173472997-1');
+</script>
+
 	<title></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -53,7 +63,7 @@ table tr:nth-child(even) {
 </style>
 <body ng-controller="JobsCtrl">
 	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">oxDNA.org</a>
+		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">oxDNA.org</a>
 		<input ng-model="searchText" class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
 		<ul class="navbar-nav px-3">
 			<li class="nav-item text-nowrap">
@@ -80,7 +90,7 @@ table tr:nth-child(even) {
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/">
+							<a class="nav-link" href="/create">
 								<span data-feather="edit"></span>
 								Create A Job	
 							</a>

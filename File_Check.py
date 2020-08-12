@@ -79,7 +79,7 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
         email_warning_files = []
         email_deletion_files = []
 
-        url = "http://10.126.22.10/jobs"
+        url = "http://oxdna.org/jobs"
         email = getUsername(user)
         
         if not isValidEmail(email):

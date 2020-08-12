@@ -33,6 +33,13 @@ def addDefaultParameters(parameters):
 		if key not in parameters:
 			parameters[key] = default_parameters[key]
 
+@app.route('/create', methods=['GET'])
+def create_job():
+	if session.get("user_id") is None:
+		return redirect("/login")
+	else:
+		return send_file("templates/index.html")
+
 @app.route('/create_job', methods=['POST'])
 def handle_form():
 
@@ -573,11 +580,7 @@ def getUserInfo(username):
 
 @app.route("/")
 def index():
-
-	if session.get("user_id") is not None:
-		return send_file("templates/index.html")
-	else:
-		return redirect("/login")
+	return send_file("templates/landing.html")
 
 if __name__ == '__main__':
 	app.run(host="0.0.0.0", port=9000)

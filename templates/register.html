@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-173472997-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-173472997-1');
+</script>
+
 	<title>Login</title>
 </head>
 <body>
@@ -44,7 +54,7 @@
 </style>
 <body ng-controller="LoginCtrl">
 	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">oxDNA.org</a>
+		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">oxDNA.org</a>
 		<input ng-model="searchText" class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
 		<ul class="navbar-nav px-3">
 			<li class="nav-item text-nowrap">
@@ -71,7 +81,7 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/">
+							<a class="nav-link" href="/create">
 								<span data-feather="edit"></span>
 								Create A Job	
 							</a>
@@ -133,10 +143,9 @@
 								<br><br>
 								Registration Code: <input ng-model="registrationCode" name="registrationCode" id="registrationCode" type="text">
 								<br><br>
-								<input ng-disabled="email.substring(email.length-4) != '.edu'" type="submit">
+								<input type="submit">
 							</form>
 							<br>
-							<p>We are currently only accepting registrations from .edu emails</p>
 
 
 						</div>

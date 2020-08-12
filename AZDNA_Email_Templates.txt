@@ -1,6 +1,6 @@
 Dear <n>, 
 ;;
-Good luck with your simulations.\r\nPlease do not reply to this email.\r\nIf you have any questions, please contact oxdna.org.questions@gmail.com or raise an issue on our github forum.
+Good luck with your simulations.\r\nPlease do not reply to this email.\r\nIf you have any questions, please contact oxdna.help@gmail.com or raise an issue on our github forum.
 ;;
 OxDNA Registration
 ::

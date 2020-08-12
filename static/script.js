@@ -507,19 +507,16 @@ app.controller("MainCtrl", function($scope, $http) {
 })
 
 
-app.controller("LandingCtrl", function($scope){
+app.controller("LandingCtrl", function(){
 	
 })
+
 app.controller("ForgotPasswordCtrl", function($scope, $http) {
 	$scope.status = null;
 
 	$scope.sendResetToken = function(email) {
 		if (email == undefined) {
 			$scope.status = "Please fill out the field";
-			return;
-		}
-		else if (!email.endsWith(".edu")) {
-			$scope.status = "Must be an edu email";
 			return;
 		}
 		$scope.status = "Loading...";

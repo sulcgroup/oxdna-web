@@ -154,7 +154,7 @@ def sendResetToken(username):
 		cursor.execute(set_reset_token_expiration, (day, username,))
 	
 	### UPDATE LINK WHEN DOMAIN GOES PUBLIC ###
-	verifylink = "http://10.126.22.10/password/reset?token={token}".format(token = token)
+	verifylink = "http://oxdna.org/password/reset?token={token}".format(token = token)
 	EmailScript.SendEmail("-t 6 -n {username} -u {verifylink} -d {email}".format(username = username, verifylink = verifylink, email = username).split(" "))
 
 	connection.close()
