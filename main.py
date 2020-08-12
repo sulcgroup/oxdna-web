@@ -369,7 +369,11 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 		"distance_data" : ".txt",
 		"distance_hist" : "_hist.png",
 		"distance_traj" : "_traj.png",
-		"distance_log" :  ".log"
+		"distance_log" :  ".log",
+		"angle_plot_data" : ".txt",
+		"angle_plot_hist" : "_hist.png",
+		"angle_plot_traj" : "_traj.png",
+		"angle_plot_log" : ".log"
 	}
 
 	job_data = Job.getAssociatedJobs(uuid)
@@ -433,7 +437,11 @@ def getJobOutput(uuid, desired_output):
 		"input":"input",
 		"mean":"mean.dat",
 		"deviations":"deviations.json",
-		"aligned_traj":"aligned.dat"
+		"aligned_traj":"aligned.dat",
+		"bond_log":"bond.log",
+		"bond_output":"bond_occupancy.json",
+		"angle_find_log":"angle_find.log",
+		"angle_find_output":"duplex_angle.txt"
 	}
 
 	if desired_output not in desired_output_map:

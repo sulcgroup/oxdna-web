@@ -68,6 +68,26 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 			name = analysis_parameters["name"],
 			particles = ' '.join(plist)
 		)
+	elif analysis_type == "bond":
+		if ("force.txt" in os.listdir(job_directory)):
+			run_command = "forces2pairs.py force.txt designed_pairs.txt"
+		else:
+			run_command = "generate_force.py -o force.txt -f designed_pairs.txt input last_conf.dat"
+		run_command += ";python3 /opt/oxdna_analysis_tools/bond_analysis.py -p 1 input trajectory.dat designed_pairs.txt bond_occupancy.json"
+	elif analysis_type == "angle_find":
+		run_command = "duplex_angle_finder.py -p 1 -o duplex_angle.txt input trajectory.dat"
+	elif analysis_type == "angle_plot":
+		analysis_parameters["name"] = analysis_parameters["name_angle"]
+		job_output_file = job_directory + analysis_parameters["name"] + ".log"
+		p1 = analysis_parameters["p1_angle"].split(" ")
+		p2 = analysis_parameters["p2_angle"].split(" ")
+		p_input = []
+		for pair in zip(p1, p2):
+			p_input.append("-i duplex_angle.txt " + " ".join(pair))
+		run_command = "duplex_angle_plotter.py -f both -o {name}.png {particle_input}".format(
+			name = analysis_parameters["name"],
+			particle_input = ' '.join(p_input)
+		)
 
 	sbatch_file = """#!/bin/bash
 #SBATCH --job-name={analysis_id}    # Job name
@@ -232,7 +252,10 @@ def createAnalysisForUserIdWithJob(userId, analysis_parameters):
 	analysis_types = {
 		"mean" : 1,
 		"align" : 2,
-		"distance" : 3
+		"distance" : 3,
+		"bond" : 4,
+		"angle_find" : 5,
+		"angle_plot" : 6
 	}
 
 	jobId = analysis_parameters["jobId"]
@@ -243,6 +266,10 @@ def createAnalysisForUserIdWithJob(userId, analysis_parameters):
 		analysis_parameters["name"] = "mean"
 	elif analysis_type == "align":
 		analysis_parameters["name"] = "align"
+	elif analysis_type == "bond":
+		analysis_parameters["name"] = "bond"
+	elif analysis_type == "angle_find":
+		analysis_parameters["name"] = "angle_find"
 
 	randomAnalysisId = str(uuid.uuid4())
 
