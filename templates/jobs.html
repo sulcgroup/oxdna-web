@@ -75,7 +75,7 @@ table tr:nth-child(even) {
 	<div class="container-fluid">
 		<div class="row">
 			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-				<div class="sidebar-sticky">
+				<div class="sidebar-sticky" ng-cloak>
 					<ul class="nav flex-column">
 						<li class="nav-item">
 							<a class="nav-link" href="/">
@@ -151,7 +151,7 @@ table tr:nth-child(even) {
 								<td>Cancel</td>
 								<td>Delete</td>
 							</tr>
-							<tr ng-repeat="x in jobs">
+							<tr ng-repeat="x in jobs" ng-cloak>
 								<td><a href="/job/{{x.uuid}}">{{ x.name }}</a></td>
 								<td><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
 								<td>{{ x.dateString }}</td>
@@ -164,7 +164,7 @@ table tr:nth-child(even) {
 								<td><a target="_blank" href="/ufile/{{x.uuid}}/energy">view</a>
 									<a target="_blank" href="/ufile/{{x.uuid}}/energy" download="{{x.name}}_energy.dat">download</a>
 								</td>
-								<td><a tartet="_blank" href="/static/oxdna-viewer/index.html?configuration=/ufile/{{x.uuid}}/last_conf&topology=/ufile/{{x.uuid}}/topology">view</a>
+								<td><a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/ufile/{{x.uuid}}/last_conf&topology=/ufile/{{x.uuid}}/topology">view</a>
 									<a target="_blank" href="/ufile/{{x.uuid}}/last_conf" download="{{x.name}}_last_conf.dat">download</a>
 								</td>
 								<td><a target="_blank" href="/ufile/{{x.uuid}}/trajectory_zip">download</a></td>

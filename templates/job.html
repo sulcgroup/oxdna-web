@@ -92,7 +92,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-				<div class="sidebar-sticky">
+				<div class="sidebar-sticky" ng-cloak>
 					<ul class="nav flex-column">
 						<li class="nav-item">
 							<a class="nav-link" href="/">
@@ -147,9 +147,13 @@
 				</div>
 			</nav>
 
-			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-					<h1 class="h2">Viewing Analyses for Job: {{job.name}}</h1>
+			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4" ng-cloak>
+				<div class="pb-2 mb-3 border-bottom">
+					<h1 class="h2 d-inline-block">Viewing Analyses for Job:</h1>
+					<input class="h2 d-inline-block" id="job-name" type="text" value={{job.name}} size={{job.name.length}}
+						   onkeydown="this.size = this.value.length < 1 ? 1 : this.value.length">
+					<button type="button" ng-click="updateJobName()">Change Name</button>
+					<a class="h2 d-inline-block text-primary float-right" target="_blank" href="/static/oxdna-viewer/index.html?configuration=/ufile/{{job.uuid}}/last_conf&topology=/ufile/{{job.uuid}}/topology">View Last Configuration</a>
 				</div>
 			
 
@@ -256,8 +260,8 @@
 									<td>Histogram</td>
 									<td>Trajectory</td>
 								</tr>
-								<tr ng-repeat="x in distance">
-									<td style="width:8%">{{ x.name }}</td>
+								<tr ng-cloak ng-repeat="x in distance">
+									<td style="width:8%"">{{ x.name }}</td>
 									<td style="width:5%"><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
 									<td style="width:5%">{{ x.dateString }}</td>
 									<td style="width:5%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_log" target="_blank" download={{x.name}}.txt>View log</a></td>

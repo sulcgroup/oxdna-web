@@ -10,10 +10,14 @@ query = ("SELECT id, password, administrator FROM Users WHERE username = %s")
 adminQuery = ("SELECT administrator FROM Users WHERE id = %s")
 privalegedQuery = ("SELECT privaleged FROM Users WHERE id = %s")
 recentUsersQuery = ("SELECT id, username FROM Users ORDER BY creationDate DESC LIMIT 5")
+allUsersQuery = ("SELECT id, username FROM Users ORDER BY username ASC")
 updateToAdministrator = ("UPDATE Users SET administrator = 1 WHERE id = %s")
 updateToPrivaleged = ("UPDATE Users SET privaleged = 1 WHERE id = %s")
 jobLimitQuery = ("SELECT jobLimit FROM Users WHERE id = %s")
+jobCreationDateQuery = ("SELECT creationDate FROM Jobs WHERE uuid = %s")
+timeLimitQuery = ("SELECT timeLimit FROM Users WHERE id = %s")
 updateJobLimit = ("UPDATE Users SET jobLimit = %s WHERE id = %s")
+setMonthlyTimeLimit = ("UPDATE Users SET timeLimit = %s WHERE id = %s")
 userJobCountQuery = ("SELECT COUNT(*) FROM Jobs WHERE userId = %s")
 userJobStatusCountQuery = ("SELECT COUNT(*) FROM Jobs WHERE userId = %s AND status = %s")
 userIDQuery = ("SELECT id FROM Users WHERE username = %s")
@@ -27,6 +31,24 @@ def getRecentlyAddedUsers():
 
 	with connection.cursor() as cursor:
 		cursor.execute(recentUsersQuery)
+		result = cursor.fetchall()
+	
+	connection.close()
+
+	usernames = []
+
+	for user_id, username in result:
+		usernames.append(username)
+
+	return usernames
+
+def getAllUsers():
+	connection = Database.pool.get_connection()
+
+	result = []
+
+	with connection.cursor() as cursor:
+		cursor.execute(allUsersQuery)
 		result = cursor.fetchall()
 	
 	connection.close()
@@ -98,11 +120,33 @@ def getJobLimit(user_id):
 	else:
 		return 0
 
+def getTimeLimit(user_id):
+	connection = Database.pool.get_connection()
+	result = None
+
+	with connection.cursor() as cursor:
+		cursor.execute(timeLimitQuery, (user_id,))
+		result = cursor.fetchone()
+	connection.close()
+
+	if result is not None:
+		return result[0]
+	else:
+		return 0
+
 def setJobLimit(user_id, jobs):
 	connection = Database.pool.get_connection()
 
 	with connection.cursor() as cursor:
 		cursor.execute(updateJobLimit, (jobs, user_id,))
+	
+	connection.close()
+
+def setTimeLimit(user_id, timeLimit):
+	connection = Database.pool.get_connection()
+
+	with connection.cursor() as cursor:
+		cursor.execute(setMonthlyTimeLimit, (timeLimit, user_id,))
 	
 	connection.close()
 

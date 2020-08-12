@@ -52,6 +52,10 @@ def handle_form():
 	if (activeJobCount >= jobLimit):
 		return "You have reached the maximum number of running jobs."
 
+	if (Admin.getTimeLimit(user_id) <= 0):
+		return "You have reached the monthly time limit for running jobs."
+
+
 	print("Now creating a job on behalf of:", user_id)
 
 	json_data = request.get_json()
@@ -66,6 +70,11 @@ def handle_form():
 
 	parameters.update(json_data["parameters"])
 	files = json_data["files"]
+
+	if "force_file" in json_data:
+		force_file_name = json_data["parameters"]["external_forces_file"]
+		files[force_file_name] = json_data["force_file"]
+
 
 	addDefaultParameters(parameters)
 
@@ -325,6 +334,13 @@ def view_job(job_id):
 	else:
 		return send_file("templates/job.html")
 
+@app.route("/job/update_name/<name>/<uuid>")
+def update_job_name(name, uuid):
+	user_id = session.get("user_id")
+	if user_id is None:
+		return redirect("/login")
+	
+	return Job.updateJobName(name, uuid)
 
 @app.route("/api/job/<job_id>")
 def get_job_data(job_id):
@@ -488,6 +504,12 @@ def recentlyAddedUsers():
 	users = tuple(newUsers)
 	return jsonify(users)
 
+@app.route("/admin/all_users")
+def allUsers():
+	allUsers = Admin.getAllUsers()
+	users = tuple(allUsers)
+	return jsonify(users)
+
 @app.route("/admin/promoteToAdmin/<username>")
 def promoteToAdmin(username):
 	loggedInUserID = session.get("user_id")
@@ -506,7 +528,7 @@ def promoteToPrivaleged(username):
 		Admin.promoteToPrivaleged(userID)
 		return username + " promoted to privaleged"
 
-@app.route("/admin/setJobLimit/<username>")
+@app.route("/admin/getJobLimit/<username>")
 def getJobLimit(username):
 	loggedInUserID = session.get("user_id")
 	isAdmin = Admin.checkIfAdmin(loggedInUserID)
@@ -528,6 +550,19 @@ def setJobLimit(username, jobLimit):
 		userID = Admin.getID(username)
 		Admin.setJobLimit(userID, jobLimit)
 		return username + "'s job limit set to " + jobLimit
+
+@app.route("/admin/setTimeLimit/<username>/<timeLimit>")
+def setTimeLimit(username, timeLimit):
+	loggedInUserID = session.get("user_id")
+	isAdmin = Admin.checkIfAdmin(loggedInUserID)
+	if isAdmin == 1:
+		try:
+			timeLimitInt = int(timeLimit)
+		except ValueError:
+			return "Failure: enter an integer value"
+		userID = Admin.getID(username)
+		Admin.setTimeLimit(userID, timeLimit)
+		return username + "'s time limit set to " + str(timeLimitInt / 3600) + " hours"
 
 @app.route("/admin/deleteUser/<user_id>")
 def deleteUser(user_id):
@@ -558,8 +593,9 @@ def getUserInfo(username):
 	else:
 		isPrivaleged = "False"
 	jobLimit = Admin.getJobLimit(userID)
+	timeLimit = Admin.getTimeLimit(userID)
 	jobCount = Admin.getUserJobCount(userID)
-	info = (jobCount, jobLimit, isAdmin, isPrivaleged, userID)
+	info = (jobCount, jobLimit, timeLimit, isAdmin, isPrivaleged, userID)
 	return jsonify(info)
 
 @app.route("/")

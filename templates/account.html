@@ -55,7 +55,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-				<div class="sidebar-sticky">
+				<div class="sidebar-sticky" ng-cloak>
 					<ul class="nav flex-column">
 						<li class="nav-item">
 							<a class="nav-link" href="/">
@@ -125,7 +125,7 @@
 						<div class="row">
 							<div class="col-6">
 								<h4>Update your Password</h4>
-								<div ng-if="status != null"><h6>{{status}}</h6></div>
+								<div ng-if="status != null" ng-cloak><h6>{{status}}</h6></div>
 								<div>
 									<br>
 									Old password: <input type="text" ng-model="old_password" placeholder="Your current password">
