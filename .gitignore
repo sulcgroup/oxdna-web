@@ -4,6 +4,7 @@ jobfiles/*
 *.py[cod]
 *.log
 .vscode
+.DS_Store
 
 #logfiles
 pid.pid
