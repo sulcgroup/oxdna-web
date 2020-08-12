@@ -289,7 +289,7 @@ app.controller("AdminCtrl", function($scope, $http) {
 	$scope.getAllUsers();
 })
 
-app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
+app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $http) {
 	console.log("Now loading job...");
 	$scope.job = {};
 	$scope.job.name = "";
@@ -329,6 +329,17 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
 			}
 		})
 		
+	}
+
+	$scope.updateJobName = function() {
+		const name = document.getElementById('job-name').value;
+		if (!name) return;
+		$scope.job.name = name;
+
+		$http({
+			method: "GET",
+			url: `/job/update_name/${name}/${$scope.job.uuid}`
+		}).then(() => location.reload());
 	}
 
 })
@@ -434,6 +445,8 @@ app.controller("MainCtrl", function($scope, $http) {
 		$scope.data["MD_dt"] = 0.0001;
 		$scope.data["relax_force"] = 1.5;
 		$scope.data["dt"] = 0.001;
+		$scope.data["external_forces"] = 0;
+		$scope.data["external_forces_file"] = "";
 	}
 
 	$scope.parseData();
@@ -456,6 +469,10 @@ app.controller("MainCtrl", function($scope, $http) {
 		var payload = {};
 		payload["files"] = $scope.data["files"];
 		delete $scope.data["files"];
+		if ($scope.data["force_file"]) {
+			payload["force_file"] = $scope.data["force_file"];
+			delete $scope.data["force_file"];
+		}
 		payload["parameters"] = $scope.data;
 
 		request.send(JSON.stringify(payload));
@@ -479,9 +496,12 @@ app.controller("MainCtrl", function($scope, $http) {
 		$scope.parseData()
 		TriggerFileDownloads();
 
+		if ($scope.force_file) {
+			[$scope.data["external_forces_file"], $scope.data["force_file"]] = $scope.force_file;
+			$scope.data["external_forces"] = 1;
+		}
 
 		var file_data = {};
-
 		var fullyRead = 0;
 
 		for(fileName in files) {
@@ -500,12 +520,30 @@ app.controller("MainCtrl", function($scope, $http) {
 		var readCallback = function() {
 			if(fullyRead == 2) {
 				$scope.data["files"] = file_data;
-				$scope.postJob()
+				$scope.postJob();
 			}
 		}
 	}
 })
 
+app.directive("fileread", [function () {
+    return {
+        scope: {
+            fileread: "="
+        },
+        link: function (scope, element, attributes) {
+            element.bind("change", function (changeEvent) {
+                var reader = new FileReader();
+                reader.onload = function (loadEvent) {
+                    scope.$apply(function () {
+                        scope.fileread = [changeEvent.target.files[0].name, loadEvent.target.result];
+                    });
+				}
+                reader.readAsText(changeEvent.target.files[0]);
+            });
+        }
+    }
+}])
 
 app.controller("LandingCtrl", function(){
 	

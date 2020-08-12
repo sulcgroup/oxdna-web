@@ -19,6 +19,7 @@ get_job_name_for_uuid = ("SELECT name FROM Jobs WHERE uuid = %s")
 get_jobs_query = ("SELECT * FROM Jobs WHERE userId = %s")
 get_job_query = ("SELECT * FROM Jobs WHERE uuid = %s")
 get_associated_query = ("SELECT * FROM Jobs WHERE simJobId = %s")
+update_job_name = ("UPDATE Jobs SET name = %s WHERE uuid = %s")
 get_userId_for_job_uuid = ("SELECT userId FROM Jobs WHERE uuid = %s")
 remove_job = ("DELETE FROM Jobs WHERE uuid = %s")
 remove_jobs_for_user_id = ("DELETE FROM Jobs WHERE userId = %s")
@@ -287,6 +288,7 @@ def createJobForUserIdWithData(userId, jsonData):
 
 	user_directory = "/users/"+str(userId) + "/"
 	job_directory = user_directory + randomJobId + "/"
+	print('job_directory', job_directory)
 
 	if not os.path.exists(user_directory):
 		os.mkdir(user_directory)
@@ -296,7 +298,7 @@ def createJobForUserIdWithData(userId, jsonData):
 	#pass randomJobId to slurm!
 	files = jsonData["files"]
 
-	#write the top and conf files
+	#write the top, conf, and (optional) force files
 	for (file_name, file_data) in files.items():
 		#set file path to /users here
 		file_path = job_directory + file_name
@@ -460,6 +462,16 @@ def getJobNameForUuid(uuid):
 		return result[0]
 	else:
 		return None
+
+def updateJobName(name, uuid):
+	connection = Database.pool.get_connection()
+
+	with connection.cursor() as cursor:
+		cursor.execute(update_job_name, (name, uuid,))
+	
+	connection.close()
+	
+	return name
 
 def runOneStepJob(job_directory):
 	pipe = subprocess.Popen(

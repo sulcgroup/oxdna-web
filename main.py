@@ -71,6 +71,11 @@ def handle_form():
 	parameters.update(json_data["parameters"])
 	files = json_data["files"]
 
+	if "force_file" in json_data:
+		force_file_name = json_data["parameters"]["external_forces_file"]
+		files[force_file_name] = json_data["force_file"]
+
+
 	addDefaultParameters(parameters)
 
 	metadata = {}
@@ -329,6 +334,13 @@ def view_job(job_id):
 	else:
 		return send_file("templates/job.html")
 
+@app.route("/job/update_name/<name>/<uuid>")
+def update_job_name(name, uuid):
+	user_id = session.get("user_id")
+	if user_id is None:
+		return redirect("/login")
+	
+	return Job.updateJobName(name, uuid)
 
 @app.route("/api/job/<job_id>")
 def get_job_data(job_id):
