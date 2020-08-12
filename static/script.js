@@ -144,6 +144,7 @@ app.controller("AdminCtrl", function($scope, $http) {
 
 	console.log("Now in the admin ctrl!");
 	$scope.recentUsers = [];
+	$scope.allUsers = [];
 
 	$scope.searchInput = "";
 	$scope.jobLimitInput = "";
@@ -152,6 +153,10 @@ app.controller("AdminCtrl", function($scope, $http) {
 	$scope.selectedUserID = -1;
 	$scope.selectedUserJobCount = "";
 	$scope.selectedUserJobLimit = -1;
+	$scope.selectedUserTimeLimit = 0;
+	$scope.selectedUserHours = 0;
+	$scope.selectedUserMinutes = 0;
+	$scope.selectedUserSeconds = 0;
 	$scope.selectedUserIsAdmin = false
 	$scope.selectedUserIsPrivaleged = false
 	$scope.privalegedButtonText = "Make Privaleged";
@@ -166,7 +171,17 @@ app.controller("AdminCtrl", function($scope, $http) {
 			url: '/admin/recentlyaddedusers'
 		}).then(function successCallback(response){
 			$scope.recentUsers = response.data;
-			$scope.getUserInfo(response.data[0]);		
+			$scope.getUserInfo(response.data[0]);	
+		});
+	}
+
+	$scope.getAllUsers = function(){
+		$http({
+			method: 'GET',
+			url: '/admin/all_users'
+		}).then(function successCallback(response){
+			$scope.allUsers = response.data;
+			$scope.getUserInfo(response.data[0]);
 		});
 	}
 
@@ -179,9 +194,14 @@ app.controller("AdminCtrl", function($scope, $http) {
 			$scope.selectedUserName = userID
 			$scope.selectedUserJobCount = response.data[0]
 			$scope.selectedUserJobLimit = response.data[1]
-			$scope.selectedUserIsAdmin = response.data[2]
-			$scope.selectedUserIsPrivaleged = response.data[3]
-			$scope.selectedUserID = response.data[4]
+			$scope.selectedUserTimeLimit = response.data[2]
+			$scope.selectedUserIsAdmin = response.data[3]
+			$scope.selectedUserIsPrivaleged = response.data[4]
+			$scope.selectedUserID = response.data[5]
+
+			$scope.selectedUserHours = Math.floor($scope.selectedUserTimeLimit / 3600);
+			$scope.selectedUserMinutes = Math.floor(($scope.selectedUserTimeLimit % 3600) / 60);
+			$scope.selectedUserSeconds = $scope.selectedUserTimeLimit % 60;
 		})
 	}
 
@@ -241,6 +261,15 @@ app.controller("AdminCtrl", function($scope, $http) {
 		})
 	}
 
+	$scope.setTimeLimit = function(){
+		$http({
+			method: "GET",
+			url: `/admin/setTimeLimit/${$scope.selectedUserName}/${$scope.timeLimitInput * 3600}`
+		}).then(function successCallback(response){
+			$scope.timeMessage = response.data;
+		})
+	}
+
 	$scope.deleteUser = function(userId){
 		$http({
 			method: "GET",
@@ -257,7 +286,7 @@ app.controller("AdminCtrl", function($scope, $http) {
 	}
 
 	$scope.getRecentUsers();
-
+	$scope.getAllUsers();
 })
 
 app.controller("JobCtrl", function($scope, $location, $timeout, JobService) {
