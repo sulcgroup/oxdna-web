@@ -398,10 +398,19 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 			if job["uuid"] == analysis_id:
 				desired_file_path = job_directory + job["name"] + desired_output_map[desired_output]
 
-	try:
-		return send_file(desired_file_path, as_attachment=True)
-	except:
-		abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=analysis_id))
+	if "log" in desired_file_path:
+		try:
+			print(desired_file_path)
+			desired_file = open(desired_file_path, "r")
+			desired_file_contents = desired_file.read()
+			return Response(desired_file_contents, mimetype='text/plain')
+		except:
+			abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=analysis_id))
+	else:
+		try:
+			return send_file(desired_file_path, as_attachment=True)
+		except:
+			abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=analysis_id))
 
 @app.route("/ufile/<uuid>/<desired_output>")
 def getUserfile(uuid, desired_output):
