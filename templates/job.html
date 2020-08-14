@@ -264,7 +264,8 @@
 									<td style="width:8%"">{{ x.name }}</td>
 									<td style="width:5%"><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
 									<td style="width:5%">{{ x.dateString }}</td>
-									<td style="width:5%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_log" target="_blank" download={{x.name}}.txt>View log</a></td>
+														 <a href="/job_output/{{mean[0].sim_job_id}}/mean_log" target="_blank">View log</a>
+									<td style="width:5%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_log" target="_blank">View log</a></td>
 									<td style="width:8%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_data" target="_blank" download={{x.name}}.txt>Download distance as text</a></td>
 									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" target="_blank" download={{x.name}}_hist.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" width=100% height=100%></a></td>
 									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" target="_blank" download={{x.name}}_traj.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" width=100% height=100%></a></td>
@@ -298,9 +299,11 @@
 								<tr>
 									<td>Bond Occupancy</td>
 									<td><span ng-class="{'completed': bond[0].status == 'Completed', 'pending': bond[0].status == 'Pending', 'running': bond[0].status == 'Running'}">{{bond[0].status}}</span></td>
-									<td>{{ mean[0].dateString }}</td>
-									<td><a href="/job_output/{{mean[0].sim_job_id}}/bond_log" target="_blank">View log</a></td>
-									<td><a href="/job_output/{{mean[0].sim_job_id}}/bond_output" target="_blank" download={{job.name}}_occupancy.json>Download colormap</a></br>
+									<td>{{ bond[0].dateString }}</td>
+									<td><a href="/job_output/{{bond[0].sim_job_id}}/bond_log" target="_blank">View log</a></td>
+									<td>
+										<a href="/static/oxdna-viewer/index.html?configuration=/job_output/{{bond[0].sim_job_id}}/last_conf&topology=/job_output/{{bond[0].sim_job_id}}/topology&overlay=/job_output/{{bond[0].sim_job_id}}/bond_output" target="_blank">View colormap</a></br>
+										<a href="/job_output/{{bond[0].sim_job_id}}/bond_output" target="_blank" download={{job.name}}_occupancy.json>Download colormap</a></br>
 									</td>
 								</tr>
 							</table>
@@ -369,7 +372,7 @@
 									<td style="width:8%">{{ x.name }}</td>
 									<td style="width:5%"><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
 									<td style="width:5%">{{ x.dateString }}</td>
-									<td style="width:5%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_log" target="_blank" download={{x.name}}.txt>View log</a></td>
+									<td style="width:5%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_log" target="_blank">View log</a></td>
 									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_hist" target="_blank" download={{x.name}}_hist.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_hist" width=100% height=100%></a></td>
 									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_traj" target="_blank" download={{x.name}}_traj.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_traj" width=100% height=100%></a></td>
 								</tr>

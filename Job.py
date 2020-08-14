@@ -152,7 +152,7 @@ cd {job_directory}""".	format(
 			sbatch_file += "\n/opt/oxdna_analysis_tools/generate_force.py -o force.txt input_relax_MC MC_relax.dat"
 			sbatch_file += '\nsed -i "s/0.9/{force}/g" force.txt'.format(force=force)
 	sbatch_file += "\npython3 /opt/zip_traj.py"
-	sbatch_file += "\npython3 /vagrant/azDNA/Update_Status.py"
+	sbatch_file += "\npython3 /vagrant/oxdna-web/Update_Status.py"
 
 	file_name = "sbatch.sh"
 	file_path = job_directory + file_name

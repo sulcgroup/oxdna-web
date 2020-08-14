@@ -466,7 +466,7 @@ app.controller("MainCtrl", function($scope, $http) {
 	$scope.setDefaults();
 
 
-	$scope.hasSubmitted = false
+	$scope.submissionStatus = '';
 
 
 	$scope.postJob = function() {
@@ -495,6 +495,7 @@ app.controller("MainCtrl", function($scope, $http) {
 				window.location = "/jobs";
 				console.log("Job submission was a success!")
 			} else {
+				$scope.submissionStatus = '';
 				$scope.error = request.response;
 				$scope.$apply();
 
@@ -506,6 +507,8 @@ app.controller("MainCtrl", function($scope, $http) {
 	}
 
 	$scope.submitJob = function() {
+		$scope.submissionStatus = 'Processing submission...';
+		
 		$scope.parseData()
 		TriggerFileDownloads();
 
