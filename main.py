@@ -178,11 +178,8 @@ def register():
 		institution = request.form["institution"]
 		registrationCode = request.form["registrationCode"]
 	
-	if registrationCode != "BetaCodeDNA":
+	if registrationCode != "RealBetaCodeDNA":
 		return "Incorrect registration code."
-
-	if username[-4:] != ".edu":
-		 return "We are currently only accepting .edu registrations at this time."
 
 	if username is not None and password is not None:
 		user_id = Register.registerUser(username, password, firstName, lastName, institution)

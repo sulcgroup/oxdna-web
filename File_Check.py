@@ -26,7 +26,7 @@ from Job import getJobNameForUuid
     # python File_Check.py -d /users -s 100000 -w 432000 -x 604800 -o results -b
 
 
-DEFAULT_SIZE_LIMIT = 1000000 # 1MB
+DEFAULT_SIZE_LIMIT = 5000000 # 5MB
 DEFAULT_WARNING_TIME = 432000 # five days
 DEFAULT_DELETION_TIME = 604800 # one week
 DEFAULT_DIR = "/users"

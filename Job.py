@@ -210,7 +210,7 @@ def createOxDNAInput(parameters, job_directory, file_name, needs_relax):
 		unique_parameters["conf_file"] = "MC_relax.dat"
 		unique_parameters["lastconf_file"] = "MD_relax.dat"
 		unique_parameters["restart_step_counter"] = 0
-		unique_parameters.update([("max_backbone_force", 1000), ("bussi_tau", 1), ("external_force", 1), ("external_force_file", "force.txt")])
+		unique_parameters.update([("max_backbone_force", 1000), ("bussi_tau", 1), ("external_forces", 1), ("external_forces_file", "force.txt")])
 		if unique_parameters["backend"] == "CUDA":
 			unique_parameters["backend_precision"] = "mixed"
 
