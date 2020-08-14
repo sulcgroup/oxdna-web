@@ -10,6 +10,7 @@ jobfiles/*
 pid.pid
 nohup.out
 logs/*
+cron.tt
 
 #oxView (its a separate repository)
 static/oxdna-viewer
