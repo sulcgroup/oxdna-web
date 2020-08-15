@@ -150,9 +150,9 @@ cd {job_directory}""".	format(
 		sbatch_file += "\n/opt/oxdna/oxDNA/build/bin/oxDNA {file_name}".format(file_name=f)
 		if f == "input_relax_MC":
 			sbatch_file += "\n/opt/oxdna_analysis_tools/generate_force.py -o force.txt input_relax_MC MC_relax.dat"
-			sbatch_file += '\nsed -i "s/0.9/{force}/g" force.txt'.format(force=force)
+			sbatch_file += "\nsed -i 's/0.9/{force}/g' force.txt".format(force=force)
 	sbatch_file += "\npython3 /opt/zip_traj.py"
-	sbatch_file += "\npython3 /vagrant/oxdna-web/Update_Status.py"
+	sbatch_file += "\npython3 /var/www/azDNA/azDNA/Update_Status.py"
 
 	file_name = "sbatch.sh"
 	file_path = job_directory + file_name
@@ -162,7 +162,11 @@ cd {job_directory}""".	format(
 
 
 def createOxDNAInput(parameters, job_directory, file_name, needs_relax):
+	#Copying parameters let us change parameters if we're making multiple input files from the same form submission
+	#There are three input files created if relaxion was requested
 	unique_parameters = parameters.copy()
+
+	#these parameters are not actually oxDNA commands, so we remove them from the dict that actually creates the input file
 	unique_parameters.pop("MC_steps")
 	unique_parameters.pop("MD_steps")
 	unique_parameters.pop("MD_dt")
@@ -174,7 +178,7 @@ def createOxDNAInput(parameters, job_directory, file_name, needs_relax):
 		unique_parameters["steps"] = 10
 		unique_parameters["backend"] = "CPU"
 
-		#the production run would fail, so we're checking the MC
+		#the production run would fail, so we're checking the MC if relaxing
 		if needs_relax:
 			if unique_parameters["interaction_type"] == "DNA2":
 				unique_parameters["interaction_type"] = "DNA_relax"
@@ -315,7 +319,7 @@ def createJobForUserIdWithData(userId, jsonData):
 
 	user_directory = "/users/"+str(userId) + "/"
 	job_directory = user_directory + randomJobId + "/"
-	print('job_directory', job_directory)
+	print("Creating job {uuid} for user {user}".format(uuid=randomJobId, user=userId), flush=True)
 
 	if not os.path.exists(user_directory):
 		os.mkdir(user_directory)
@@ -362,8 +366,10 @@ def createJobForUserIdWithData(userId, jsonData):
 							("use_edge", 1), 
 							("edge_n_forces", 1)
 		])
-		
 
+	#empty optional parameters need to be removed from the list
+	if parameters["external_forces_file"] == '':
+		parameters.pop("external_forces_file")
 
 	input_files = createOxDNAFile(parameters, job_directory, needs_relax)
 	createSlurmJobFile(job_directory, randomJobId, backend, input_files, force=relax_force)
@@ -373,6 +379,7 @@ def createJobForUserIdWithData(userId, jsonData):
 	job_ran_okay, error = runOneStepJob(job_directory)
 
 	if not job_ran_okay:
+		print("Job {uuid} died on one-step run".format(uuid=randomJobId), flush=True)
 		return False, error
 	
 
@@ -395,6 +402,7 @@ def createJobForUserIdWithData(userId, jsonData):
 		cursor.execute(add_job_query, job_data)
 	
 	connection.close()
+	print("Successfully created job {uuid} for user {user}".format(uuid=randomJobId, user=userId), flush=True)
 
 	return True, job_number
 

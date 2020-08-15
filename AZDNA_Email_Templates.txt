@@ -38,7 +38,7 @@ OxDNA File Deletion Notice
 ::
 <HEADER>
 
-Since we just turned the large file check on yesterday, you have an extra warning before the following files are deleted.
+File size limit has been updated, hopefully this is a more reasonable list.
 
 You have files that are approaching the one-week time limit and will soon be deleted. You can access the files here <u>
 The files are

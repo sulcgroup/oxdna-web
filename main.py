@@ -1,4 +1,5 @@
 import os
+import sys
 from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort
 import requests
 import Login
@@ -11,28 +12,6 @@ import Database
 app = Flask(__name__, static_url_path='/static', static_folder="static")
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
-def addDefaultParameters(parameters):
-	default_parameters = {
-		"sim_type":"MD",
-		"max_density_multiplier":10,
-		"verlet_skin":0.5,
-		"time_scale":"linear",
-		"ensemble":"NVT",
-		"thermostat":"john",
-		"diff_coeff":2.5,
-		"backend_precision":"double",
-		"lastconf_file":"last_conf.dat",
-		"trajectory_file":"trajectory.dat",
-		"energy_file":"energy.dat",
-		"refresh_vel":1,
-		"restart_step_counter":1,
-		"newtonian_steps": 103
-	}
-
-	for (key, value) in default_parameters.items():
-		if key not in parameters:
-			parameters[key] = default_parameters[key]
-
 @app.route('/create', methods=['GET'])
 def create_job():
 	if session.get("user_id") is None:
@@ -42,6 +21,28 @@ def create_job():
 
 @app.route('/create_job', methods=['POST'])
 def handle_form():
+
+	def addDefaultParameters(parameters):
+		default_parameters = {
+			"sim_type":"MD",
+			"max_density_multiplier":10,
+			"verlet_skin":0.5,
+			"time_scale":"linear",
+			"ensemble":"NVT",
+			"thermostat":"john",
+			"diff_coeff":2.5,
+			"backend_precision":"double",
+			"lastconf_file":"last_conf.dat",
+			"trajectory_file":"trajectory.dat",
+			"energy_file":"energy.dat",
+			"refresh_vel":1,
+			"restart_step_counter":1,
+			"newtonian_steps": 103
+		}
+	
+		for (key, value) in default_parameters.items():
+			if key not in parameters:
+				parameters[key] = default_parameters[key]
 
 	if session.get("user_id") is None:
 		return "You must be logged in to submit a job!"
@@ -54,9 +55,6 @@ def handle_form():
 
 	if (Admin.getTimeLimit(user_id) <= 0):
 		return "You have reached the monthly time limit for running jobs."
-
-
-	print("Now creating a job on behalf of:", user_id)
 
 	json_data = request.get_json()
 
@@ -409,37 +407,6 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 		except:
 			abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=analysis_id))
 
-@app.route("/ufile/<uuid>/<desired_output>")
-def getUserfile(uuid, desired_output):
-
-	if session.get("user_id") is None:
-		return "You must be logged in to view the output of a job"
-
-	desired_output_map = {
-		"energy":"energy.dat",
-		"trajectory_zip":"trajectory.zip",
-		"trajectory_txt":"trajectory.dat",
-        "topology": "output.top",
-		"last_conf": "last_conf.dat",
-		"log":"job_out.log",
-		"analysis_log":"analysis_out.log",
-		"input":"input",
-		"mean":"mean.dat",
-		"deviations":"deviations.json"
-	}
-
-	if desired_output not in desired_output_map:
-		return "You must specify a valid desired output"
-	
-
-	user_directory = "/users/" + str(session["user_id"]) + "/"
-	job_directory =  user_directory + uuid + "/"
-
-	file_path =  "/userfiles/" + str(session["user_id"]) + "/" + uuid + "/" + desired_output_map[desired_output]
-
-	print(file_path)
-	return redirect(file_path)
-
 @app.route("/job_output/<uuid>/<desired_output>")
 def getJobOutput(uuid, desired_output):
 
@@ -476,7 +443,6 @@ def getJobOutput(uuid, desired_output):
 
 	if not "trajectory" in desired_output:
 		try:
-			print(desired_file_path)
 			desired_file = open(desired_file_path, "r")
 			desired_file_contents = desired_file.read()
 			return Response(desired_file_contents, mimetype='text/plain')
