@@ -85,10 +85,21 @@
                             Services we provide:
                         </h2>
                         <p>
-                            Welcome to oxDNA.org, a service of the Sulc and Yan labs at Arizona State University.  Our goal is to facilitate development of more advance and complex
-                            designs in the fields of DNA and RNA nanotechnology by facilitating non-experts to run simple simulations.
-                            The simulations this server supports are equlibrium sampling of assembled designs, meant to 
-                            assist users in understanding the dynamics of their designs before taking them to the lab.
+                            <img src = "dna.png"
+                                 class="TextWrap"
+                                 align="right"
+                                 alt = "Picture of a DNA nanostructure as represented in the oxDNA model" 
+                                 style="width:280px;"
+                                 />
+                       
+                            Welcome to oxDNA.org, a service of the <a href="https://www.public.asu.edu/~psulc/">Šulc</a> lab at Arizona State University.  Our goal is to facilitate development of more advance and complex
+                            designs in the fields of DNA and RNA nanotechnology by facilitating non-experts to run simple simulations. This server uses oxDNA and oxRNA models to simulate DNA 
+                            and RNA nanostructures to verify and prototype novel designs.
+                            The simulations this server supports are equilibrium sampling of assembled designs, meant to 
+                            assist users to test in silico their designs before taking them to the lab. The server is provided for free for anyone. All you need to do is register and agree with 
+                            the Terms of Use. We ask you to be considerate to other users and keep the server usage reasonable. We also ask you to review FAQ below prior to submitting your first job.
+                          
+
                         </p>
                     </div>
                 </div>
@@ -98,33 +109,82 @@
                             Simulation FAQ:
                         </h2>
                         <p>
-                            <b>How large of structures can I simulate?</b>  
+                            <ul>
+                                 <li>  <b>What is oxDNA / oxRNA?</b>  
+                             OxDNA and oxRNA are coarse-grained models specifically developed to simulate nucleic acid nanotechnology. They are parametrized to reproduce basic structural, mechanical, and thermodynamic properties of DNA and RNA.
+                             OxDNA is also the name of a  <a href="https://sourceforge.net/projects/oxdna">software tool</a> implements, among others, the oxDNA and oxRNA models. To learn more about the models, please look at Citations or explore the webpage <a href="https://dna.physics.ox.ac.uk">dna.physics.ox.ac.uk</a>
+                             <br>
+                             <li><b>How do I simulate my design?</b>
+                             To start an oxDNA simulation, you need three files: topology (.top) and configuration (.conf or .dat) that describe the structure, and input file that describes 
+                             the parameters of the simulation (such as temperature, duration of simulation, salt concentration). The format of these files is described in detail <a href="https://dna.physics.ox.ac.uk/index.php/Documentation">here</a>. The server generates automatically the input file for you,
+                             but you need to provide the .top and .dat file for the simulation server that describe the configuration you want to simulate. <br>
+                             <li>  <b>How do I get my design into oxDNA format?</b> The <a href="http://tacoxdna.sissa.it/">TacoxDNA webserver</a>
+                             provides a variety of conversion tools from popular DNA nanotechnology design platforms to the oxDNA format.  Some tools, such as vHelix, Adenita,
+                             and MagicDNA have built in oxDNA outputs.  Designs from CaDNAno often need to be relaxed using rigid-body dynamics prior to simulation, 
+                             this can be done in <a href="https://github.com/sulcgroup/oxdna-viewer">oxView</a> (hit the "try it!" link in the description). <br>
+                           
+                             <li>  <b>How large structures can I simulate?</b>  
                             These simulations are run on NVIDIA 2080 RTX GPUs, which easily handle origami-sized (10-20k bases) designs.
-                            Designs with more than 50k bases may not finish in the time allotted to each job. <br>
-                            <b>Can I submit my own oxDNA input files?</b>  
+                            Designs with more than 50k bases may not finish in the time allotted to each job. It also makes sense to only use GPU cards for simulations of structures of sizes at least 300 nucleotides,
+                            when the GPU provides siginificant speed-up over CPUs.<br>
+                            <li>  <b>Can I simulate proteins / nanopores / lipid membranes / other cool things along with DNA and RNA nanostructures? </b>  
+                             Currently, it is not possible. The model only support simulations of DNA or RNA molecules alone. We have a model in development that allows you to represent also proteins, but it has not 
+                             been deployed to the server yet. <br>
+                            <li>  <b>Can I keep my files on the server?</b>  
+                            Due to storage limitations, the simulated trajectory gets automatically deleted after 2 weeks. You will receive a reminder by e-mail, but we strongly recommend 
+                            to download all data once simulation is finished. We keep the start and final configuration file on the server. <br>
+                            <li>  <b>Can I submit my own oxDNA input files?</b>  
                             For security reasons, we do not allow users to submit their own input files. <br>
-                            <b>Can I run VMMC/FFS/PT/Umbrella sampling simulations?</b>
-                            No. This service is meant to provide simulation support for experimental labs and so only provides equlibrium MD simulations. <br>
-                            <b>How do I get my design into oxDNA format?</b> The <a href="http://tacoxdna.sissa.it/">TacoxDNA webserver</a>
-                            provides a variety of conversion tools from popular DNA nanotechnology design platforms to the oxDNA format.  Some tools, such as vHelix 
-                            and MagicDNA have built in oxDNA outputs.  Designs from CaDNAno often need to be relaxed using rigid-body dynamics prior to simulation, 
-                            this can be done in <a href="https://github.com/sulcgroup/oxdna-viewer">oxView</a> (hit the "try it!" link in the description). <br>
-                            <b>What is the real-time correlation of these simulations?</b> Coarse-grained simulations such as oxDNA speed up different processes
-                            by different amounts.  These simulations will be run for 1e9 steps with a timestep of 0.001, which by conservative estimation corresponds
-                            to 3.03 &mu;s.  However, based on simulated rates of hairpin hybridization, this corresponds to an actual timescale on the order of 1 ms. <br>
-                            <b>My simulation log shows an error!  What do I do??</b> Errors are most frequently due to the model encountering unpysical states because of
-                            insufficient relaxation.  Structures exported from design tools are rarely in a physically viable state and must be relaxed prior to production
+                            <li>  <b>Can I run VMMC/FFS/PT/Umbrella sampling simulations?</b>
+                            No. This service is meant to provide simulation support for experimental labs and so only provides equilibrium MD simulations and currently does not support advanced simulation techniques. <br>
+                            <li>  <b>What is the real-time correspondence of these simulations?</b> Coarse-grained simulations such as oxDNA speed up different processes
+                            by different amounts, so it is impossible to put an exact time correspondence between simulation and real experiment. For more discussion on this topic, see e.g. <a href="https://pubs.acs.org/doi/abs/10.1021/acsnano.5b05865"> this article</a>.
+                            On the server, these simulations will be run by default for 1e9 steps with a timestep of 0.001 simulation time units, which by direct unit conversion corresponds
+                            to 3.03 &mu;s.  However, due to accelerated diffusion constant that we use, it can be argued that it can roughly correspond to timescale on the order of up to 1 ms. <br>
+                            
+                            <li>  <b>How long should I run my simulation for?</b>
+                            By default, we set the simulation to run for 1e9 steps. This is usually sufficient to get enough statistics to explore behavior of a typical DNA origami-sized structure.
+                            However, if your system is more complex and can undergo different conformational transitions, it might not be enough. You should watch video and plot energy file versus time and see 
+                            that each relevant state is sampled, and that energy of system does not diverge, but rather keeps fluctuating around mean value. 
+                
+                            <li>  <b> Is what I see in the simulation real?</b>
+                            Remember that oxDNA is just a model, which makes numerous approximations to simulate efficiently the nanostructures. While in majority systems that we studied
+                            previously, we found quantitative or semiquantitative agreement with available experimental data, you should still take results with a grain of salt and ask yourself:
+                            is the behavior seen in simulations something that my system should be able to do? Simulations can never replace experiments, but might help you get insight into the function.
+                            If you are in doubt, do not hesitate to contact us or check out some of our publications where we study systems similar to yours for further discussion of underlying phenomena.
+
+
+                            <li>  <b> I want two single-stranded segments (e.g. on two different structures that  I want to join together) to bind into a duplex. How do I force simulation to do it?</b>
+                                You first load your structure in oxView and select all the complementary pairs that will be bound to each other in a duplex. You then select the option to download "Selected base pair trap file". 
+                                When you submit the simulation, you can then upload this file under the optional "External force file" field in Advanced Parameters.
+                        
+                            <li>  <b> The simulation is finished. How do I analyze the results now?</b> 
+                            We recommend that you download the trajectory file and visualize it using <a href="https://github.com/sulcgroup/oxdna-viewer">oxView</a>. 
+                            Furthermore, we provide multiple automated analysis options, based on the tools that we developed <a href="https://doi.org/10.1093/nar/gkaa417">here</a>. Currently implemented analysis allows you
+                            to obtain mean structure and standard deviations from the mean structure to visualize its flexibility. You can also check distances betweeen nucleotides, bond occupancy and angles between different stems in the simulation trajectory. For more
+                            complex analysis, you can use our python tools to analyze the trajectory that you downloaded (see tutorials and examples <a href="https://github.com/sulcgroup/oxdna_analysis_tools">here</a>)
+
+                            <li>  <b>My simulation log shows an error!  What do I do??</b> Errors are most frequently due to the model encountering unphysical states because of
+                            insufficient relaxation. This often happens when you convert from a different format (most often caDNAno) where the 3D positions of helices are not physical and some of the distances between neighboring nucleotides are unphysically large.
+                            Structures exported from design tools are rarely in a physically viable state and must be relaxed prior to production
                             simulation.  We have tried to provide a reasonable relaxation protocol automatically, but for some structures it is insufficient.
                               Try resubmitting your job and increasing the length of the relaxation steps or decreasing the dt of the MD relaxation. <br>
-                            <b>I am interested in learning more about oxDNA!  Where can I do that?</b> Check out this <a href="https://arxiv.org/pdf/2004.05052.pdf">book chapter</a> for a comprehensive introduction 
-                            and take a look at the <a href="https://dna.physics.ox.ac.uk/index.php/Main_Page">documentation</a> for detailed information on installation and running simulations.<br>
+                              <li>  <b>I am interested in learning more about oxDNA!  Where can I do that?</b> Check out this <a href="https://arxiv.org/pdf/2004.05052.pdf">book chapter</a> for a comprehensive introduction 
+                            and take a look at the <a href="https://dna.physics.ox.ac.uk/index.php/Main_Page">documentation</a> for detailed information on installation and running simulations. Also check out our Citation section for the articles describing the models in detail.<br>
+                            <li> <b>I need to simulate many different structures, but all nodes are occupied! When does my job get scheduled?</b> We currently impose a limit of 4 submitted jobs per user and a maximum running time of 4 days per job. 
+                                These constraints might change in the future and we reserve the right to limit the allowed maximum running time and number of submitted jobs for users that use the server heavily. While we have plans to expand the capacity of the server in the future, it is currently equipped only with 8 GPUs. Hence, we ask users to be considerate
+                                and not use it excessively. For complex simulation tasks (such as FFS) and large number of designs to try, we recommend that you either purchase your own GPU server or use your own university HPC resources. Most universities have GPU servers available for their researchers.
+                                The evaluation scripts that are used on our server are available <a href="https://github.com/sulcgroup/oxdna_analysis_tools">here</a>  and you can use them to evaluate and visualize your results from your local HPC service provider.
+    
+                        </ul>
+                         
                         </p>
                     </div>
                 </div>
                 <div class="card">
                     <div id=ContactCard class="card-body">
                         <h2>
-                            Questions? Issues!:
+                            Questions? Issues?:
                         </h2>
                         <p>
                             If you have bug reports/issues/feature requests, please post them in the <a href=https://github.com/sulcgroup/oxdna-web/issues>issues page</a> of our GitHub. We will get to them as soon as possible.<br>
@@ -144,39 +204,45 @@
                             For analysis, we use the oxdna_analysis_tools code maintained <a href=https://github.com/sulcgroup/oxdna_analysis_tools>here</a><br>
                             For visualization, we use the oxView code maintained <a href=https://github.com/sulcgroup/oxdna-viewer>here</a><br>
                             We kindly ask you to cite the following if you use the oxDNA model: <br>
-                            B. E. K. Snodin, F. Randisi, M. Mosayebi, P. Šulc, J. S. Schreck, F. Romano, T. E. Ouldridge, R. Tsukanov, E. Nir, A. A. Louis, J. P. K. Doye, J. Chem. Phys. 142, 234901 (2015) (DOI: <a href="https://aip.scitation.org/doi/10.1063/1.4921957")>10.1063/1.4921957</a>)<br>
-                            P. Šulc, F. Romano, T. E. Ouldridge, L. Rovigatti, J. P. K. Doye, A. A. Louis, J. Chem. Phys. 137, 135101 (2012) (DOI: <a href=https://aip.scitation.org/doi/10.1063/1.4754132>10.1063/1.475413</a>) <br>
-                            L. Rovigatti, P. Šulc, I. Z. Reguly, F Romano, J. Comput. Chem. 36, 1 (2015) (DOI: <a href= https://doi.org/10.1002/jcc.23763>10.1002/jcc.23763</a>)<br>
-                            T. E. Ouldridge, A. A. Louis and J. P. K. Doye, J. Chem. Phys, 134, 085101 (2011) (DOI: <a href=https://aip.scitation.org/doi/10.1063/1.3552946>10.1063/1.3552946</a>)<br>
-                            and the following if you use oxRNA: <br>
+                            <ul>
+                            <li>B. E. K. Snodin, F. Randisi, M. Mosayebi, P. Šulc, J. S. Schreck, F. Romano, T. E. Ouldridge, R. Tsukanov, E. Nir, A. A. Louis, J. P. K. Doye, J. Chem. Phys. 142, 234901 (2015) (DOI: <a href="https://aip.scitation.org/doi/10.1063/1.4921957")>10.1063/1.4921957</a>)<br>
+                            <li>P. Šulc, F. Romano, T. E. Ouldridge, L. Rovigatti, J. P. K. Doye, A. A. Louis, J. Chem. Phys. 137, 135101 (2012) (DOI: <a href=https://aip.scitation.org/doi/10.1063/1.4754132>10.1063/1.475413</a>) <br>
+                            <li>L. Rovigatti, P. Šulc, I. Z. Reguly, F Romano, J. Comput. Chem. 36, 1 (2015) (DOI: <a href= https://doi.org/10.1002/jcc.23763>10.1002/jcc.23763</a>)<br>
+                            <li>T. E. Ouldridge, A. A. Louis and J. P. K. Doye, J. Chem. Phys, 134, 085101 (2011) (DOI: <a href=https://aip.scitation.org/doi/10.1063/1.3552946>10.1063/1.3552946</a>)<br>
+                            <li>and the following if you use oxRNA: <br>
                             P. Šulc, F. Romano, T. E. Ouldridge, J. P. K. Doye, A. A. Louis: A nucleotide-level coarse-grained model of RNA, J. Chem. Phys. 140, 235102 (2014) (DOI: <a href=https://aip.scitation.org/doi/10.1063/1.4881424>10.1063/1.4881424</a>)
+                            </ul>
                             <br><br>
-                            The server is developed and maintained by Erik Poppleton, Roger Romero and Aatmik Mallya in Šulc group at ASU
+                            The server is developed and maintained by Erik Poppleton, Roger Romero and Aatmik Mallya in Šulc group at ASU.
                         </p>
                     </div>
                 </div>
                 <div class="card">
                     <div id=LegalCard class="card-body">
-                        <h2>Legal Stuff</h2>
-                        <h3>Terms of Use</h3>
+                        <h2>Terms of Use</h2>
                         <p>
                             By using the oxDNA.org web application you are agreeing to be bound by the Terms of Use.  The oxDNA.org web application may be used for commercial or academic purposes, subject to the usage limit and disclaimer stated below. 
                         </p>
-                        <br>
-                        <h3>Usage Limit</h3>
+                        
+                        <h4>Usage Limit</h4>
                         <p>
                             Users are limited to submitting 4 jobs at a time.  We reserve the right to limit the usage of any user. 
                         </p>
-                        <br>
-                        <h3>Disclaimer</h3>
+                        
+                        <h4>Disclaimer</h4>
                         <p>
                             The oxDNA.org web application is provided by the copyright holders and contributors "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.  In no event shall the copyright holder or contributors be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of the oxDNA.org web application, even if advised of the possibility of such damage. 
                         </p>
-                        <br>
-                        <h3>License</h3>
+                        <h4>License</h4>
                         <p>
                             The oxDNA.org web application is provided under a GNU Public License.  The sourcecode is available on our <a href="https://github.com/sulcgroup/oxdna-web/">GitHub</a>
                         </p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div id=FunCard class="card-body">
+                        <h2>Funding</h2>
+                        We gratefully acknowledge NSF grant no. 1931487 which funds the oxdna.org server development.
                     </div>
                 </div>
             </main>
