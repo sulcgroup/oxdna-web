@@ -675,9 +675,9 @@ def getQueue():
 
 	running = queued = 0
 	for job in jobs:
-		if 'R' in job:
+		if ' R ' in job:
 			running += 1
-		elif 'PD' in job:
+		elif ' PD ' in job:
 			queued += 1
 	
 	return str(running) + ' ' + str(queued)
