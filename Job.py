@@ -667,3 +667,17 @@ def getJobStatus(job_name):
 
 	connection.close()
 	return status
+
+def getQueue():
+	pipe = subprocess.Popen(["squeue"], stdout=subprocess.PIPE)
+	output = pipe.communicate()[0].decode("ascii")
+	jobs = output.split('\n')[1:]
+
+	running = queued = 0
+	for job in jobs:
+		if 'R' in job:
+			running += 1
+		elif 'PD' in job:
+			queued += 1
+	
+	return str(running) + ' ' + str(queued)
