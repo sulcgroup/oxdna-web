@@ -354,7 +354,9 @@ def get_job_data(job_id):
 	else:
 		return "No job data."
 
-
+@app.route("/api/job")
+def getQueue():
+	return Job.getQueue()
 
 @app.route("/all_jobs")
 def getJobs():

@@ -138,6 +138,8 @@ table tr:nth-child(even) {
 				<div class="card">
 					<div class="card-body">
 						<p>Here is a list of the jobs you have currently running under your account.</p>
+						<b>Total jobs currently running: </b><span ng-cloak>{{jobsRunning}}</span><br>
+						<b>Total jobs in queue: </b><span ng-cloak>{{jobsQueued}}</span><br><br>
 						<table>
 							<tr>
 								<td>Job Name</td>

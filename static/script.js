@@ -357,13 +357,27 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 
 })
 
-app.controller("JobsCtrl", function($scope, JobsService) {
+app.controller("JobsCtrl", function($scope, JobsService, $http) {
 
 	$scope.jobs = [];
+	$scope.jobsRunning = 0;
+	$scope.jobsQueued = 0;
+	
+	$scope.getQueue = function() {
+		$http({
+			method: 'GET',
+			url: '/api/job'
+		}).then(response => {
+			const data = response.data.split(' ');
+			$scope.jobsRunning = parseInt(data[0]);
+			$scope.jobsQueued = parseInt(data[1]);
+		});
+	}
 
 	JobsService.getJobs(function(jobs) {
 		$scope.jobs = jobs;
 	})
+	$scope.getQueue();
 
 	$scope.cancelJob = function(job){
 		var request = new XMLHttpRequest();
@@ -416,11 +430,24 @@ app.controller("MainCtrl", function($scope, $http) {
 
 	$scope.data = {};
 	$scope.error = "";
+	$scope.jobsRunning = 0;
+	$scope.jobsQueued = 0;
 
 	$scope.auxillary = {
 		"temperature":20,
 		"temperature_units":"celsius",
 		"mismatch_repulsion":"false"
+	}
+
+	$scope.getQueue = function() {
+		$http({
+			method: 'GET',
+			url: '/api/job'
+		}).then(response => {
+			const data = response.data.split(' ');
+			$scope.jobsRunning = parseInt(data[0]);
+			$scope.jobsQueued = parseInt(data[1]);
+		});
 	}
 
 	$scope.parseData = function() {
@@ -464,7 +491,7 @@ app.controller("MainCtrl", function($scope, $http) {
 
 	$scope.parseData();
 	$scope.setDefaults();
-
+	$scope.getQueue();
 
 	$scope.submissionStatus = '';
 
