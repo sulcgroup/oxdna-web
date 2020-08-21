@@ -92,7 +92,7 @@
                                  style="width:280px;"
                                  />
                        
-                            Welcome to oxDNA.org, a service of the <a href="https://www.public.asu.edu/~psulc/">Šulc</a> lab at Arizona State University.  Our goal is to facilitate development of more advance and complex
+                            Welcome to oxDNA.org, a service of the <a href="https://www.public.asu.edu/~psulc/">Šulc</a> lab at Arizona State University.  Our goal is to facilitate development of more advanced and complex
                             designs in the fields of DNA and RNA nanotechnology by facilitating non-experts to run simple simulations. This server uses oxDNA and oxRNA models to simulate DNA 
                             and RNA nanostructures to verify and prototype novel designs.
                             The simulations this server supports are equilibrium sampling of assembled designs, meant to 
@@ -126,7 +126,11 @@
                              <li>  <b>How large structures can I simulate?</b>  
                             These simulations are run on NVIDIA 2080 RTX GPUs, which easily handle origami-sized (10-20k bases) designs.
                             Designs with more than 50k bases may not finish in the time allotted to each job. It also makes sense to only use GPU cards for simulations of structures of sizes at least 300 nucleotides,
-                            when the GPU provides siginificant speed-up over CPUs.<br>
+                            when the GPU provides significant speed-up over CPUs.<br>
+                            <li>  <b>How long will the simulation take?</b>
+                                For an origami-sized structure running with the default option of 1e9 steps, we are looking typically at about 3-4 days running time. The running time scales almost
+                                linearly with the number of nucleotides, but please note that each structure is different.   
+                                    
                             <li>  <b>Can I simulate proteins / nanopores / lipid membranes / other cool things along with DNA and RNA nanostructures? </b>  
                              Currently, it is not possible. The model only support simulations of DNA or RNA molecules alone. We have a model in development that allows you to represent also proteins, but it has not 
                              been deployed to the server yet. <br>
@@ -140,12 +144,14 @@
                             <li>  <b>What is the real-time correspondence of these simulations?</b> Coarse-grained simulations such as oxDNA speed up different processes
                             by different amounts, so it is impossible to put an exact time correspondence between simulation and real experiment. For more discussion on this topic, see e.g. <a href="https://pubs.acs.org/doi/abs/10.1021/acsnano.5b05865"> this article</a>.
                             On the server, these simulations will be run by default for 1e9 steps with a timestep of 0.001 simulation time units, which by direct unit conversion corresponds
-                            to 3.03 &mu;s.  However, due to accelerated diffusion constant that we use, it can be argued that it can roughly correspond to timescale on the order of up to 1 ms. <br>
+                            to 3.03 &mu;s.  However, due to accelerated diffusion constant that we use, it can be argued that it can roughly correspond to timescale on the order of up to 1 ms. Increasing dt 
+                            in the simulation parameters can allow you to simulate loner times with the same amount of steps, but can also lead to numerical instabilities and errors. We do not recommend using 
+                            dt larger than 0.003. <br>
                             
                             <li>  <b>How long should I run my simulation for?</b>
                             By default, we set the simulation to run for 1e9 steps. This is usually sufficient to get enough statistics to explore behavior of a typical DNA origami-sized structure.
                             However, if your system is more complex and can undergo different conformational transitions, it might not be enough. You should watch video and plot energy file versus time and see 
-                            that each relevant state is sampled, and that energy of system does not diverge, but rather keeps fluctuating around mean value. 
+                            that each relevant state is sampled, and that energy of system does not diverge, but rather keeps fluctuating around mean value. Similar analysis can be done with distance evaluation, checking that distances between parts of structure of your interest have crossed multiple times between proximal and distant states.
                 
                             <li>  <b> Is what I see in the simulation real?</b>
                             Remember that oxDNA is just a model, which makes numerous approximations to simulate efficiently the nanostructures. While in majority systems that we studied
@@ -161,18 +167,21 @@
                             <li>  <b> The simulation is finished. How do I analyze the results now?</b> 
                             We recommend that you download the trajectory file and visualize it using <a href="https://github.com/sulcgroup/oxdna-viewer">oxView</a>. 
                             Furthermore, we provide multiple automated analysis options, based on the tools that we developed <a href="https://doi.org/10.1093/nar/gkaa417">here</a>. Currently implemented analysis allows you
-                            to obtain mean structure and standard deviations from the mean structure to visualize its flexibility. You can also check distances betweeen nucleotides, bond occupancy and angles between different stems in the simulation trajectory. For more
-                            complex analysis, you can use our python tools to analyze the trajectory that you downloaded (see tutorials and examples <a href="https://github.com/sulcgroup/oxdna_analysis_tools">here</a>)
+                            to obtain mean structure and standard deviations from the mean structure to visualize its flexibility. You can also check distances between nucleotides, bond occupancy and angles between different stems in the simulation trajectory. For more
+                            complex analysis, you can use our python tools to analyze the trajectory that you downloaded (see tutorials and examples <a href="https://github.com/sulcgroup/oxdna_analysis_tools">here</a>).
+                            The trajectory is downloaded in 7-zip format, which has to be unzipped with standard tools: 7z or Archive Manager on Linux, 7-zip on Windows or The Unarchiver on MacOS.
 
-                            <li>  <b>My simulation log shows an error!  What do I do??</b> Errors are most frequently due to the model encountering unphysical states because of
+                            <li>  <b>My simulation log shows an error!  What do I do?</b> Errors are most frequently due to the model encountering unphysical states because of
                             insufficient relaxation. This often happens when you convert from a different format (most often caDNAno) where the 3D positions of helices are not physical and some of the distances between neighboring nucleotides are unphysically large.
                             Structures exported from design tools are rarely in a physically viable state and must be relaxed prior to production
                             simulation.  We have tried to provide a reasonable relaxation protocol automatically, but for some structures it is insufficient.
                               Try resubmitting your job and increasing the length of the relaxation steps or decreasing the dt of the MD relaxation. <br>
                               <li>  <b>I am interested in learning more about oxDNA!  Where can I do that?</b> Check out this <a href="https://arxiv.org/pdf/2004.05052.pdf">book chapter</a> for a comprehensive introduction 
                             and take a look at the <a href="https://dna.physics.ox.ac.uk/index.php/Main_Page">documentation</a> for detailed information on installation and running simulations. Also check out our Citation section for the articles describing the models in detail.<br>
-                            <li> <b>I need to simulate many different structures, but all nodes are occupied! When does my job get scheduled?</b> We currently impose a limit of 4 submitted jobs per user and a maximum running time of 4 days per job. 
-                                These constraints might change in the future and we reserve the right to limit the allowed maximum running time and number of submitted jobs for users that use the server heavily. While we have plans to expand the capacity of the server in the future, it is currently equipped only with 8 GPUs. Hence, we ask users to be considerate
+                            <li> <b>I need to simulate many different structures, but all nodes are occupied! When does my job get scheduled?</b> 
+                                On "View Jobs" page, you can see the cluster status and how many nodes are currently occupied and the total number of jobs scheduled in the queue. The jobs are scheduled on first come first serve basis, and you might need to wait until other jobs finish before yours gets scheduled.
+                                We currently impose a limit of 4 submitted jobs per user and a maximum running time of 4 days per job. 
+                               These constraints might change in the future and we reserve the right to limit the allowed maximum running time and number of submitted jobs for users that use the server heavily. While we have plans to expand the capacity of the server in the future, it is currently equipped only with 8 GPUs. Hence, we ask users to be considerate
                                 and not use it excessively. For complex simulation tasks (such as FFS) and large number of designs to try, we recommend that you either purchase your own GPU server or use your own university HPC resources. Most universities have GPU servers available for their researchers.
                                 The evaluation scripts that are used on our server are available <a href="https://github.com/sulcgroup/oxdna_analysis_tools">here</a>  and you can use them to evaluate and visualize your results from your local HPC service provider.
     
