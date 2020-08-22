@@ -137,9 +137,11 @@ table tr:nth-child(even) {
 
 				<div class="card">
 					<div class="card-body">
-						<p>Here is a list of the jobs you have currently running under your account.</p>
-						<b>Total jobs currently running: </b><span ng-cloak>{{jobsRunning}}</span><br>
-						<b>Total jobs in queue: </b><span ng-cloak>{{jobsQueued}}</span><br><br>
+						<p> <b>Server status:</b> <br>
+						Total jobs currently running: <span ng-cloak>{{jobsRunning}}</span><br>
+						Total jobs in queue: <span ng-cloak>{{jobsQueued}}</span><br><br>
+						</p>
+						<p><b>Your simulations:</b><br>Here is a list of the jobs you have currently running, pending or finished under your account. Please be aware trajectory files get automatically deleted two weeks after the job finishes. To access analysis tools, click on your job name.</p>
 						<table>
 							<tr>
 								<td>Job Name</td>

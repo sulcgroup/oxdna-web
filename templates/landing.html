@@ -128,7 +128,7 @@
                             Designs with more than 50k bases may not finish in the time allotted to each job. It also makes sense to only use GPU cards for simulations of structures of sizes at least 300 nucleotides,
                             when the GPU provides significant speed-up over CPUs.<br>
                             <li>  <b>How long will the simulation take?</b>
-                                For an origami-sized structure running with the default option of 1e9 steps, we are looking typically at about 3-4 days running time. The running time scales almost
+                                For an origami-sized structure running with the default option of 1e9 steps, we are looking typically at about 2 days running time. The running time scales almost
                                 linearly with the number of nucleotides, but please note that each structure is different.   
                                     
                             <li>  <b>Can I simulate proteins / nanopores / lipid membranes / other cool things along with DNA and RNA nanostructures? </b>  
@@ -136,7 +136,7 @@
                              been deployed to the server yet. <br>
                             <li>  <b>Can I keep my files on the server?</b>  
                             Due to storage limitations, the simulated trajectory gets automatically deleted after 2 weeks. You will receive a reminder by e-mail, but we strongly recommend 
-                            to download all data once simulation is finished. We keep the start and final configuration file on the server. <br>
+                            to download all data once simulation is finished. The start and final configuration file will remain available on the server, as well as results of analysis that you carried out on the server. <br>
                             <li>  <b>Can I submit my own oxDNA input files?</b>  
                             For security reasons, we do not allow users to submit their own input files. <br>
                             <li>  <b>Can I run VMMC/FFS/PT/Umbrella sampling simulations?</b>
@@ -145,12 +145,12 @@
                             by different amounts, so it is impossible to put an exact time correspondence between simulation and real experiment. For more discussion on this topic, see e.g. <a href="https://pubs.acs.org/doi/abs/10.1021/acsnano.5b05865"> this article</a>.
                             On the server, these simulations will be run by default for 1e9 steps with a timestep of 0.001 simulation time units, which by direct unit conversion corresponds
                             to 3.03 &mu;s.  However, due to accelerated diffusion constant that we use, it can be argued that it can roughly correspond to timescale on the order of up to 1 ms. Increasing dt 
-                            in the simulation parameters can allow you to simulate loner times with the same amount of steps, but can also lead to numerical instabilities and errors. We do not recommend using 
+                            in the simulation parameters can allow you to simulate longer times with the same amount of steps, but can also lead to numerical instabilities and errors. We do not recommend using 
                             dt larger than 0.003. <br>
                             
                             <li>  <b>How long should I run my simulation for?</b>
                             By default, we set the simulation to run for 1e9 steps. This is usually sufficient to get enough statistics to explore behavior of a typical DNA origami-sized structure.
-                            However, if your system is more complex and can undergo different conformational transitions, it might not be enough. You should watch video and plot energy file versus time and see 
+                            However, if your system is more complex and can undergo different conformational transitions, it might not be enough. You should visualize the entire trajectory in oxView and plot energy file versus time and see 
                             that each relevant state is sampled, and that energy of system does not diverge, but rather keeps fluctuating around mean value. Similar analysis can be done with distance evaluation, checking that distances between parts of structure of your interest have crossed multiple times between proximal and distant states.
                 
                             <li>  <b> Is what I see in the simulation real?</b>
@@ -208,20 +208,25 @@
                         </H2>
                         <p>
                             Citation for this server coming soon!  For now, please cite our paper that covers the visualization and analysis tools offered as part of this webpage: <br>
-                            E. Poppleton, J. Bohlin, M. Matthies, S. Sharma, F. Zhang, P. Šulc, Nucleic Acids Res., 48(12):e72 (2020) (DOI: <a href= https://doi.org/10.1093/nar/gkaa417>10.1093/nar/gkaa417</a>) <br>
-                            For the simulations, we use the oxDNA simulation code maintained at <a href="dna.physics.ox.ac.uk">dna.physics.ox.ac.uk</a> <br>
+                            <ul>
+                            <li>E. Poppleton, J. Bohlin, M. Matthies, S. Sharma, F. Zhang, P. Šulc, Nucleic Acids Res., 48(12):e72 (2020) (DOI: <a href= https://doi.org/10.1093/nar/gkaa417>10.1093/nar/gkaa417</a>) <br>
+                            </ul>
+                                For the simulations, we use the oxDNA simulation code maintained at <a href="dna.physics.ox.ac.uk">dna.physics.ox.ac.uk</a> <br>
                             For analysis, we use the oxdna_analysis_tools code maintained <a href=https://github.com/sulcgroup/oxdna_analysis_tools>here</a><br>
                             For visualization, we use the oxView code maintained <a href=https://github.com/sulcgroup/oxdna-viewer>here</a><br>
-                            We kindly ask you to cite the following if you use the oxDNA model: <br>
+                            <br>
+                            We further kindly ask you to cite the following if you use the oxDNA model: <br>
                             <ul>
                             <li>B. E. K. Snodin, F. Randisi, M. Mosayebi, P. Šulc, J. S. Schreck, F. Romano, T. E. Ouldridge, R. Tsukanov, E. Nir, A. A. Louis, J. P. K. Doye, J. Chem. Phys. 142, 234901 (2015) (DOI: <a href="https://aip.scitation.org/doi/10.1063/1.4921957")>10.1063/1.4921957</a>)<br>
                             <li>P. Šulc, F. Romano, T. E. Ouldridge, L. Rovigatti, J. P. K. Doye, A. A. Louis, J. Chem. Phys. 137, 135101 (2012) (DOI: <a href=https://aip.scitation.org/doi/10.1063/1.4754132>10.1063/1.475413</a>) <br>
                             <li>L. Rovigatti, P. Šulc, I. Z. Reguly, F Romano, J. Comput. Chem. 36, 1 (2015) (DOI: <a href= https://doi.org/10.1002/jcc.23763>10.1002/jcc.23763</a>)<br>
                             <li>T. E. Ouldridge, A. A. Louis and J. P. K. Doye, J. Chem. Phys, 134, 085101 (2011) (DOI: <a href=https://aip.scitation.org/doi/10.1063/1.3552946>10.1063/1.3552946</a>)<br>
-                            <li>and the following if you use oxRNA: <br>
-                            P. Šulc, F. Romano, T. E. Ouldridge, J. P. K. Doye, A. A. Louis: A nucleotide-level coarse-grained model of RNA, J. Chem. Phys. 140, 235102 (2014) (DOI: <a href=https://aip.scitation.org/doi/10.1063/1.4881424>10.1063/1.4881424</a>)
                             </ul>
-                            <br><br>
+                            or the following if you use oxRNA: 
+                            <ul>
+                            <li>P. Šulc, F. Romano, T. E. Ouldridge, J. P. K. Doye, A. A. Louis: A nucleotide-level coarse-grained model of RNA, J. Chem. Phys. 140, 235102 (2014) (DOI: <a href=https://aip.scitation.org/doi/10.1063/1.4881424>10.1063/1.4881424</a>)
+                            </ul>
+                            <br>
                             The server is developed and maintained by Erik Poppleton, Roger Romero and Aatmik Mallya in Šulc group at ASU.
                         </p>
                     </div>
