@@ -336,7 +336,19 @@
 									<td><span ng-class="{'completed': angle_find[0].status == 'Completed', 'pending': angle_find[0].status == 'Pending', 'running': angle_find[0].status == 'Running'}">{{angle_find[0].status}}</span></td>
 									<td>{{ angle_find[0].dateString }}</td>
 									<td><a href="/job_output/{{angle_find[0].sim_job_id}}/angle_find_log" target="_blank">View log</a></td>
-									<td><a href="/job_output/{{angle_find[0].sim_job_id}}/angle_find_output" target="_blank" download={{job.name}}_duplex_angle.txt>Download angle file</a></br>
+									<td><a href="/job_output/{{angle_find[0].sim_job_id}}/angle_find_output" target="_blank" download={{job.name}}_duplex_angle.txt
+											data-toggle="tooltip" data-placement="bottom" data-html="true" title="
+											File format<br>
+											0: time<br>
+											1: duplex id<br>
+											2: strand 1 start nucleotide<br>
+											3: strand 1 end nucleotide<br>
+											4: strand 2 start nucleotide<br>
+											5: strand 2 end nucleotide<br>
+											6: axis vector X-component<br>
+											7: axis vector Y-component<br>
+											8: axis vector Z-component<br>
+											9: Helix position">Download angle file</a></br>
 									</td>
 								</tr>
 							</table>
