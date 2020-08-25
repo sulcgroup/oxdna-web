@@ -225,10 +225,10 @@
 								</tr>
 								<tr>
 									<td>Align Trajectory</td>
-									<td><span ng-class="{'completed': mean[0].status == 'Completed', 'pending': mean[0].status == 'Pending', 'running': mean[0].status == 'Running'}">{{mean[0].status}}</span></td>
-									<td>{{ mean[0].dateString }}</td>
-									<td><a href="/job_output/{{mean[0].sim_job_id}}/align_log" target="_blank">View log</a></td>
-									<td><a href="/job_output/{{mean[0].sim_job_id}}/aligned_traj" target="_blank" download={{job.name}}_aligned.dat>Download aligned trajectory</a></br>
+									<td><span ng-class="{'completed': align[0].status == 'Completed', 'pending': align[0].status == 'Pending', 'running': align[0].status == 'Running'}">{{align[0].status}}</span></td>
+									<td>{{ align[0].dateString }}</td>
+									<td><a href="/job_output/{{align[0].sim_job_id}}/align_log" target="_blank">View log</a></td>
+									<td><a href="/job_output/{{align[0].sim_job_id}}/aligned_traj" target="_blank" download={{job.name}}_aligned.dat>Download aligned trajectory</a></br>
 									</td>
 								</tr>
 							</table>
@@ -261,14 +261,13 @@
 									<td>Trajectory</td>
 								</tr>
 								<tr ng-cloak ng-repeat="x in distance">
-									<td style="width:8%"">{{ x.name }}</td>
+									<td style="width:8%">{{ x.name }}</td>
 									<td style="width:5%"><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
 									<td style="width:5%">{{ x.dateString }}</td>
-														 <a href="/job_output/{{mean[0].sim_job_id}}/mean_log" target="_blank">View log</a>
 									<td style="width:5%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_log" target="_blank">View log</a></td>
 									<td style="width:8%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_data" target="_blank" download={{x.name}}.txt>Download distance as text</a></td>
-									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" target="_blank" download={{x.name}}_hist.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" width=100% height=100%></a></td>
-									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" target="_blank" download={{x.name}}_traj.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" width=100% height=100%></a></td>
+									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" target="_blank" download={{x.name}}_hist.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" width=100%></a></td>
+									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" target="_blank" download={{x.name}}_traj.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" width=100%></a></td>
 								</tr>
 							</table>
 						</div>
@@ -335,9 +334,21 @@
 								<tr>
 									<td>Duplex Angle Finder</td>
 									<td><span ng-class="{'completed': angle_find[0].status == 'Completed', 'pending': angle_find[0].status == 'Pending', 'running': angle_find[0].status == 'Running'}">{{angle_find[0].status}}</span></td>
-									<td>{{ mean[0].dateString }}</td>
-									<td><a href="/job_output/{{mean[0].sim_job_id}}/angle_find_log" target="_blank">View log</a></td>
-									<td><a href="/job_output/{{mean[0].sim_job_id}}/angle_find_output" target="_blank" download={{job.name}}_duplex_angle.txt>Download angle file</a></br>
+									<td>{{ angle_find[0].dateString }}</td>
+									<td><a href="/job_output/{{angle_find[0].sim_job_id}}/angle_find_log" target="_blank">View log</a></td>
+									<td><a href="/job_output/{{angle_find[0].sim_job_id}}/angle_find_output" target="_blank" download={{job.name}}_duplex_angle.txt
+											data-toggle="tooltip" data-placement="bottom" data-html="true" title="
+											File format<br>
+											0: time<br>
+											1: duplex id<br>
+											2: strand 1 start nucleotide<br>
+											3: strand 1 end nucleotide<br>
+											4: strand 2 start nucleotide<br>
+											5: strand 2 end nucleotide<br>
+											6: axis vector X-component<br>
+											7: axis vector Y-component<br>
+											8: axis vector Z-component<br>
+											9: Helix position">Download angle file</a></br>
 									</td>
 								</tr>
 							</table>
@@ -347,7 +358,7 @@
 				<div class="card">
 					<div id=angle_plotCard class="card-body">
 						<h2> Duplex Angle Plotter <a href="#" style="color:#999" 
-							title="Plots the file produced by Duplex Angle Finder" 
+							title="Reads file from duplex angle finder and plots the angle between the specified duplexes" 
 							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
 						</h2>
 						<label for="name">Job Name: </label>
@@ -373,8 +384,8 @@
 									<td style="width:5%"><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
 									<td style="width:5%">{{ x.dateString }}</td>
 									<td style="width:5%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_log" target="_blank">View log</a></td>
-									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_hist" target="_blank" download={{x.name}}_hist.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_hist" width=100% height=100%></a></td>
-									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_traj" target="_blank" download={{x.name}}_traj.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_traj" width=100% height=100%></a></td>
+									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_hist" target="_blank" download={{x.name}}_hist.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_hist" width=100%></a></td>
+									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_traj" target="_blank" download={{x.name}}_traj.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_traj" width=100%></a></td>
 								</tr>
 							</table>
 						</div>
