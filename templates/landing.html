@@ -126,7 +126,7 @@
                              <li>  <b>How large structures can I simulate?</b>  
                             These simulations are run on NVIDIA 2080 RTX GPUs, which easily handle origami-sized (10-20k bases) designs.
                             Designs with more than 50k bases may not finish in the time allotted to each job. It also makes sense to only use GPU cards for simulations of structures of sizes at least 300 nucleotides,
-                            when the GPU provides significant speed-up over CPUs.<br>
+                            when the GPU provides significant speed-up over CPUs For smaller systems, we recommend submitting them to CPU. They will run just as fast and will leave GPUs available for larger simulations.<br>
                             <li>  <b>How long will the simulation take?</b>
                                 For an origami-sized structure running with the default option of 1e9 steps, we are looking typically at about 2 days running time. The running time scales almost
                                 linearly with the number of nucleotides, but please note that each structure is different.   
