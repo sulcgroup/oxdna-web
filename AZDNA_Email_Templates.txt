@@ -51,7 +51,8 @@ OxDNA Files Deleted
 <HEADER>
 
 We have deleted some of your simulation files as per our policy. 
-The following files were deleted:  <j>
+The following files were deleted:
+<j>
 
 <TAIL>
 ;;
