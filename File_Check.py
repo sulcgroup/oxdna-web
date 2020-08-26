@@ -134,9 +134,10 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
 
         results[user][0].extend(new_results)
 
-    # remove deletion files from results dict
+    # remove duplicates and deletion files
     for user in results.keys():
-        results[user] = (results[user][0],[])
+        results[user] = (list(set(results[user][0])), [])
+        
 
     file = open(output_path, "w")
     file.write(str(results))
