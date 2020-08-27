@@ -151,6 +151,7 @@ table tr:nth-child(even) {
 								<td>Log</td>
 								<td>Energy</td>
 								<td>Topology</td>
+								<td>Initial Configuration</td>
 								<td>Last Configuration</td>
 								<td>Trajectory</td>
 								<td>Cancel</td>
@@ -169,6 +170,9 @@ table tr:nth-child(even) {
 								<td><a target="_blank" href="/job_output/{{x.uuid}}/energy">view</a>
 									<a href="/job_output/{{x.uuid}}/energy" download="{{x.name}}_energy.dat">download</a>
 								<td><a href="/job_output/{{x.uuid}}/topology" download="{{x.name}}.top">download</a></td>
+								</td>
+								<td ng-cloak><a ng-cloak target="_blank" href={{x.initConf[0]}}>view</a>
+									<a ng-cloak href={{x.initConf[1]}} download="{{x.name}}_init_conf.dat">download</a>
 								</td>
 								<td><a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{x.uuid}}/last_conf&topology=/job_output/{{x.uuid}}/topology">view</a>
 									<a href="/job_output/{{x.uuid}}/last_conf" download="{{x.name}}_last_conf.dat">download</a>

@@ -426,6 +426,17 @@ def getAssociatedJobs(job_id):
 	else:
 		return None
 
+def isRelax(job_id):
+	connection = Database.pool.get_connection()
+
+	with connection.cursor() as cursor:
+		cursor.execute(get_userId_for_job_uuid, (job_id,))
+		user_id = cursor.fetchone()[0]
+
+	connection.close()
+	
+	job_files = os.listdir("/users/{}/{}".format(user_id, job_id))
+	return "True" if "MD_relax.dat" in job_files else "False"
 
 def createAssociateDictionary(data) :
 	keys = ["name", "uuid", "job_type", "sim_job_id", "creation_date", "status"]

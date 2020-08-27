@@ -362,6 +362,9 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 	$scope.jobs = [];
 	$scope.jobsRunning = 0;
 	$scope.jobsQueued = 0;
+
+	// <a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{x.uuid}}/last_conf&topology=/job_output/{{x.uuid}}/topology">view</a>
+	// <a href="/job_output/{{x.uuid}}/last_conf" download="{{x.name}}_last_conf.dat">download</a>
 	
 	$scope.getQueue = function() {
 		$http({
@@ -376,6 +379,23 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 
 	JobsService.getJobs(function(jobs) {
 		$scope.jobs = jobs;
+		for (job of jobs) {
+			// console.log('job: ', job)
+			$http({
+				method: 'GET',
+				url: `/api/job/isRelax/${job.uuid}`
+			}).then(response => {
+				console.log('response: ', response)
+				if (response.data === "True") {
+					job["initConf"] = [`/static/oxdna-viewer/index.html?configuration=/job_output/${job.uuid}/init_conf_relax&topology=/job_output/${job.uuid}/topology`,
+									   `/job_output/${job.uuid}/init_conf_relax`];
+				}
+				else {
+					job["initConf"] = [`/static/oxdna-viewer/index.html?configuration=/job_output/${job.uuid}/init_conf&topology=/job_output/${job.uuid}/topology`,
+									   `/job_output/${job.uuid}/init_conf`];
+				}
+			});
+		}
 	})
 	$scope.getQueue();
 
