@@ -38,11 +38,6 @@ def is_dir(dir):
         return dir
     raise argparse.ArgumentTypeError("Must be a valid directory")
 
-# Regex from here https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/
-regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
-def isValidEmail(email):
-    return True if re.search(regex, email) else False
-
 
 def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
     output_path = os.path.join(output_dir, OUTPUT_FILE)
@@ -82,7 +77,7 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
         url = "http://oxdna.org/jobs"
         email = getUsername(user)
         
-        if not isValidEmail(email):
+        if not "@" in email:
             print(email, " is not a valid email. User ", user, " will not be notified.")
             bad_emails.append(email)
             continue
