@@ -393,7 +393,10 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 		"angle_plot_data" : ".txt",
 		"angle_plot_hist" : "_hist.png",
 		"angle_plot_traj" : "_traj.png",
-		"angle_plot_log" : ".log"
+		"angle_plot_log" : ".log",
+		"energy_log" : ".log",
+		"energy_hist" : "_hist.png",
+		"energy_traj" : "_traj.png"
 	}
 
 	job_data = Job.getAssociatedJobs(uuid)

@@ -179,7 +179,7 @@
 								<tr>
 									<td>Job Name</td>
 									<td>Status</td>
-									<td>Started</td>
+									<td>Creation Date</td>
 									<td>Log</td>
 									<td>Mean+Deviations</td>
 								</tr>
@@ -219,7 +219,7 @@
 								<tr>
 									<td>Job Name</td>
 									<td>Status</td>
-									<td>Started</td>
+									<td>Creation Date</td>
 									<td>Log</td>
 									<td>Aligned Trajectory</td>
 								</tr>
@@ -254,11 +254,11 @@
 								<tr>
 									<td style="width:8%">Job Name</td>
 									<td style="width:5%">Status</td>
-									<td style="width:5%">Started</td>
+									<td style="width:5%">Creation Date</td>
 									<td style="width:5%">Log</td>
 									<td style="width:8%">Distance Data</td>
-									<td>Histogram</td>
-									<td>Trajectory</td>
+									<td>Distance Histogram</td>
+									<td>Distance Trajectory</td>
 								</tr>
 								<tr ng-cloak ng-repeat="x in distance">
 									<td style="width:8%">{{ x.name }}</td>
@@ -268,6 +268,43 @@
 									<td style="width:8%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_data" target="_blank" download={{x.name}}.txt>Download distance as text</a></td>
 									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" target="_blank" download={{x.name}}_hist.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" width=100%></a></td>
 									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" target="_blank" download={{x.name}}_traj.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" width=100%></a></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="card">
+					<div id=energyCard class="card-body">
+						<h2> Energy Plotter <a href="#" style="color:#999" 
+							title="TODO Energy Tooltip" 
+							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
+						</h2>
+						<div ng-show="energy[0] == undefined"> 
+							<button type="button" ng-click="startAnalysis('energy')" ngbTooltip="Help?" placement="right" container="body">Start Plotting</button>	
+						</div>
+						<div ng-hide="energy[0] == undefined"> 
+							<button type="button" ng-click="startAnalysis('energy')" ngbTooltip="Help?" placement="right" container="body">Redo Plot</button>	
+						</div>
+
+						<div ng-hide="energy[0] == undefined">
+							<table>
+								<tr>
+									<td style="width:8%">Job Name</td>
+									<td style="width:5%">Status</td>
+									<td style="width:5%">Creation Date</td>
+									<td style="width:5%">Log</td>
+									<td style="width:8%">Energy Data</td>
+									<td>Energy Histogram</td>
+									<td>Energy Trajectory</td>
+								</tr>
+								<tr>
+									<td style="width:8%">Energy</td>
+									<td style="width:5%"><span ng-class="{'completed': energy[0].status == 'Completed', 'pending': energy[0].status == 'Pending', 'running': energy[0].status == 'Running'}">{{energy[0].status}}</span></td>
+									<td style="width:5%">{{ energy[0].dateString }}</td>
+									<td style="width:5%"><a href="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_log" target="_blank">View log</a></td>
+									<td style="width:8%"><a href="/job_output/{{energy[0].sim_job_id}}/energy" download={{job.name}}_energy.dat>Download energy as text</a></td>
+									<td><a href="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_hist" target="_blank" download={{energy[0].name}}_hist.png><img src="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_hist" width=100%></a></td>
+									<td><a href="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_traj" target="_blank" download={{energy[0].name}}_traj.png><img src="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_traj" width=100%></a></td>
 								</tr>
 							</table>
 						</div>
@@ -291,7 +328,7 @@
 								<tr>
 									<td>Job Name</td>
 									<td>Status</td>
-									<td>Started</td>
+									<td>Creation Date</td>
 									<td>Log</td>
 									<td>Bond Analysis</td>
 								</tr>
@@ -327,7 +364,7 @@
 								<tr>
 									<td>Job Name</td>
 									<td>Status</td>
-									<td>Started</td>
+									<td>Creation Date</td>
 									<td>Log</td>
 									<td>Angle Finder</td>
 								</tr>
@@ -368,16 +405,16 @@
 						<label class = "lpadded" for="p2">Particle 2: </label>
 						<input type="text" value="" id="p2_angle" size=16 maxlength="16">
 						<br>
-						<button type="button" ng-click="startAnalysis('angle_plot')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
+						<button type="button" ng-click="startAnalysis('angle_plot')" ngbTooltip="Help?" placement="right" container="body"> Start plotting</button>	
 						<div ng-hide="angle_plot[0] == undefined">
 							<table>
 								<tr>
 									<td style="width:8%">Job Name</td>
 									<td style="width:5%">Status</td>
-									<td style="width:5%">Started</td>
+									<td style="width:5%">Creation Date</td>
 									<td style="width:5%">Log</td>
-									<td>Histogram</td>
-									<td>Trajectory</td>
+									<td>Angle Histogram</td>
+									<td>Angle Trajectory</td>
 								</tr>
 								<tr ng-repeat="x in angle_plot">
 									<td style="width:8%">{{ x.name }}</td>

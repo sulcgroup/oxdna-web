@@ -7,6 +7,7 @@ var DISTANCE = 3;
 var BOND = 4;
 var ANGLE_FIND = 5;
 var ANGLE_PLOT = 6;
+var ENERGY = 7;
 
 //make number elements not scroll
 document.addEventListener("wheel", function(event){
@@ -323,6 +324,7 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 		$scope.bond = [$scope.associated_jobs.filter(x => x["job_type"] == BOND)[0]];
 		$scope.angle_find = [$scope.associated_jobs.filter(x => x["job_type"] == ANGLE_FIND)[0]];
 		$scope.angle_plot = $scope.associated_jobs.filter(x => x["job_type"] == ANGLE_PLOT);
+		$scope.energy = [$scope.associated_jobs.filter(x => x["job_type"] == ENERGY)[0]];
 	}
 
 	//retrieves job information from URL
@@ -362,9 +364,6 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 	$scope.jobs = [];
 	$scope.jobsRunning = 0;
 	$scope.jobsQueued = 0;
-
-	// <a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{x.uuid}}/last_conf&topology=/job_output/{{x.uuid}}/topology">view</a>
-	// <a href="/job_output/{{x.uuid}}/last_conf" download="{{x.name}}_last_conf.dat">download</a>
 	
 	$scope.getQueue = function() {
 		$http({
@@ -380,12 +379,10 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 	JobsService.getJobs(function(jobs) {
 		$scope.jobs = jobs;
 		for (job of jobs) {
-			// console.log('job: ', job)
 			$http({
 				method: 'GET',
 				url: `/api/job/isRelax/${job.uuid}`
 			}).then(response => {
-				console.log('response: ', response)
 				if (response.data === "True") {
 					job["initConf"] = [`/static/oxdna-viewer/index.html?configuration=/job_output/${job.uuid}/init_conf_relax&topology=/job_output/${job.uuid}/topology`,
 									   `/job_output/${job.uuid}/init_conf_relax`];
