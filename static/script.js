@@ -310,6 +310,7 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 	updateJobScope = function (data) {
 		console.log("DATA!:", data);
 		$scope.job = data["job_data"][0];
+		document.title = `oxDNA.org ${data["job_data"][0].name} Analyses`;
 		$scope.associated_jobs = data["associated_jobs"];
 		for(job in $scope.associated_jobs) {
 			var timestamp = $scope.associated_jobs[job]["creation_date"];
