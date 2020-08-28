@@ -354,6 +354,13 @@ def get_job_data(job_id):
 	else:
 		return "No job data."
 
+@app.route("/api/job/isRelax/<job_id>")
+def get_is_relax(job_id):
+	if session.get("user_id") is None:
+		return redirect("/login")
+
+	return Job.isRelax(job_id)
+
 @app.route("/api/job")
 def getQueue():
 	return Job.getQueue()
@@ -386,7 +393,10 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 		"angle_plot_data" : ".txt",
 		"angle_plot_hist" : "_hist.png",
 		"angle_plot_traj" : "_traj.png",
-		"angle_plot_log" : ".log"
+		"angle_plot_log" : ".log",
+		"energy_log" : ".log",
+		"energy_hist" : "_hist.png",
+		"energy_traj" : "_traj.png"
 	}
 
 	job_data = Job.getAssociatedJobs(uuid)
@@ -420,6 +430,8 @@ def getJobOutput(uuid, desired_output):
 		"trajectory_zip":"trajectory.zip",
 		"trajectory_txt":"trajectory.dat",
         "topology": "output.top",
+		"init_conf": "output.dat",
+		"init_conf_relax": "MD_relax.dat",
 		"last_conf": "last_conf.dat",
 		"log":"job_out.log",
 		"mean_log":"mean.log",

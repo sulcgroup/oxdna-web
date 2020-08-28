@@ -90,6 +90,9 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 			name = analysis_parameters["name"],
 			particle_input = ' '.join(p_input)
 		)
+	elif analysis_type == "energy":
+		job_output_file = job_directory + analysis_parameters["name"] + ".log"
+		run_command = "plot_energy.py -f both -o {}.png energy.dat".format(analysis_parameters["name"])
 
 	sbatch_file = """#!/bin/bash
 #SBATCH --job-name={analysis_id}    # Job name
@@ -262,7 +265,8 @@ def createAnalysisForUserIdWithJob(userId, analysis_parameters):
 		"distance" : 3,
 		"bond" : 4,
 		"angle_find" : 5,
-		"angle_plot" : 6
+		"angle_plot" : 6,
+		"energy" : 7
 	}
 
 	jobId = analysis_parameters["jobId"]
@@ -277,6 +281,8 @@ def createAnalysisForUserIdWithJob(userId, analysis_parameters):
 		analysis_parameters["name"] = "bond"
 	elif analysis_type == "angle_find":
 		analysis_parameters["name"] = "angle_find"
+	elif analysis_type == "energy":
+		analysis_parameters["name"] = "energy"
 
 	randomAnalysisId = str(uuid.uuid4())
 
@@ -426,6 +432,17 @@ def getAssociatedJobs(job_id):
 	else:
 		return None
 
+def isRelax(job_id):
+	connection = Database.pool.get_connection()
+
+	with connection.cursor() as cursor:
+		cursor.execute(get_userId_for_job_uuid, (job_id,))
+		user_id = cursor.fetchone()[0]
+
+	connection.close()
+	
+	job_files = os.listdir("/users/{}/{}".format(user_id, job_id))
+	return "True" if "MD_relax.dat" in job_files else "False"
 
 def createAssociateDictionary(data) :
 	keys = ["name", "uuid", "job_type", "sim_job_id", "creation_date", "status"]

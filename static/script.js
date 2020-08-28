@@ -7,6 +7,7 @@ var DISTANCE = 3;
 var BOND = 4;
 var ANGLE_FIND = 5;
 var ANGLE_PLOT = 6;
+var ENERGY = 7;
 
 //make number elements not scroll
 document.addEventListener("wheel", function(event){
@@ -324,6 +325,7 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 		$scope.bond = [$scope.associated_jobs.filter(x => x["job_type"] == BOND)[0]];
 		$scope.angle_find = [$scope.associated_jobs.filter(x => x["job_type"] == ANGLE_FIND)[0]];
 		$scope.angle_plot = $scope.associated_jobs.filter(x => x["job_type"] == ANGLE_PLOT);
+		$scope.energy = [$scope.associated_jobs.filter(x => x["job_type"] == ENERGY)[0]];
 	}
 
 	//retrieves job information from URL
@@ -377,6 +379,22 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 
 	JobsService.getJobs(function(jobs) {
 		$scope.jobs = jobs;
+		for (let i = 0; i < jobs.length; i++) {
+			$http({
+				method: 'GET',
+				url: `/api/job/isRelax/${jobs[i].uuid}`
+			}).then(response => {
+				if (response.data === "True") {
+					jobs[i]["initCon"] = "init_conf_relax"
+					jobs[i]["initConf"] = [`/static/oxdna-viewer/index.html?configuration=/job_output/${jobs[i].uuid}/init_conf_relax&topology=/job_output/${jobs[i].uuid}/topology`,
+									   `/job_output/${jobs[i].uuid}/init_conf_relax`];
+				}
+				else {
+					jobs[i]["initConf"] = [`/static/oxdna-viewer/index.html?configuration=/job_output/${jobs[i].uuid}/init_conf&topology=/job_output/${jobs[i].uuid}/topology`,
+									   `/job_output/${jobs[i].uuid}/init_conf`];
+				}				
+			});
+		}
 	})
 	$scope.getQueue();
 
