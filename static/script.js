@@ -378,19 +378,20 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 
 	JobsService.getJobs(function(jobs) {
 		$scope.jobs = jobs;
-		for (job of jobs) {
+		for (let i = 0; i < jobs.length; i++) {
 			$http({
 				method: 'GET',
-				url: `/api/job/isRelax/${job.uuid}`
+				url: `/api/job/isRelax/${jobs[i].uuid}`
 			}).then(response => {
 				if (response.data === "True") {
-					job["initConf"] = [`/static/oxdna-viewer/index.html?configuration=/job_output/${job.uuid}/init_conf_relax&topology=/job_output/${job.uuid}/topology`,
-									   `/job_output/${job.uuid}/init_conf_relax`];
+					jobs[i]["initCon"] = "init_conf_relax"
+					jobs[i]["initConf"] = [`/static/oxdna-viewer/index.html?configuration=/job_output/${jobs[i].uuid}/init_conf_relax&topology=/job_output/${jobs[i].uuid}/topology`,
+									   `/job_output/${jobs[i].uuid}/init_conf_relax`];
 				}
 				else {
-					job["initConf"] = [`/static/oxdna-viewer/index.html?configuration=/job_output/${job.uuid}/init_conf&topology=/job_output/${job.uuid}/topology`,
-									   `/job_output/${job.uuid}/init_conf`];
-				}
+					jobs[i]["initConf"] = [`/static/oxdna-viewer/index.html?configuration=/job_output/${jobs[i].uuid}/init_conf&topology=/job_output/${jobs[i].uuid}/topology`,
+									   `/job_output/${jobs[i].uuid}/init_conf`];
+				}				
 			});
 		}
 	})
