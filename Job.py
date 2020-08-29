@@ -56,11 +56,11 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 	print("creating {type} analysis, id: {id}".format(type=analysis_type, id=analysis_id), flush=True)
 
 	cpu_allocation = {
-		"mean" : 5,
+		"mean" : 1,
 		"align" : 1,
 		"distance" : 1,
-		"bond" : 5,
-		"angle_find" : 5,
+		"bond" : 1,
+		"angle_find" : 1,
 		"angle_plot" : 1,
 		"energy" : 1
 	}
@@ -84,7 +84,7 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 		if ("force.txt" in os.listdir(job_directory)):
 			run_command = "forces2pairs.py force.txt designed_pairs.txt"
 		else:
-			run_command = "generate_force.py -o force.txt -f designed_pairs.txt input last_conf.dat"
+			run_command = "generate_force.py -o force.txt -f designed_pairs.txt input output.dat"
 		run_command += ";python3 /opt/oxdna_analysis_tools/bond_analysis.py -p {n} input trajectory.dat designed_pairs.txt bond_occupancy.json".format(n = cpu_allocation[analysis_type])
 	elif analysis_type == "angle_find":
 		run_command = "duplex_angle_finder.py -p {n} -o duplex_angle.txt input trajectory.dat".format(n = cpu_allocation[analysis_type])
@@ -108,7 +108,7 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 #SBATCH --job-name={analysis_id}    # Job name
 #SBATCH --partition=CPU
 #SBATCH --ntasks={n}                    # Run on a single CPU
-#SBATCH --time=100:00:00               # Time limit hrs:min:sec
+#SBATCH --time=48:00:00               # Time limit hrs:min:sec
 #SBATCH -o {job_output_file}
 #SBATCH -e {job_output_file}
 cd {job_directory}
