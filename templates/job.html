@@ -228,7 +228,7 @@
 									<td><span ng-class="{'completed': align[0].status == 'Completed', 'pending': align[0].status == 'Pending', 'running': align[0].status == 'Running'}">{{align[0].status}}</span></td>
 									<td>{{ align[0].dateString }}</td>
 									<td><a href="/job_output/{{align[0].sim_job_id}}/align_log" target="_blank">View log</a></td>
-									<td><a href="/job_output/{{align[0].sim_job_id}}/aligned_traj" target="_blank" download={{job.name}}_aligned.dat>Download aligned trajectory</a></br>
+									<td><a href="/job_output/{{align[0].sim_job_id}}/aligned_traj" target="_blank">Download aligned trajectory</a></br>
 									</td>
 								</tr>
 							</table>
@@ -313,7 +313,7 @@
 				<div class="card">
 					<div id=bondCard class="card-body">
 						<h2> Bond Occupancy <a href="#" style="color:#999" 
-							title="Calculates the hydrogen bond occupancy compared with the intended design" 
+							title="Calculates the hydrogen bond occupancy compared with the intended design.  The intended design is guessed from the relaxed state." 
 							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
 						</h2>
 						<div ng-show="bond[0] == undefined"> 
@@ -395,7 +395,7 @@
 				<div class="card">
 					<div id=angle_plotCard class="card-body">
 						<h2> Duplex Angle Plotter <a href="#" style="color:#999" 
-							title="Reads file from duplex angle finder and plots the angle between the specified duplexes" 
+							title="Reads file from duplex angle finder and plots the angle between the specified duplexes. &#013;&#010; Specify which duplexes you want with the first nucleotide in the duplex (use oxView to find the particle ids)" 
 							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
 						</h2>
 						<label for="name">Job Name: </label>

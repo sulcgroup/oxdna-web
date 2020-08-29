@@ -53,12 +53,22 @@ def startSlurmAnalysis(job_directory):
 
 def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_parameters):
 	job_output_file = job_directory + analysis_type + ".log"
-	print("creating {type} analysis, id: {id}".format(type=analysis_type, id=analysis_id))
+	print("creating {type} analysis, id: {id}".format(type=analysis_type, id=analysis_id), flush=True)
+
+	cpu_allocation = {
+		"mean" : 1,
+		"align" : 1,
+		"distance" : 1,
+		"bond" : 1,
+		"angle_find" : 1,
+		"angle_plot" : 1,
+		"energy" : 1
+	}
 
 	if analysis_type == "mean":
-		run_command = "compute_mean.py -p 1 -d deviations.json -f oxDNA -o mean.dat trajectory.dat output.top"
+		run_command = "compute_mean.py -p {n} -d deviations.json -f oxDNA -o mean.dat trajectory.dat output.top".format(n = cpu_allocation[analysis_type])
 	elif analysis_type == "align":
-		run_command = "align_trajectory.py trajectory.dat output.top aligned.dat"
+		run_command = "align_trajectory.py trajectory.dat output.top aligned.dat\npython3 /opt/zip_traj.py aligned.dat aligned.zip\nrm aligned.dat"
 	elif analysis_type == "distance":
 		job_output_file = job_directory + analysis_parameters["name"] +".log"
 		p1s = analysis_parameters["p1"].split(" ")
@@ -74,10 +84,10 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 		if ("force.txt" in os.listdir(job_directory)):
 			run_command = "forces2pairs.py force.txt designed_pairs.txt"
 		else:
-			run_command = "generate_force.py -o force.txt -f designed_pairs.txt input last_conf.dat"
-		run_command += ";python3 /opt/oxdna_analysis_tools/bond_analysis.py -p 1 input trajectory.dat designed_pairs.txt bond_occupancy.json"
+			run_command = "generate_force.py -o force.txt -f designed_pairs.txt input output.dat"
+		run_command += ";python3 /opt/oxdna_analysis_tools/bond_analysis.py -p {n} input trajectory.dat designed_pairs.txt bond_occupancy.json".format(n = cpu_allocation[analysis_type])
 	elif analysis_type == "angle_find":
-		run_command = "duplex_angle_finder.py -p 1 -o duplex_angle.txt input trajectory.dat"
+		run_command = "duplex_angle_finder.py -p {n} -o duplex_angle.txt input trajectory.dat".format(n = cpu_allocation[analysis_type])
 	elif analysis_type == "angle_plot":
 		analysis_parameters["name"] = analysis_parameters["name_angle"]
 		job_output_file = job_directory + analysis_parameters["name"] + ".log"
@@ -97,8 +107,8 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 	sbatch_file = """#!/bin/bash
 #SBATCH --job-name={analysis_id}    # Job name
 #SBATCH --partition=CPU
-#SBATCH --ntasks=1                    # Run on a single CPU
-#SBATCH --time=100:00:00               # Time limit hrs:min:sec
+#SBATCH --ntasks={n}                    # Run on a single CPU
+#SBATCH --time=48:00:00               # Time limit hrs:min:sec
 #SBATCH -o {job_output_file}
 #SBATCH -e {job_output_file}
 cd {job_directory}
@@ -106,7 +116,8 @@ python3 /opt/oxdna_analysis_tools/{run_command}""".format(
 	analysis_id=analysis_id,
 	job_directory=job_directory, 
 	job_output_file=job_output_file,
-	run_command=run_command
+	run_command=run_command,
+	n=cpu_allocation[analysis_type]
 )
 
 	file_name = "sbatch_analysis.sh"
@@ -154,7 +165,7 @@ cd {job_directory}""".	format(
 		if f == "input_relax_MC":
 			sbatch_file += "\n/opt/oxdna_analysis_tools/generate_force.py -o force.txt input_relax_MC MC_relax.dat"
 			sbatch_file += "\nsed -i 's/0.9/{force}/g' force.txt".format(force=force)
-	sbatch_file += "\npython3 /opt/zip_traj.py"
+	sbatch_file += "\npython3 /opt/zip_traj.py trajectory.dat trajectory.zip"
 	sbatch_file += "\npython3 /var/www/azDNA/azDNA/Update_Status.py"
 
 	file_name = "sbatch.sh"
