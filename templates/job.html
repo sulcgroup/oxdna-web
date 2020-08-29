@@ -228,7 +228,7 @@
 									<td><span ng-class="{'completed': align[0].status == 'Completed', 'pending': align[0].status == 'Pending', 'running': align[0].status == 'Running'}">{{align[0].status}}</span></td>
 									<td>{{ align[0].dateString }}</td>
 									<td><a href="/job_output/{{align[0].sim_job_id}}/align_log" target="_blank">View log</a></td>
-									<td><a href="/job_output/{{align[0].sim_job_id}}/aligned_traj" target="_blank" download={{job.name}}_aligned.dat>Download aligned trajectory</a></br>
+									<td><a href="/job_output/{{align[0].sim_job_id}}/aligned_traj" target="_blank">Download aligned trajectory</a></br>
 									</td>
 								</tr>
 							</table>

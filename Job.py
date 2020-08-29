@@ -58,7 +58,7 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 	if analysis_type == "mean":
 		run_command = "compute_mean.py -p 1 -d deviations.json -f oxDNA -o mean.dat trajectory.dat output.top"
 	elif analysis_type == "align":
-		run_command = "align_trajectory.py trajectory.dat output.top aligned.dat"
+		run_command = "align_trajectory.py trajectory.dat output.top aligned.dat\npython3 /opt/zip_traj.py aligned.dat aligned.zip\nrm aligned.dat"
 	elif analysis_type == "distance":
 		job_output_file = job_directory + analysis_parameters["name"] +".log"
 		p1s = analysis_parameters["p1"].split(" ")
@@ -154,7 +154,7 @@ cd {job_directory}""".	format(
 		if f == "input_relax_MC":
 			sbatch_file += "\n/opt/oxdna_analysis_tools/generate_force.py -o force.txt input_relax_MC MC_relax.dat"
 			sbatch_file += "\nsed -i 's/0.9/{force}/g' force.txt".format(force=force)
-	sbatch_file += "\npython3 /opt/zip_traj.py"
+	sbatch_file += "\npython3 /opt/zip_traj.py trajectory.dat trajectory.zip"
 	sbatch_file += "\npython3 /var/www/azDNA/azDNA/Update_Status.py"
 
 	file_name = "sbatch.sh"
