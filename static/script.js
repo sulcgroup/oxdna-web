@@ -395,6 +395,7 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 				}				
 			});
 		}
+		$scope.updateStatus();
 	})
 	$scope.getQueue();
 
@@ -413,6 +414,7 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 			console.log(request.response);
 			job.status = "Completed"
 		}
+		$scope.getQueue();
 	}
 
 	$scope.deleteJob = function(job){
@@ -438,8 +440,32 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 		if (r == true) {
 		  $scope.deleteJob(job);
 		} 
-	  }
+	}
 
+	$scope.updateStatus = () => {
+		const update = setInterval(() => {
+			let keepUpdating = false;
+			for (let i = 0; i < $scope.jobs.length; i++) {
+				if ($scope.jobs[i].status === "Pending") {
+					keepUpdating = true;
+					$http({
+						method: 'GET',
+						url: `/api/jobs_status/${$scope.jobs[i].uuid}`
+					}).then(response => {
+						if (response.data !== "Pending") {
+							$scope.jobs[i].status = response.data;
+							$scope.getQueue();
+						}
+					});
+				}
+			}
+			if (!keepUpdating) {
+				clearInterval(update);
+			}
+			$scope.$apply();
+			console.log($scope.jobs)
+		}, 1000);
+	}
 })
 
 app.controller("LoginCtrl", function($scope) {

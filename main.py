@@ -361,6 +361,13 @@ def get_is_relax(job_id):
 
 	return Job.isRelax(job_id)
 
+@app.route("/api/jobs_status/<job_id>")
+def get_status(job_id):
+	if session.get("user_id") is None:
+		return redirect("/login")
+	
+	return Job.getJobStatus(job_id)
+
 @app.route("/api/job")
 def getQueue():
 	return Job.getQueue()
