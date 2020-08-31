@@ -12,6 +12,17 @@ import Database
 app = Flask(__name__, static_url_path='/static', static_folder="static")
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
+# request.headers["Cache-Control"] = "no-cache, no-store, must-revalidate" # HTTP 1.1.
+# request.headers["Pragma"] = "no-cache" # HTTP 1.0.
+# request.headers["Expires"] = "0" # Proxies.
+
+@app.after_request
+def after_request(response):
+	response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
+	response.headers["Expires"] = '0'
+	response.headers["Pragma"] = "no-cache"
+	return response
+
 @app.route('/create', methods=['GET'])
 def create_job():
 	if session.get("user_id") is None:
@@ -600,6 +611,15 @@ def getUserInfo(username):
 	jobCount = Admin.getUserJobCount(userID)
 	info = (jobCount, jobLimit, timeLimit, isAdmin, isPrivaleged, userID)
 	return jsonify(info)
+
+@app.route("/images/<image>")
+def getImage(image=None):
+	print(image)
+	print(os.path.isfile("images/{}".format(image)), flush=True)
+	if os.path.isfile("images/{}".format(image)):
+		return send_file("images/{}".format(image))
+	else:
+		abort(404, discription="Image not found")
 
 @app.route("/")
 def index():
