@@ -594,6 +594,15 @@ def getUserInfo(username):
 	info = (jobCount, jobLimit, timeLimit, isAdmin, isPrivaleged, userID)
 	return jsonify(info)
 
+@app.route("/images/<image>")
+def getImage(image=None):
+	print(image)
+	print(os.path.isfile("images/{}".format(image)), flush=True)
+	if os.path.isfile("images/{}".format(image)):
+		return send_file("images/{}".format(image))
+	else:
+		abort(404, discription="Image not found")
+
 @app.route("/")
 def index():
 	return send_file("templates/landing.html")
