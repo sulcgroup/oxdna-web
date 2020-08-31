@@ -12,6 +12,17 @@ import Database
 app = Flask(__name__, static_url_path='/static', static_folder="static")
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
+# request.headers["Cache-Control"] = "no-cache, no-store, must-revalidate" # HTTP 1.1.
+# request.headers["Pragma"] = "no-cache" # HTTP 1.0.
+# request.headers["Expires"] = "0" # Proxies.
+
+@app.after_request
+def after_request(response):
+	response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
+	response.headers["Expires"] = '0'
+	response.headers["Pragma"] = "no-cache"
+	return response
+
 @app.route('/create', methods=['GET'])
 def create_job():
 	if session.get("user_id") is None:
@@ -360,6 +371,13 @@ def get_is_relax(job_id):
 		return redirect("/login")
 
 	return Job.isRelax(job_id)
+
+@app.route("/api/jobs_status/<job_id>")
+def get_status(job_id):
+	if session.get("user_id") is None:
+		return redirect("/login")
+	
+	return Job.getJobStatus(job_id)
 
 @app.route("/api/job")
 def getQueue():
