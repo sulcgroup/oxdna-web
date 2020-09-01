@@ -307,6 +307,29 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 
 	$scope.viewing_job_uuid = $location.absUrl().split("/").pop();
 
+	$scope.updateStatus = function() {
+		setInterval(() => {
+			let keepUpdating = false;
+			for (let i = 0; i < $scope.associated_jobs.length; i++) {
+				if ($scope.associated_jobs[i].status !== "Completed") {
+					keepUpdating = true;
+					$http({
+						method: 'GET',
+						url: `/api/jobs_status/${$scope.associated_jobs[i].uuid}`
+					}).then(response => {
+						if (response.data !== $scope.associated_jobs[i].status) {
+							$scope.associated_jobs[i].status = response.data;
+						}
+					});
+				}
+			}
+			if (!keepUpdating) {
+				return;
+			}
+			$scope.$apply();
+		}, 1000);
+	}
+
 	//update the $scope variable to make HTML tables dynamic
 	updateJobScope = function (data) {
 		console.log("DATA!:", data);
@@ -326,6 +349,7 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 		$scope.angle_find = [$scope.associated_jobs.filter(x => x["job_type"] == ANGLE_FIND)[0]];
 		$scope.angle_plot = $scope.associated_jobs.filter(x => x["job_type"] == ANGLE_PLOT);
 		$scope.energy = [$scope.associated_jobs.filter(x => x["job_type"] == ENERGY)[0]];
+		$scope.updateStatus();
 	}
 
 	//retrieves job information from URL
@@ -395,6 +419,7 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 				}				
 			});
 		}
+		$scope.updateStatus();
 	})
 	$scope.getQueue();
 
@@ -413,6 +438,7 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 			console.log(request.response);
 			job.status = "Completed"
 		}
+		$scope.getQueue();
 	}
 
 	$scope.deleteJob = function(job){
@@ -438,8 +464,31 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 		if (r == true) {
 		  $scope.deleteJob(job);
 		} 
-	  }
+	}
 
+	$scope.updateStatus = function(){
+		setInterval(() => {
+			let keepUpdating = false;
+			for (let i = 0; i < $scope.jobs.length; i++) {
+				if ($scope.jobs[i].status !== "Completed") {
+					keepUpdating = true;
+					$http({
+						method: 'GET',
+						url: `/api/jobs_status/${$scope.jobs[i].uuid}`
+					}).then(response => {
+						if (response.data !== $scope.jobs[i].status) {
+							$scope.jobs[i].status = response.data;
+							$scope.getQueue();
+						}
+					});
+				}
+			}
+			if (!keepUpdating) {
+				return;
+			}
+			$scope.$apply();
+		}, 1000);
+	}
 })
 
 app.controller("LoginCtrl", function($scope) {
