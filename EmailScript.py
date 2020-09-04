@@ -5,8 +5,8 @@ import sys
 
 #get help text and email credentials
 try:
-	EMAIL_CREDENTIALS = open("AZDNALogin.txt", "r").read().split(";")
-	HELP_TEXT = open("EmailScriptHelp.txt", "r").read()
+	EMAIL_CREDENTIALS = open("/var/www/azDNA/azDNA/AZDNALogin.txt", "r").read().split(";")
+	HELP_TEXT = open("/var/www/azDNA/azDNA/EmailScriptHelp.txt", "r").read()
 except FileNotFoundError:
 	print("Error, Login File not found")
 
@@ -52,7 +52,7 @@ def SendEmail(args):
 		exit(0)
 
 	#open the templates file and get the right template
-	with open("AZDNA_Email_Templates.txt", "r") as file:
+	with open("/var/www/azDNA/azDNA/AZDNA_Email_Templates.txt", "r") as file:
 		#templates separated by double semicolons
 		templates = file.read().split(";;")
 		#header and footers are the first two template items

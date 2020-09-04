@@ -1,8 +1,10 @@
 import os
 from time import time
-
 from Database import pool
+from Job import getJobNameForUuid
+from Account import getUsername
 from Admin import getTimeLimit
+from EmailScript import SendEmail
 
 # This script is called at the end of sbatch.sh
 # It updates the job status and user's time limit in SQL
@@ -34,3 +36,9 @@ with connection.cursor() as cursor:
 connection.close()
 
 print("Remaining monthly time limit: ", str(new_time_limit), " seconds")
+
+# email user about job completion
+username = getUsername(user_id)
+jobname = getJobNameForUuid(job_uuid)
+link = "https://oxdna.org/job/" + job_uuid
+SendEmail("-t 7 -n {username} -j {jobname} -u {link} -d {email}".format(username = username, jobname = jobname, link = link, email = username).split(" "))
