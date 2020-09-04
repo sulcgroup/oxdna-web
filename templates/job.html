@@ -266,8 +266,16 @@
 									<td style="width:5%">{{ x.dateString }}</td>
 									<td style="width:5%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_log" target="_blank">View log</a></td>
 									<td style="width:8%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_data" target="_blank" download={{x.name}}.txt>Download distance as text</a></td>
-									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" target="_blank" download={{x.name}}_hist.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" width=100%></a></td>
-									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" target="_blank" download={{x.name}}_traj.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" width=100%></a></td>
+									<td>
+										<a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" target="_blank" download={{x.name}}_hist.png>
+											<img id="hist_{{x.uuid}}" src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" width=100%>
+										</a>
+									</td>
+									<td>
+										<a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" target="_blank" download={{x.name}}_traj.png>
+											<img id="traj_{{x.uuid}}" src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" width=100%>
+										</a>
+									</td>
 								</tr>
 							</table>
 						</div>
@@ -303,8 +311,16 @@
 									<td style="width:5%">{{ energy[0].dateString }}</td>
 									<td style="width:5%"><a href="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_log" target="_blank">View log</a></td>
 									<td style="width:8%"><a href="/job_output/{{energy[0].sim_job_id}}/energy" download={{job.name}}_energy.dat>Download energy as text</a></td>
-									<td><a href="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_hist" target="_blank" download={{energy[0].name}}_hist.png><img src="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_hist" width=100%></a></td>
-									<td><a href="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_traj" target="_blank" download={{energy[0].name}}_traj.png><img src="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_traj" width=100%></a></td>
+									<td>
+										<a href="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_hist" target="_blank" download={{energy[0].name}}_hist.png>
+											<img id="hist_{{x.uuid}}" src="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_hist" width=100%>
+										</a>
+									</td>
+									<td>
+										<a href="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_traj" target="_blank" download={{energy[0].name}}_traj.png>
+											<img id="traj_{{x.uuid}}" src="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_traj" width=100%>
+										</a>
+									</td>
 								</tr>
 							</table>
 						</div>
@@ -421,8 +437,16 @@
 									<td style="width:5%"><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
 									<td style="width:5%">{{ x.dateString }}</td>
 									<td style="width:5%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_log" target="_blank">View log</a></td>
-									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_hist" target="_blank" download={{x.name}}_hist.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_hist" width=100%></a></td>
-									<td><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_traj" target="_blank" download={{x.name}}_traj.png><img src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_traj" width=100%></a></td>
+									<td>
+										<a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_hist" target="_blank" download={{x.name}}_hist.png>
+											<img id="hist_{{x.uuid}}" src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_hist" width=100%>
+										</a>
+									</td>
+									<td>
+										<a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_traj" target="_blank" download={{x.name}}_traj.png>
+											<img id="traj_{{x.uuid}}" src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_traj" width=100%>
+										</a>
+									</td>
 								</tr>
 							</table>
 						</div>

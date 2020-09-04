@@ -311,14 +311,20 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 		setInterval(() => {
 			let keepUpdating = false;
 			for (let i = 0; i < $scope.associated_jobs.length; i++) {
-				if ($scope.associated_jobs[i].status !== "Completed") {
+				const job = $scope.associated_jobs[i]
+				if (job.status !== "Completed") {
 					keepUpdating = true;
 					$http({
 						method: 'GET',
-						url: `/api/jobs_status/${$scope.associated_jobs[i].uuid}`
+						url: `/api/jobs_status/${job.uuid}`
 					}).then(response => {
-						if (response.data !== $scope.associated_jobs[i].status) {
+						if (response.data !== job.status) {
 							$scope.associated_jobs[i].status = response.data;
+							if (job.job_type === 3 || job.job_type === 6 || job.job_type === 7) {
+								reload(`traj_${job.uuid}`);
+								reload(`hist_${job.uuid}`);
+								
+							}
 						}
 					});
 				}
@@ -328,6 +334,13 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 			}
 			$scope.$apply();
 		}, 1000);
+	}
+
+	// Helper for $scope.updateStatus
+	function reload(element){
+		const image = document.getElementById(element);
+		const content = image.src;
+		image.src= content;
 	}
 
 	//update the $scope variable to make HTML tables dynamic
