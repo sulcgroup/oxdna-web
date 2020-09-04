@@ -406,6 +406,7 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 		"energy_traj" : "_traj.png"
 	}
 
+	desired_file_path = ""
 	job_data = Job.getAssociatedJobs(uuid)
 	if job_data:
 		for job in job_data:
@@ -419,12 +420,12 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 			desired_file_contents = desired_file.read()
 			return Response(desired_file_contents, mimetype='text/plain')
 		except:
-			abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=analysis_id))
+			abort(404, description="{type} for job {uuid} is currently unfinished".format(type=desired_output, uuid=analysis_id))
 	else:
 		try:
 			return send_file(desired_file_path, as_attachment=True)
 		except:
-			abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=analysis_id))
+			abort(404, description="{type} for job {uuid} is currently unfinished".format(type=desired_output, uuid=analysis_id))
 
 @app.route("/job_output/<uuid>/<desired_output>")
 def getJobOutput(uuid, desired_output):
