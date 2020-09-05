@@ -437,8 +437,25 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 				}				
 			});
 		}
+		setTimeout(() => $scope.checkTrajectories(), 0);
 	})
 	$scope.getQueue();
+
+	$scope.checkTrajectories = function() {
+		const jobs = $scope.jobs;
+		for (let i = 0; i < jobs.length; i++) {
+			$http({
+				method: 'GET',
+				url: `/api/job/hasTrajectory/${jobs[i].uuid}`
+			}).then(response => {
+				if (response.data === "False") {
+					const traj = document.getElementById(`traj_${jobs[i].uuid}`);
+					traj.removeAttribute("href");
+					traj.style.color = "#6d6d6d";
+				}
+			});
+		}
+	}
 
 	$scope.cancelJob = function(job){
 		var request = new XMLHttpRequest();
