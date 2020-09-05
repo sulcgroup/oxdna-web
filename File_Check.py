@@ -8,7 +8,7 @@ from time import time
 from copy import deepcopy
 
 import EmailScript
-from Account import getUsername
+from Account import getUsername, getEmailPrefs
 from Job import getJobNameForUuid
 
 
@@ -77,13 +77,13 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
 
         url = "http://oxdna.org/jobs"
         email = getUsername(user)
+        email_prefs = getEmailPrefs(user)
         
         if not "@" in email:
             print(email, " is not a valid email. User ", user, " will not be notified.")
             bad_emails.append(email)
             continue
         
-
         # format job files for warning
         for job_path in warning_files:
             job_path_list = job_path.split('/')
@@ -97,7 +97,7 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
                 results[user][0].remove(job_file)
                 
         # send warning email
-        if email_warning_files and not debug:
+        if email_warning_files and email_prefs[2] == '1' and not debug:
             email_warning_files = ',\n'.join(email_warning_files)
             EmailScript.SendEmail("-t``4``-n``{username}``-u``{url}``-d``{email}``-j``{files}".format(username = email, url = url, email = email, files = email_warning_files).split("``"))
 
@@ -116,10 +116,10 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
                 print("Failure: tried to remove job that doesn't exist")
                 exit(0)
         # send deletion email
-        if email_deletion_files and not debug:
+        if email_deletion_files and email_prefs[4] == '1' and not debug:
             email_deletion_files = ',\n'.join(email_deletion_files)
             EmailScript.SendEmail("-t``5``-n``{username}``-d``{email}``-j``{files}".format(username = email, email = email, files = email_deletion_files).split("``"))
-    
+        
     # update warning files in results with old results dctionary only if the file hasn't been deleted
     for user in old_results.keys():
         new_results = []
@@ -133,7 +133,6 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
     for user in results.keys():
         results[user] = (list(set(results[user][0])), [])
         
-
     file = open(output_path, "w")
     file.write(str(results))
     file.close()

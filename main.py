@@ -276,6 +276,24 @@ def updatePassword():
 
 	return Login.updatePasssword(user_id, old_password, new_password)
 
+@app.route("/account/get_email_prefs", methods=["GET"])
+def getEmailPrefs():
+	if session.get("user_id") is None:
+		return "You must be logged in to modify your account"
+
+	user_id = int(session["user_id"])
+	
+	return Account.getEmailPrefs(user_id)
+
+@app.route("/account/set_email_prefs/<prefs>", methods=["GET"])
+def setEmailPrefs(prefs):
+	if session.get("user_id") is None:
+		return "You must be logged in to modify your account"
+
+	user_id = int(session["user_id"])
+	
+	return Account.setEmailPrefs(user_id, prefs)
+
 @app.route("/account/get_email", methods=["GET"])
 def getEmail():
 	if session.get("user_id") is None:

@@ -7,6 +7,8 @@ import EmailScript
 
 import Database
 
+get_email_prefs = ("SELECT emailPrefs FROM Users WHERE id = %s")
+set_email_prefs = ("UPDATE Users SET emailPrefs = %s WHERE id = %s")
 find_email_by_user_id_query = ("SELECT username FROM Users WHERE id = %s")
 set_email = ("UPDATE Users SET username = %s WHERE id = %s")
 find_date_by_user_id_query = ("SELECT creationDate FROM Users WHERE id = %s")
@@ -22,6 +24,31 @@ set_reset_token_expiration = ("UPDATE Users SET resetTokenExpiration = %s WHERE 
 get_reset_token_expiration = ("SELECT resetTokenExpiration FROM Users WHERE id = %s")
 
 
+def getEmailPrefs(userId):
+	connection = Database.pool.get_connection()
+	result = None
+
+	with connection.cursor() as cursor:
+		cursor.execute(get_email_prefs, userId)
+		result = cursor.fetchone()[0]
+
+	connection.close()
+	return result
+
+def setEmailPrefs(userId, prefs):
+	print(prefs)
+	print(type(prefs))
+	print(prefs[0])
+
+	prefs_integers = list(map(lambda x: "1" if x == "true" else "0", prefs.split(",")))
+	result = " ".join(prefs_integers)
+	print(result)
+
+	connection = Database.pool.get_connection()
+	with connection.cursor() as cursor:
+		cursor.execute(set_email_prefs, (result, userId))
+	connection.close()
+	return "Success"
 
 ##DEPRECATED
 def getEmail(userId):
