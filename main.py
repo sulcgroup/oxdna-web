@@ -182,6 +182,8 @@ def register():
 	if username is not None and password is not None:
 		user_id = Register.registerUser(username, password, firstName, lastName, institution)
 
+		if (len(password) < 8):
+			return "Password must be at least 8 characters"
 		if(user_id > -1):
 			#session["user_id"] = user_id
 			return redirect("/login")
@@ -262,6 +264,8 @@ def resetPassword():
 			return "Reset token expired: please try again"
 		else:
 			newPassword = request.json["newPassword"]
+			if len(newPassword) < 8:
+				return "Password must be at least 8 characters"
 			return Account.resetPassword(userId, newPassword)
 
 @app.route("/account/update_password", methods=["POST"])
@@ -273,6 +277,11 @@ def updatePassword():
 
 	old_password = request.json["old_password"]
 	new_password = request.json["new_password"]
+
+	if len(new_password) < 8:
+		return "Password must be at least 8 characters"
+	if new_password == old_password:
+		return "Choose a different password"
 
 	return Login.updatePasssword(user_id, old_password, new_password)
 

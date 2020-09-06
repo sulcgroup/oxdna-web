@@ -180,14 +180,8 @@ app.controller("AccountCtrl", function($scope, $http, $timeout) {
 			},
 			url: '/account/update_password'
 		}).then(response => {
-			if (response.data === "Invalid password") {
-				$scope.passwordStatus = "Invalid password";
-				document.getElementById('password-status').style.color = 'red';
-			}
-			else {
-				$scope.passwordStatus = "Password updated";
-				document.getElementById('password-status').style.color = 'green';
-			}
+			$scope.passwordStatus = response.data;
+			document.getElementById('password-status').style.color = (response.data === 'Password updated') ? 'green' : 'red';
 		});
 	}
 
