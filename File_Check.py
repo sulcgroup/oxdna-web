@@ -89,12 +89,7 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
             job_path_list = job_path.split('/')
             job_name = getJobNameForUuid(job_path_list[0])
             job_file = job_path_list[-1]
-            # check that it exists
-            if job_file in os.listdir("/users/{}/{}".format(user, job_path_list[0])):
-                email_warning_files.append("{}: {}".format(job_name, job_file))
-            else:
-                print("OS: ", os.listdir("/users/{}/{}".format(user, job_path_list[0])))
-                results[user][0].remove(job_file)
+            email_warning_files.append("{}: {}".format(job_name, job_file))
                 
         # send warning email
         if email_warning_files and email_prefs[2] == '1' and not debug:
@@ -119,12 +114,12 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
         if email_deletion_files and email_prefs[4] == '1' and not debug:
             email_deletion_files = ',\n'.join(email_deletion_files)
             EmailScript.SendEmail("-t``5``-n``{username}``-d``{email}``-j``{files}".format(username = email, email = email, files = email_deletion_files).split("``"))
-        
+    
     # update warning files in results with old results dctionary only if the file hasn't been deleted
     for user in old_results.keys():
         new_results = []
         for file in old_results[user][0]:
-            if not (file in results[user][1] or file in warning_files):
+            if not (file in results[user][1]):
                 new_results.append(file)
 
         results[user][0].extend(new_results)
