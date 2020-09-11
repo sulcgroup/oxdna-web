@@ -8,6 +8,7 @@ import Delete_User_Files
 import Database
 import Cache
 import Admin
+import Utilities
 
 add_job_query = (
 	"INSERT INTO Jobs "
@@ -55,12 +56,20 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 	job_output_file = job_directory + analysis_type + ".log"
 	print("creating {type} analysis, id: {id}".format(type=analysis_type, id=analysis_id), flush=True)
 
+	#if this is running in the virtual machine, which only has 1 cpu, var will not be in the path
+	#But on the server, which has 20, its okay to give 5 cpus to a job.
+	home_path = Utilities.get_home_path()
+	if 'var' in home_path:
+		allocation = 5
+	else:
+		allocation = 1
+
 	cpu_allocation = {
-		"mean" : 1,
+		"mean" : allocation,
 		"align" : 1,
 		"distance" : 1,
-		"bond" : 1,
-		"angle_find" : 1,
+		"bond" : allocation,
+		"angle_find" : allocation,
 		"angle_plot" : 1,
 		"energy" : 1
 	}
@@ -130,6 +139,8 @@ python3 /opt/oxdna_analysis_tools/{run_command}""".format(
 	file.write(sbatch_file)
 
 def createSlurmJobFile(job_directory, job_name, backend, input_files, force=1.5):
+	home_path = Utilities.get_home_path()
+
 	#job_output_location = job_directory
 	job_output_file = job_directory + "job_out.log"
 	if backend == "CPU":
@@ -137,7 +148,7 @@ def createSlurmJobFile(job_directory, job_name, backend, input_files, force=1.5)
 #SBATCH --job-name={job_name}    # Job name
 #SBATCH --partition={backend}
 #SBATCH --ntasks=1                    # Run on a single CPU
-#SBATCH --time=100:00:00               # Time limit hrs:min:sec
+#SBATCH --time=96:00:00               # Time limit hrs:min:sec
 #SBATCH --output={job_output_file}   # Standard output and error log
 cd {job_directory}""".	format(
 	job_directory=job_directory, 
@@ -151,7 +162,7 @@ cd {job_directory}""".	format(
 #SBATCH --job-name={job_name}    # Job name
 #SBATCH --partition={backend}
 #SBATCH --ntasks=1                    # Run on a single CPU
-#SBATCH --time=336:00:00               # Time limit hrs:min:sec
+#SBATCH --time=96:00:00               # Time limit hrs:min:sec
 #SBATCH --output={job_output_file}   # Standard output and error log
 cd {job_directory}""".	format(
 	job_directory=job_directory, 
@@ -166,7 +177,7 @@ cd {job_directory}""".	format(
 			sbatch_file += "\n/opt/oxdna_analysis_tools/generate_force.py -o force.txt input_relax_MC MC_relax.dat"
 			sbatch_file += "\nsed -i 's/0.9/{force}/g' force.txt".format(force=force)
 	sbatch_file += "\npython3 /opt/zip_traj.py trajectory.dat trajectory.zip"
-	sbatch_file += "\npython3 /var/www/azDNA/azDNA/Update_Status.py"
+	sbatch_file += "\npython3 {path}/Update_Status.py".format(path=home_path)
 
 	file_name = "sbatch.sh"
 	file_path = job_directory + file_name
@@ -454,6 +465,18 @@ def isRelax(job_id):
 	
 	job_files = os.listdir("/users/{}/{}".format(user_id, job_id))
 	return "True" if "MD_relax.dat" in job_files else "False"
+
+def hasTrajectory(job_id):
+	connection = Database.pool.get_connection()
+
+	with connection.cursor() as cursor:
+		cursor.execute(get_userId_for_job_uuid, (job_id,))
+		user_id = cursor.fetchone()[0]
+
+	connection.close()
+
+	job_files = os.listdir("/users/{}/{}".format(user_id, job_id))
+	return "True" if "trajectory.dat" in job_files else "False"
 
 def createAssociateDictionary(data) :
 	keys = ["name", "uuid", "job_type", "sim_job_id", "creation_date", "status"]
