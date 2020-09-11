@@ -185,10 +185,6 @@ def register():
 		firstName = request.form["firstName"]
 		lastName = request.form["lastName"]
 		institution = request.form["institution"]
-		registrationCode = request.form["registrationCode"]
-	
-	if registrationCode != "RealBetaCodeDNA":
-		return "Incorrect registration code."
 
 	if username is not None and password is not None:
 		user_id = Register.registerUser(username, password, firstName, lastName, institution)
