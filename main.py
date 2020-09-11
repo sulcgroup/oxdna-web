@@ -193,6 +193,8 @@ def register():
 	if username is not None and password is not None:
 		user_id = Register.registerUser(username, password, firstName, lastName, institution)
 
+		if (len(password) < 8):
+			return "Password must be at least 8 characters"
 		if(user_id > -1):
 			#session["user_id"] = user_id
 			return redirect("/login")
@@ -273,6 +275,8 @@ def resetPassword():
 			return "Reset token expired: please try again"
 		else:
 			newPassword = request.json["newPassword"]
+			if len(newPassword) < 8:
+				return "Password must be at least 8 characters"
 			return Account.resetPassword(userId, newPassword)
 
 @app.route("/account/update_password", methods=["POST"])
@@ -285,7 +289,30 @@ def updatePassword():
 	old_password = request.json["old_password"]
 	new_password = request.json["new_password"]
 
+	if len(new_password) < 8:
+		return "Password must be at least 8 characters"
+	if new_password == old_password:
+		return "Choose a different password"
+
 	return Login.updatePasssword(user_id, old_password, new_password)
+
+@app.route("/account/get_email_prefs", methods=["GET"])
+def getEmailPrefs():
+	if session.get("user_id") is None:
+		return "You must be logged in to modify your account"
+
+	user_id = int(session["user_id"])
+	
+	return Account.getEmailPrefs(user_id)
+
+@app.route("/account/set_email_prefs/<prefs>", methods=["GET"])
+def setEmailPrefs(prefs):
+	if session.get("user_id") is None:
+		return "You must be logged in to modify your account"
+
+	user_id = int(session["user_id"])
+	
+	return Account.setEmailPrefs(user_id, prefs)
 
 @app.route("/account/get_email", methods=["GET"])
 def getEmail():
@@ -372,6 +399,13 @@ def get_is_relax(job_id):
 
 	return Job.isRelax(job_id)
 
+@app.route("/api/job/hasTrajectory/<job_id>")
+def has_trajectory(job_id):
+	if session.get("user_id") is None:
+		return redirect("/login")
+
+	return Job.hasTrajectory(job_id)
+
 @app.route("/api/jobs_status/<job_id>")
 def get_status(job_id):
 	if session.get("user_id") is None:
@@ -417,6 +451,7 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 		"energy_traj" : "_traj.png"
 	}
 
+	desired_file_path = ""
 	job_data = Job.getAssociatedJobs(uuid)
 	if job_data:
 		for job in job_data:
@@ -432,12 +467,12 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 			desired_file_contents = desired_file.read()
 			return Response(desired_file_contents, mimetype='text/plain')
 		except:
-			abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=analysis_id))
+			abort(404, description="{type} for job {uuid} is currently unfinished".format(type=desired_output, uuid=analysis_id))
 	else:
 		try:
 			return send_file(desired_file_path, as_attachment=True)
 		except:
-			abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=analysis_id))
+			abort(404, description="{type} for job {uuid} is currently unfinished".format(type=desired_output, uuid=analysis_id))
 
 @app.route("/job_output/<uuid>/<desired_output>")
 def getJobOutput(uuid, desired_output):

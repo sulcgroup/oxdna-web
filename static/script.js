@@ -114,40 +114,76 @@ app.controller("AppCtrl", function($scope, JobsService) {
 
 })
 
-app.controller("AccountCtrl", function($scope, $http) {
-
-	$scope.status = null;
+app.controller("AccountCtrl", function($scope, $http, $timeout) {
+	$scope.passwordStatus = null;
+	$scope.emailStatus = null;
+	$scope.emailPrefs = [];
 
 	console.log("Now in the acccount ctrl!");
 
-	$scope.updatePassword = function(old_password, new_password) {
-		$scope.status = "Loading...";
-
+	$scope.getEmailPrefs = function() {
 		$http({
-			method: 'POST',
-			data: 
-			{
-				"old_password":old_password,
-				"new_password":new_password
-			},
-			url: '/account/update_password'
-		}).then(function (response) {
-
-			var data = response.data;
-
-			if(data == "Invalid password") {
-				$scope.status = "Invalid password";
-			} else if(data == "Password updated") {
-				$scope.status = "Password updated";
+			method: 'GET',
+			url: '/account/get_email_prefs'
+		}).then(response => {
+			$scope.emailPrefs = response.data.split(' ').map(el => parseInt(el));
+			if ($scope.emailPrefs[0]) {
+				document.getElementById('email0').checked = true;
 			}
-		
+			if ($scope.emailPrefs[1]) {
+				document.getElementById('email1').checked = true;
+			}
+			if ($scope.emailPrefs[2]) {
+				document.getElementById('email2').checked = true;
+			}
 		});
 	}
+	$scope.getEmailPrefs();
 
-	$scope.submit = function() {
-		$scope.updatePassword($scope.old_password, $scope.new_password);
+	$scope.updateEmailPrefs = async function() {
+		$scope.emailStatus = "Processing..."
+		if (document.getElementById('email-status')) {
+			document.getElementById('email-status').style.color = 'black';
+		}
+		const newPrefs = [document.getElementById('email0').checked, document.getElementById('email1').checked, document.getElementById('email2').checked];
+		let success;
+		await $http({
+			method: 'GET',
+			url: `/account/set_email_prefs/${newPrefs}`
+		}).then(response => {
+			if (response.data === "Success") {
+				$scope.emailStatus = "Preferences updated"
+				document.getElementById('email-status').style.color = 'green';
+				success = true;
+			}
+			else {
+				$scope.emailStatus = "Failed to update"
+				document.getElementById('email-status').style.color = 'red';
+			}
+
+		});
 	}
-	
+	$scope.success = function() {
+		$scope.emailStatusColor = "{color:'green'}"
+	}
+
+	$scope.updatePassword = function() {
+		$scope.passwordStatus = "Processing...";
+		if (document.getElementById('password-status')) {
+			document.getElementById('password-status').style.color = 'black';
+		}
+		$http({
+			method: 'POST',
+			data: {
+				"old_password": $scope.old_password,
+				"new_password": $scope.new_password
+			},
+			url: '/account/update_password'
+		}).then(response => {
+			$scope.passwordStatus = response.data;
+			document.getElementById('password-status').style.color = (response.data === 'Password updated') ? 'green' : 'red';
+		});
+	}
 
 })
 
@@ -307,29 +343,6 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 
 	$scope.viewing_job_uuid = $location.absUrl().split("/").pop();
 
-	$scope.updateStatus = function() {
-		setInterval(() => {
-			let keepUpdating = false;
-			for (let i = 0; i < $scope.associated_jobs.length; i++) {
-				if ($scope.associated_jobs[i].status !== "Completed") {
-					keepUpdating = true;
-					$http({
-						method: 'GET',
-						url: `/api/jobs_status/${$scope.associated_jobs[i].uuid}`
-					}).then(response => {
-						if (response.data !== $scope.associated_jobs[i].status) {
-							$scope.associated_jobs[i].status = response.data;
-						}
-					});
-				}
-			}
-			if (!keepUpdating) {
-				return;
-			}
-			$scope.$apply();
-		}, 1000);
-	}
-
 	//update the $scope variable to make HTML tables dynamic
 	updateJobScope = function (data) {
 		console.log("DATA!:", data);
@@ -349,7 +362,6 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 		$scope.angle_find = [$scope.associated_jobs.filter(x => x["job_type"] == ANGLE_FIND)[0]];
 		$scope.angle_plot = $scope.associated_jobs.filter(x => x["job_type"] == ANGLE_PLOT);
 		$scope.energy = [$scope.associated_jobs.filter(x => x["job_type"] == ENERGY)[0]];
-		$scope.updateStatus();
 	}
 
 	//retrieves job information from URL
@@ -419,9 +431,25 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 				}				
 			});
 		}
-		$scope.updateStatus();
+		setTimeout(() => $scope.checkTrajectories(), 0);
 	})
 	$scope.getQueue();
+
+	$scope.checkTrajectories = function() {
+		const jobs = $scope.jobs;
+		for (let i = 0; i < jobs.length; i++) {
+			$http({
+				method: 'GET',
+				url: `/api/job/hasTrajectory/${jobs[i].uuid}`
+			}).then(response => {
+				if (response.data === "False") {
+					const traj = document.getElementById(`traj_${jobs[i].uuid}`);
+					traj.removeAttribute("href");
+					traj.style.color = "#6d6d6d";
+				}
+			});
+		}
+	}
 
 	$scope.cancelJob = function(job){
 		var request = new XMLHttpRequest();
@@ -438,7 +466,6 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 			console.log(request.response);
 			job.status = "Completed"
 		}
-		$scope.getQueue();
 	}
 
 	$scope.deleteJob = function(job){
@@ -464,31 +491,8 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 		if (r == true) {
 		  $scope.deleteJob(job);
 		} 
-	}
+	  }
 
-	$scope.updateStatus = function(){
-		setInterval(() => {
-			let keepUpdating = false;
-			for (let i = 0; i < $scope.jobs.length; i++) {
-				if ($scope.jobs[i].status !== "Completed") {
-					keepUpdating = true;
-					$http({
-						method: 'GET',
-						url: `/api/jobs_status/${$scope.jobs[i].uuid}`
-					}).then(response => {
-						if (response.data !== $scope.jobs[i].status) {
-							$scope.jobs[i].status = response.data;
-							$scope.getQueue();
-						}
-					});
-				}
-			}
-			if (!keepUpdating) {
-				return;
-			}
-			$scope.$apply();
-		}, 1000);
-	}
 })
 
 app.controller("LoginCtrl", function($scope) {

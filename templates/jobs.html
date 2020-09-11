@@ -176,7 +176,7 @@ table tr:nth-child(even) {
 								<td><a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{x.uuid}}/last_conf&topology=/job_output/{{x.uuid}}/topology">view</a>
 									<a href="/job_output/{{x.uuid}}/last_conf" download="{{x.name}}_last_conf.dat">download</a>
 								</td>
-								<td><a href="/job_output/{{x.uuid}}/trajectory_zip">download</a></td>
+								<td><a id="traj_{{x.uuid}}" href="/job_output/{{x.uuid}}/trajectory_zip">download</a></td>
 								<td><button ng-click="cancelJob(x); x.status = 'Completed'" ng-disabled="x.status == 'Completed'">Cancel Job</button></td>
 								<td><button ng-click="confirmDelete(x)" ng-disabled="x.status != 'Completed' && x.status != 'Canceled'">Delete Job</button></td>
 							</tr>
