@@ -164,7 +164,7 @@ cd {job_directory}""".	format(
 		sbatch_file += "\n/opt/oxdna/oxDNA/build/bin/oxDNA {file_name}".format(file_name=f)
 		if f == "input_relax_MC":
 			sbatch_file += "\n/opt/oxdna_analysis_tools/generate_force.py -o force.txt input_relax_MC MC_relax.dat"
-			sbatch_file += "\nsed -i 's/0.9/{force}/g' force.txt".format(force=force)
+			sbatch_file += "\nsed -i 's/0\.9/{force}/g' force.txt".format(force=force)
 	sbatch_file += "\npython3 /opt/zip_traj.py trajectory.dat trajectory.zip"
 	sbatch_file += "\npython3 /var/www/azDNA/azDNA/Update_Status.py"
 
@@ -221,7 +221,7 @@ def createOxDNAInput(parameters, job_directory, file_name, needs_relax):
 	#the secondary relax is a set length and run in molecular dynamics using GPU if requested
 	if file_name == "input_relax_MD":
 		unique_parameters["steps"] = parameters["MD_steps"]
-		unique_parameters["print_energy_interval"] = 5000000
+		unique_parameters["print_energy_interval"] = 500000
 		unique_parameters["dt"] = parameters["MD_dt"]
 		unique_parameters["thermostat"] = "bussi"
 		unique_parameters["T"] = "0C"

@@ -422,8 +422,10 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 		for job in job_data:
 			if job["uuid"] == analysis_id:
 				desired_file_path = job_directory + job["name"] + desired_output_map[desired_output]
+		if not desired_file_path:
+			print("No output found for query {}".format)
 
-	if "log" in desired_file_path:
+	if "log" in desired_output_map:
 		try:
 			print(desired_file_path)
 			desired_file = open(desired_file_path, "r")
