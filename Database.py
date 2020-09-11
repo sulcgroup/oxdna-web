@@ -37,7 +37,7 @@ class MyPool:
 		function_caller = calframe[1][3]
 		connection_identifier = str(uuid.uuid4())[:5]
 
-		print("CONNECTION: ", connection_identifier, " OPEN BY:", calframe[1][3])
+		#print("CONNECTION: ", connection_identifier, " OPEN BY:", calframe[1][3])
 
 		wrapped_connection = MyConnection(self._pool.get_connection(), function_caller, connection_identifier)
 
