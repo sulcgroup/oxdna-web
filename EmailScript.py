@@ -1,13 +1,9 @@
 import codecs
 import yagmail
 import sys
+import Utilities
 
-# determine if we are in the server or the VM
-try:
-	open("/var/www/azDNA/azDNA/AZDNALogin.txt", "r")
-	path = "/var/www/azDNA/azDNA/"
-except FileNotFoundError:
-	path = "/vagrant/oxdna-web/"
+path = Utilities.get_home_path()
 
 #get help text and email credentials
 try:
