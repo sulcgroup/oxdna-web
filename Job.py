@@ -692,7 +692,7 @@ def getJobStatus(job_name):
 	#we can save on doing the Slurm/MySQL interfacing
 	cache_entry = Cache.CompletedJobsCache.get(job_name)
 	if cache_entry: 
-		print("Found CompletedJobsCache entry for:", job_name)
+		#print("Found CompletedJobsCache entry for:", job_name)
 		return cache_entry
 	else:
 		print("Did not find entry for:", job_name)

@@ -18,7 +18,7 @@ class MyConnection:
 
 		self.closer = function_caller
 		self._connection.close()
-		print("CONNECTION: ", self.identifier, " CLOSE BY:", function_caller)
+		#print("CONNECTION: ", self.identifier, " CLOSE BY:", function_caller)
 
 	def cursor(self):
 		return self._connection.cursor()
