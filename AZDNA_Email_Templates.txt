@@ -64,3 +64,11 @@ You can reset your password at the following link <u>. The link will expire in 2
 
 <TAIL>
 ;;
+OxDNA Job Completion
+::
+<HEADER>
+
+Your job "<j>" has been completed. You can access it at the following link <u>.
+
+<TAIL>
+;;

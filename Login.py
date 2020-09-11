@@ -81,4 +81,4 @@ def updatePasssword(userId, old_password, new_password):
 	if password_check:
 		return "Password updated"
 	else:
-		return "Invalid password"
+		return "Incorrect password"

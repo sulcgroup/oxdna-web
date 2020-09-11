@@ -2,11 +2,17 @@ import codecs
 import yagmail
 import sys
 
+# determine if we are in the server or the VM
+try:
+	open("/var/www/azDNA/azDNA/AZDNALogin.txt", "r")
+	path = "/var/www/azDNA/azDNA/"
+except FileNotFoundError:
+	path = "/vagrant/oxdna-web/"
 
 #get help text and email credentials
 try:
-	EMAIL_CREDENTIALS = open("AZDNALogin.txt", "r").read().split(";")
-	HELP_TEXT = open("EmailScriptHelp.txt", "r").read()
+	EMAIL_CREDENTIALS = open(path + "AZDNALogin.txt", "r").read().split(";")
+	HELP_TEXT = open(path + "EmailScriptHelp.txt", "r").read()
 except FileNotFoundError:
 	print("Error, Login File not found")
 
@@ -52,7 +58,7 @@ def SendEmail(args):
 		exit(0)
 
 	#open the templates file and get the right template
-	with open("AZDNA_Email_Templates.txt", "r") as file:
+	with open(path + "AZDNA_Email_Templates.txt", "r") as file:
 		#templates separated by double semicolons
 		templates = file.read().split(";;")
 		#header and footers are the first two template items
