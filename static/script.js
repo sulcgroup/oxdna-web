@@ -362,6 +362,43 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 		$scope.angle_find = [$scope.associated_jobs.filter(x => x["job_type"] == ANGLE_FIND)[0]];
 		$scope.angle_plot = $scope.associated_jobs.filter(x => x["job_type"] == ANGLE_PLOT);
 		$scope.energy = [$scope.associated_jobs.filter(x => x["job_type"] == ENERGY)[0]];
+		$scope.updateStatus();
+	}
+
+	$scope.updateStatus = function() {
+		setInterval(() => {
+			let keepUpdating = false;
+			for (let i = 0; i < $scope.associated_jobs.length; i++) {
+				const job = $scope.associated_jobs[i]
+				if (job.status !== "Completed") {
+					keepUpdating = true;
+					$http({
+						method: 'GET',
+						url: `/api/jobs_status/${job.uuid}`
+					}).then(response => {
+						if (response.data !== job.status) {
+							$scope.associated_jobs[i].status = response.data;
+							if (job.job_type === 3 || job.job_type === 6 || job.job_type === 7) {
+								reload(`traj_${job.uuid}`);
+								reload(`hist_${job.uuid}`);
+
+							}
+						}
+					});
+				}
+			}
+			if (!keepUpdating) {
+				return;
+			}
+			$scope.$apply();
+		}, 1000);
+	}
+
+	// Helper for $scope.updateStatus
+	function reload(element){
+		const image = document.getElementById(element);
+		const content = image.src;
+		image.src= content;
 	}
 
 	//retrieves job information from URL
@@ -432,8 +469,33 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 			});
 		}
 		setTimeout(() => $scope.checkTrajectories(), 0);
+		$scope.updateStatus();
 	})
 	$scope.getQueue();
+
+	$scope.updateStatus = function(){
+		setInterval(() => {
+			let keepUpdating = false;
+			for (let i = 0; i < $scope.jobs.length; i++) {
+				if ($scope.jobs[i].status !== "Completed") {
+					keepUpdating = true;
+					$http({
+						method: 'GET',
+						url: `/api/jobs_status/${$scope.jobs[i].uuid}`
+					}).then(response => {
+						if (response.data !== $scope.jobs[i].status) {
+							$scope.jobs[i].status = response.data;
+							$scope.getQueue();
+						}
+					});
+				}
+			}
+			if (!keepUpdating) {
+				return;
+			}
+			$scope.$apply();
+		}, 1000);
+	}
 
 	$scope.checkTrajectories = function() {
 		const jobs = $scope.jobs;
