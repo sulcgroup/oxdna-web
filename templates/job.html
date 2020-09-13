@@ -316,12 +316,12 @@
 									<td style="width:8%"><a href="/job_output/{{energy[0].sim_job_id}}/energy" download={{job.name}}_energy.dat>Download energy as text</a></td>
 									<td>
 										<a href="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_hist" target="_blank" download={{energy[0].name}}_hist.png>
-											<img id="hist_{{x.uuid}}" src="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_hist" width=100%>
+											<img id="hist_{{energy[0].uuid}}" src="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_hist" width=100%>
 										</a>
 									</td>
 									<td>
 										<a href="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_traj" target="_blank" download={{energy[0].name}}_traj.png>
-											<img id="traj_{{x.uuid}}" src="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_traj" width=100%>
+											<img id="traj_{{energy[0].uuid}}" src="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_traj" width=100%>
 										</a>
 									</td>
 								</tr>
