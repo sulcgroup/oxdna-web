@@ -136,12 +136,13 @@
 						<div class="card-body">
 
 							<form action="/register" method="POST">
-								<p>First Name: <input ng-model="firstName" name="firstName" id="firstName" type="text"></p>
-								<p>Last Name: <input ng-model="lastName" name="lastName" id="lastName" type="text"></p>
-								<p style="margin-left: 0.35em;">Institution: <input ng-model="institution" name="institution" id="institution" type="text">
+								<p class="font-weight-bold" >First Name: <input ng-model="firstName" name="firstName" id="firstName" type="text"></p>
+								<p class="font-weight-bold" style="margin-left: 0.1em;">Last Name: <input ng-model="lastName" name="lastName" id="lastName" type="text"></p>
+								<p class="font-weight-bold" style="margin-left: 0.4em;">Institution: <input ng-model="institution" name="institution" id="institution" type="text">
 								<br><br>
-								<p style="margin-left: 2.15em;">Email:<sup class="font-weight-bold">*</sup> <input ng-model="email" name="username" id="username" type="text"></p>
-								<p style="margin-left: 0.5em;">Password: <input name="password" id="password" type="password"> Must be at least 8 characters</p>
+								<p class="font-weight-bold" style="margin-left: 2.2em;">Email:<sup class="font-weight-bold">*</sup> <input ng-model="email" name="username" id="username" type="text"></p>
+								<p class="font-weight-bold" style="margin-left: 0.55em; display: inline;">Password: <input name="password" id="password" type="password"></p> <span>Must be at least 8 characters</span>
+								<br><br>
 								<p><sup class="font-weight-bold">*</sup>You must check for an email to verify your account before running simulations.</p>
 								<input type="submit">
 							</form>
