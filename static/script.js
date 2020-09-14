@@ -558,6 +558,37 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 })
 
 app.controller("LoginCtrl", function($scope) {
+
+})
+
+app.controller("RegisterCtrl", function($scope) {
+	$scope.errors = {};
+	$scope.loadingMessage = "";
+	$scope.failColor = ""
+
+	$scope.register = function(user) {
+		$scope.loadingMessage = "Processing...";
+		for (field in $scope.errors) {
+			$scope.errors[field] = "";
+		}
+		const request = new XMLHttpRequest();
+		request.open("POST", "/register");
+		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		request.send(JSON.stringify(user));
+		request.onload = () => {
+			$scope.loadingMessage = "";
+			if (request.response == "Success") {
+				window.location = "/login";
+			} else {
+				const response = JSON.parse(request.response);
+				for (field in response) {
+					$scope.errors[field] = response[field];
+				}
+			}
+			$scope.$apply();
+		}
+	}
+	
 })
 
 app.controller("MainCtrl", function($scope, $http) {

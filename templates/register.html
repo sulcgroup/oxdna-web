@@ -55,10 +55,9 @@
 		background-color: #ffffff;
 	}
 </style>
-<body ng-controller="LoginCtrl">
+<body ng-controller="RegisterCtrl">
 	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
 		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">oxDNA.org</a>
-		<input ng-model="searchText" class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
 		<ul class="navbar-nav px-3">
 			<li class="nav-item text-nowrap">
 				<a class="nav-link" href="/logout">Sign out</a>
@@ -129,22 +128,34 @@
 						<h1 class="h2">Register</h1>
 					</div>
 
-
-
-
-					<div class="card">
+					<div class="card" ng-cloak>
 						<div class="card-body">
 
-							<form action="/register" method="POST">
-								<p class="font-weight-bold" >First Name: <input ng-model="firstName" name="firstName" id="firstName" type="text"></p>
-								<p class="font-weight-bold" style="margin-left: 0.1em;">Last Name: <input ng-model="lastName" name="lastName" id="lastName" type="text"></p>
-								<p class="font-weight-bold" style="margin-left: 0.4em;">Institution: <input ng-model="institution" name="institution" id="institution" type="text">
-								<br><br>
-								<p class="font-weight-bold" style="margin-left: 2.2em;">Email:<sup class="font-weight-bold">*</sup> <input ng-model="email" name="username" id="username" type="text"></p>
-								<p class="font-weight-bold" style="margin-left: 0.55em; display: inline;">Password: <input name="password" id="password" type="password"></p> <span>Must be at least 8 characters</span>
+							<form novalidate>
+								<p class="font-weight-bold">First Name: 
+									<input ng-model="user.firstName" name="firstName" id="firstName" type="text">
+									<span class="font-weight-normal text-danger">{{errors.firstName}}</span>
+								</p>
+								<p class="font-weight-bold" style="margin-left: 0.1em;">Last Name: 
+									<input ng-model="user.lastName" name="lastName" id="lastName" type="text">
+									<span class="font-weight-normal text-danger">{{errors.lastName}}</span>
+								</p>
+								<p class="font-weight-bold" style="margin-left: 0.25em;">Institution: 
+									<input ng-model="user.institution" name="institution" id="institution" type="text">
+									<span class="font-weight-normal text-danger">{{errors.institution}}</span>
+								</p>
+								<br>
+								<p class="font-weight-bold" style="margin-left: 2.3em;">Email:<sup>*</sup> 
+									<input ng-model="user.email" name="username" id="username" type="text">
+									<span class="font-weight-normal text-danger">{{errors.email}}</span>
+								</p>
+								<p class="font-weight-bold" style="margin-left: 0.55em; display: inline;">Password: 
+									<input ng-model="user.password" name="password" id="password" type="password">
+									<span class="font-weight-normal text-danger">{{errors.password}}</span>
+								</p>
 								<br><br>
 								<p><sup class="font-weight-bold">*</sup>You must check for an email to verify your account before running simulations.</p>
-								<input type="submit">
+								<input ng-click="register(user)" type="submit"> {{loadingMessage}}
 							</form>
 						</div>
 						<div class="card-body">
@@ -153,7 +164,6 @@
 						
 					</div>
 				</main>
-
 
 			</body>
 

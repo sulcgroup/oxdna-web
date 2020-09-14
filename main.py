@@ -180,27 +180,8 @@ def register():
 		return send_file("templates/register.html")
 
 	if request.method == "POST":
-		username = request.form["username"]
-		password = request.form["password"]
-		firstName = request.form["firstName"]
-		lastName = request.form["lastName"]
-		institution = request.form["institution"]
-
-	if username is not None and password is not None:
-		user_id = Register.registerUser(username, password, firstName, lastName, institution)
-
-		if (len(password) < 8):
-			return "Password must be at least 8 characters"
-		if(user_id > -1):
-			#session["user_id"] = user_id
-			return redirect("/login")
-		elif(user_id == -2):
-			return "Username already taken"
-		else:
-			return "Invalid username or password"
-
-	return "Invalid username or password"
-
+		user = request.get_json()
+		return Register.registerUser(user)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

@@ -17,15 +17,20 @@ add_user_query = (
 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 )
 
-#needs input cleaning/escaping/validation
-
-def registerUser(name, password, firstName, lastName, institution, requires_verification=True):
+def registerUser(user, requires_verification=True):
 	connection = Database.pool.get_connection()
-	
-	#check if the user already exists.
-	if Account.getUserId(name):
+
+	response = validate(user)
+	print(response)
+	if len(response) > 0:
 		connection.close()
-		return -2 #value that is not none means user is in the database. return -2 error code.
+		return response
+	
+	name = user["email"]
+	firstName = user["firstName"]
+	lastName = user["lastName"]
+	institution = user["institution"]
+	password = user["password"]
 
 	verifycode = binascii.b2a_hex(os.urandom(15)).decode("utf-8")
 	user_data = (name, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), 0, int(time.time()), verifycode, "False", firstName, lastName, institution, defaultJobLimit)
@@ -43,7 +48,25 @@ def registerUser(name, password, firstName, lastName, institution, requires_veri
 		EmailScript.SendEmail("-t 0 -n {username} -u {verifylink} -d {email}".format(username = name, verifylink = verifylink, email = name).split(" "))
 
 	connection.close()
-	return user_id
+	return "Success"
 
+def validate(user):
+	errors = {}
 
+	if "firstName" not in user:
+		errors["firstName"] = "Empty field"
+	if "lastName" not in user:
+		errors["lastName"] = "Empty field"
+	if "institution" not in user:
+		errors["institution"] = "Empty field"
+	if "email" not in user:
+		errors[""] = "Empty field"
+	else:
+		if "@" not in user["email"]:
+			errors["email"] = "Invalid email"
+		elif Account.getUserId(user["email"]):
+			errors["email"] = "Email is already registered"
+	if "password" not in user or len(user["password"]) < 8:
+		errors["password"] = "Must be at least 8 characters"
 
+	return errors
