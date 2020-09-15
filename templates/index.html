@@ -100,8 +100,8 @@
 					<div class="card-body">
 						<p>You are now creating a job for processing on our servers.</p>
 						<h4>Server Status</h4>
-						<b>Total jobs currently running: </b><span ng-cloak>{{jobsRunning}}</span><br>
-						<b>Total jobs in queue: </b><span ng-cloak>{{jobsQueued}}</span><br><br>
+						<span>Total jobs currently running: </span><span ng-cloak>{{jobsRunning}}</span><br>
+						<span>Total jobs in queue: </span><span ng-cloak>{{jobsQueued}}</span><br><br>
 
 						<!--
 						<p>
@@ -113,7 +113,7 @@
 
 						<h4>Input Files</h4>
 						<div class="form-group">
-							<label for="exampleFormControlFile1">Please select the input files you'd like for the job</label>
+							<label for="exampleFormControlFile1">Please select <b>2 input files</b> you'd like for the job</label>
 							<input type="file" accept=".top,.conf,.dat,.oxdna" autocomplete="off" class="form-control-file" id="exampleFormControlFile1" multiple onchange="openFiles(this.files)">
 						</div>
 					</form>
