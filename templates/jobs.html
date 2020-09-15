@@ -146,7 +146,7 @@ table tr:nth-child(even) {
 						</p>
 						<p><b>Your simulations:</b><br>Here is a list of the jobs you have currently running, pending or finished under your account. Please be aware trajectory files get automatically deleted one week after the job finishes. To access analysis tools, click on your job name.</p>
 						<table>
-							<tr>
+							<tr class="font-weight-bold">
 								<td>Job Name</td>
 								<td>Status</td>
 								<td>Started</td>
@@ -177,8 +177,8 @@ table tr:nth-child(even) {
 									<a href="/job_output/{{x.uuid}}/last_conf" download="{{x.name}}_last_conf.dat">download</a>
 								</td>
 								<td><a id="traj_{{x.uuid}}" href="/job_output/{{x.uuid}}/trajectory_zip">download</a></td>
-								<td><button ng-click="cancelJob(x); x.status = 'Completed'" ng-disabled="x.status == 'Completed'">Cancel Job</button></td>
-								<td><button ng-click="confirmDelete(x)" ng-disabled="x.status != 'Completed' && x.status != 'Canceled'">Delete Job</button></td>
+								<td><button class="rounded" ng-click="cancelJob(x); x.status = 'Completed'" ng-disabled="x.status == 'Completed'">Cancel Job</button></td>
+								<td><button class="rounded"ng-click="confirmDelete(x)" ng-disabled="x.status != 'Completed' && x.status != 'Canceled'">Delete Job</button></td>
 							</tr>
 						</table>
 

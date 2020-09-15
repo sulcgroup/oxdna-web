@@ -155,7 +155,7 @@
 					<h1 class="h2 d-inline-block">Viewing Analyses for Job:</h1>
 					<input class="h2 d-inline-block" id="job-name" type="text" value={{job.name}} size={{job.name.length}}
 						   onkeydown="this.size = this.value.length < 1 ? 1 : this.value.length">
-					<button type="button" ng-click="updateJobName()">Change Name</button>
+					<button class="rounded" type="button" ng-click="updateJobName()">Change Name</button>
 					<a class="h2 d-inline-block text-primary float-right" target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{job.uuid}}/last_conf&topology=/job_output/{{job.uuid}}/topology">View Last Configuration</a>
 				</div>
 			
@@ -171,15 +171,15 @@
 						
 						
 						<div ng-show="mean[0] == undefined"> 
-							<button type="button" ng-click="startAnalysis('mean')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
+							<button class="rounded mb-2" type="button" ng-click="startAnalysis('mean')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
 						</div>
 						<div ng-hide="mean[0] == undefined"> 
-							<button type="button" ng-click="startAnalysis('mean')" ngbTooltip="Help?" placement="right" container="body"> Redo analysis</button>	
+							<button class="rounded mb-2" type="button" ng-click="startAnalysis('mean')" ngbTooltip="Help?" placement="right" container="body"> Redo analysis</button>	
 						</div>
 
 						<div ng-hide="mean[0] == undefined">
 							<table>
-								<tr>
+								<tr class="font-weight-bold">
 									<td>Job Name</td>
 									<td>Status</td>
 									<td>Creation Date</td>
@@ -211,15 +211,15 @@
 							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
 						</h2>
 						<div ng-show="align[0] == undefined"> 
-							<button type="button" ng-click="startAnalysis('align')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
+							<button class="rounded mb-2" type="button" ng-click="startAnalysis('align')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
 						</div>
 						<div ng-hide="align[0] == undefined"> 
-							<button type="button" ng-click="startAnalysis('align')" ngbTooltip="Help?" placement="right" container="body"> Redo analysis</button>	
+							<button class="rounded mb-2" type="button" ng-click="startAnalysis('align')" ngbTooltip="Help?" placement="right" container="body"> Redo analysis</button>	
 						</div>
 
 						<div ng-hide="align[0] == undefined">
 							<table>
-								<tr>
+								<tr class="font-weight-bold">
 									<td>Job Name</td>
 									<td>Status</td>
 									<td>Creation Date</td>
@@ -251,10 +251,10 @@
 						<label class = "lpadded" for="p2">Particle 2s: </label>
 						<input type="text" value="4 5 6" id="p2" size=6>
 						<br>
-						<button type="button" ng-click="startAnalysis('distance')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
+						<button class="rounded mb-2" type="button" ng-click="startAnalysis('distance')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
 						<div ng-hide="distance[0] == undefined">
 							<table>
-								<tr>
+								<tr class="font-weight-bold">
 									<td style="width:8%">Job Name</td>
 									<td style="width:5%">Status</td>
 									<td style="width:5%">Creation Date</td>
@@ -291,15 +291,15 @@
 							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
 						</h2>
 						<div ng-show="energy[0] == undefined"> 
-							<button type="button" ng-click="startAnalysis('energy')" ngbTooltip="Help?" placement="right" container="body">Start Plotting</button>	
+							<button class="rounded mb-2" type="button" ng-click="startAnalysis('energy')" ngbTooltip="Help?" placement="right" container="body">Start Plotting</button>	
 						</div>
 						<div ng-hide="energy[0] == undefined"> 
-							<button type="button" ng-click="startAnalysis('energy')" ngbTooltip="Help?" placement="right" container="body">Redo Plot</button>	
+							<button class="rounded mb-2" type="button" ng-click="startAnalysis('energy')" ngbTooltip="Help?" placement="right" container="body">Redo Plot</button>	
 						</div>
 
 						<div ng-hide="energy[0] == undefined">
 							<table>
-								<tr>
+								<tr class="font-weight-bold">
 									<td style="width:8%">Job Name</td>
 									<td style="width:5%">Status</td>
 									<td style="width:5%">Creation Date</td>
@@ -336,15 +336,15 @@
 							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
 						</h2>
 						<div ng-show="bond[0] == undefined"> 
-							<button type="button" ng-click="startAnalysis('bond')" ngbTooltip="Help?" placement="right" container="body">Start analysis</button>	
+							<button class="rounded mb-2" type="button" ng-click="startAnalysis('bond')" ngbTooltip="Help?" placement="right" container="body">Start analysis</button>	
 						</div>
 						<div ng-hide="bond[0] == undefined"> 
-							<button type="button" ng-click="startAnalysis('bond')" ngbTooltip="Help?" placement="right" container="body">Redo analysis</button>	
+							<button class="rounded mb-2" type="button" ng-click="startAnalysis('bond')" ngbTooltip="Help?" placement="right" container="body">Redo analysis</button>	
 						</div>
 
 						<div ng-hide="bond[0] == undefined">
 							<table>
-								<tr>
+								<tr class="font-weight-bold">
 									<td>Job Name</td>
 									<td>Status</td>
 									<td>Creation Date</td>
@@ -372,15 +372,15 @@
 							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
 						</h2>
 						<div ng-show="angle_find[0] == undefined"> 
-							<button type="button" ng-click="startAnalysis('angle_find')" ngbTooltip="Help?" placement="right" container="body">Start analysis</button>	
+							<button class="rounded mb-2" type="button" ng-click="startAnalysis('angle_find')" ngbTooltip="Help?" placement="right" container="body">Start analysis</button>	
 						</div>
 						<div ng-hide="angle_find[0] == undefined"> 
-							<button type="button" ng-click="startAnalysis('angle_find')" ngbTooltip="Help?" placement="right" container="body">Redo analysis</button>	
+							<button class="rounded mb-2" type="button" ng-click="startAnalysis('angle_find')" ngbTooltip="Help?" placement="right" container="body">Redo analysis</button>	
 						</div>
 
 						<div ng-hide="angle_find[0] == undefined">
 							<table>
-								<tr>
+								<tr class="font-weight-bold">
 									<td>Job Name</td>
 									<td>Status</td>
 									<td>Creation Date</td>
@@ -424,10 +424,10 @@
 						<label class = "lpadded" for="p2">Particle 2: </label>
 						<input type="text" value="" id="p2_angle" size=16 maxlength="16">
 						<br>
-						<button type="button" ng-click="startAnalysis('angle_plot')" ngbTooltip="Help?" placement="right" container="body"> Start plotting</button>	
+						<button class="rounded mb-2" type="button" ng-click="startAnalysis('angle_plot')" ngbTooltip="Help?" placement="right" container="body"> Start plotting</button>	
 						<div ng-hide="angle_plot[0] == undefined">
 							<table>
-								<tr>
+								<tr class="font-weight-bold">
 									<td style="width:8%">Job Name</td>
 									<td style="width:5%">Status</td>
 									<td style="width:5%">Creation Date</td>
