@@ -31,6 +31,7 @@ def registerUser(user, requires_verification=True):
 	lastName = user["lastName"]
 	institution = user["institution"]
 	password = user["password"]
+	iAgree = user["iAgree"]
 
 	verifycode = binascii.b2a_hex(os.urandom(15)).decode("utf-8")
 	user_data = (name, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), 0, int(time.time()), verifycode, "False", firstName, lastName, institution, defaultJobLimit)
@@ -68,5 +69,7 @@ def validate(user):
 			errors["email"] = "Email is already registered"
 	if "password" not in user or len(user["password"]) < 8:
 		errors["password"] = "Must be at least 8 characters"
+	if "iAgree" not in user:
+		errors["iAgree"] = "You must agree to the terms and conditions"
 
 	return errors
