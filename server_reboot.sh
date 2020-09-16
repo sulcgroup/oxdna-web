@@ -6,3 +6,4 @@ service nginx restart
 /usr/bin/nvidia-smi -c EXCLUSIVE_PROCESS
 su capstonegroup
 ./RestartPython.sh
+#this is a line of code
