@@ -9,6 +9,8 @@ import Database
 import Cache
 import Admin
 import Utilities
+from EmailScript import SendEmail
+
 
 add_job_query = (
 	"INSERT INTO Jobs "
@@ -27,8 +29,18 @@ remove_jobs_for_user_id = ("DELETE FROM Jobs WHERE userId = %s")
 get_status = ("SELECT status FROM Jobs WHERE uuid = %s")
 update_status = ("UPDATE Jobs SET status = %s WHERE uuid = %s")
 
+def getUserIdForJob(job_id):
+	connection = Database.pool.get_connection()
+	result = None
 
-def startSlurmJob(job_directory, job_id):
+	with connection.cursor() as cursor:
+		cursor.execute(get_userId_for_job_uuid, (job_id,))
+		result = cursor.fetchone()[0]
+
+	connection.close()
+	return result
+
+def startSlurmJob(job_directory):
 	sbatch_file = job_directory + "sbatch.sh"
 	
 	pipe = subprocess.Popen(["sbatch", sbatch_file], stdout=subprocess.PIPE)
@@ -342,9 +354,7 @@ def createAnalysisForUserIdWithJob(userId, analysis_parameters):
 	return randomAnalysisId
 
 
-def createJobForUserIdWithData(userId, jsonData):
-	randomJobId = str(uuid.uuid4())
-
+def createJobForUserIdWithData(userId, jsonData, randomJobId):
 	user_directory = "/users/"+str(userId) + "/"
 	job_directory = user_directory + randomJobId + "/"
 	print("Creating job {uuid} for user {user}".format(uuid=randomJobId, user=userId), flush=True)
@@ -411,7 +421,7 @@ def createJobForUserIdWithData(userId, jsonData):
 		return False, error
 	
 
-	job_number = startSlurmJob(job_directory, randomJobId)
+	job_number = startSlurmJob(job_directory)
 	job_title = parameters["job_title"]
 
 	job_data = (
@@ -732,3 +742,8 @@ def getQueue():
 			queued += 1
 	
 	return str(running) + ' ' + str(queued)
+
+def emailGuest(email,link):
+	jobname = getJobNameForUuid(link.split("/")[-1]).replace(" ", "_")
+	SendEmail("-t 8 -n {username} -j {jobname} -u {link} -d {email}".format(username = email, jobname = jobname, link = link, email = email).split(" "))
+	return "Test email"

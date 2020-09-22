@@ -16,6 +16,7 @@ add_user_query = (
 "(`username`, `password`, `group`, `creationDate`, `verifycode`, `verified`, `firstName`, `lastName`, `institution`, `jobLimit`)"
 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 )
+group_query = ("SELECT `group` FROM Users WHERE username = %s")
 
 def registerUser(user, requires_verification=True):
 	connection = Database.pool.get_connection()
@@ -70,3 +71,34 @@ def validate(user):
 		errors["password"] = "Must be at least 8 characters"
 
 	return errors
+
+def getGroup(email):
+	connection = Database.pool.get_connection()
+	result = None
+	
+	with connection.cursor() as cursor:
+		cursor.execute(group_query, (email))
+		result = cursor.fetchone()[0]
+
+	connection.close()
+	return result if result else None
+
+def registerGuest(email):
+	connection = Database.pool.get_connection()
+	user_id = Account.getUserId(email)
+	if user_id:
+		return "Guest exists" if getGroup(email) == 1 else "User exists"
+	
+	name = email
+	firstName = "Guest"
+	lastName = "Guest"
+	institution = "Guest"
+	password = "Guest"
+	verifycode = "Guest"
+
+	user_data = (name, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), 1, int(time.time()), verifycode, "False", firstName, lastName, institution, defaultJobLimit)
+
+	connection.cursor().execute(add_user_query, user_data)
+
+	connection.close()
+	return "Success"

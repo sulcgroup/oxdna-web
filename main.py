@@ -1,5 +1,6 @@
 import os
 import sys
+import uuid
 from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort
 import requests
 import Login
@@ -94,13 +95,28 @@ def handle_form():
 		"parameters": parameters, 
 		"files": files
 	}
-
-	success, error_message = Job.createJobForUserIdWithData(user_id, job_data)
+	job_id = str(uuid.uuid4())
+	success, error_message = Job.createJobForUserIdWithData(user_id, job_data, job_id)
 
 	if success:
-		return "Success"
+		return "Success" + job_id
 	else:
 		return error_message
+
+@app.route("/guestcreate", methods=["GET"])
+def create_guest_job():
+	if session.get("user_id"):
+		return redirect("/create")
+	else:
+		return send_file("templates/guestcreate.html")
+		
+@app.route("/emailguest", methods=["POST"])
+def email_guest():
+	if request.method == "POST":
+		json_data = request.get_json()
+		email = json_data["email"]
+		link = json_data["link"]
+		return Job.emailGuest(email, link)
 
 @app.route('/cancel_job', methods=['POST'])
 def cancel_job():
@@ -182,6 +198,18 @@ def register():
 	if request.method == "POST":
 		user = request.get_json()
 		return Register.registerUser(user)
+
+@app.route("/registerguest", methods=["POST"])
+def register_guest():
+	print("NOW REGISTERING GUEST USER!")
+
+	if request.method == "POST":
+		email = str(request.data.decode("utf-8")).strip('"')
+		response = Register.registerGuest(email)
+		if (response != "User exists"):
+			session["user_id"] = Account.getUserId(email)
+
+		return response
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -335,6 +363,11 @@ def jobs():
 		return redirect("/login")
 	else:
 		return send_file("templates/jobs.html")
+
+@app.route("/guestjob/<job_id>")
+def view_guest_job(job_id):
+	session["user_id"] = Job.getUserIdForJob(job_id)
+	return send_file("templates/guestjob.html")
 
 @app.route("/job/<job_id>")
 def view_job(job_id):
