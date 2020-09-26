@@ -216,7 +216,7 @@ def account():
 		return "You must be logged in to modify your account"
 
 	if request.method == "GET":
-		return send_file("templates/account.html")
+		return render_template("account.html")
 
 @app.route("/password/forgot", methods=["GET"])
 def forgotPassword():
