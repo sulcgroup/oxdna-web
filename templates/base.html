@@ -24,7 +24,8 @@
 
 <link rel="stylesheet" href="/static/style.css">
 {% block additionalStylesheet %}{% endblock %}
-<body>
+
+<body ng-controller="{{ page_controller }}">
     {% include "header.html" %}
 
     <div>
