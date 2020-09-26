@@ -1,109 +1,23 @@
-<html ng-app="app" ng-controller="AppCtrl">
-<head>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-173472997-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+{% extends 'base.html' %}
+{% set active_page = "create" %}
 
-  gtag('config', 'UA-173472997-1');
-</script>
+{% block title %}Create{% endblock %}
 
-	<title>oxDNA.org Create</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-
-</head>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css">
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-<link rel="stylesheet" href="/static/style.css">
-<body ng-controller="MainCtrl">
-	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">oxDNA.org</a>
-		<input ng-model="searchText" class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
-		<ul class="navbar-nav px-3">
-			<li class="nav-item text-nowrap">
-				<a class="nav-link" href="/logout">Sign out</a>
-			</li>
-		</ul>
-	</nav>
-
-	<div>
-		<div class="row">
-			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-				<div class="sidebar-sticky" ng-cloak>
-					<ul class="nav flex-column">
-						<li class="nav-item">
-							<a class="nav-link" href="#">
-								<span data-feather="home"></span>
-								Dashboard <span class="sr-only">(current)</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/jobs">
-								<span data-feather="list"></span>
-								View Jobs
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" href="#">
-								<span data-feather="edit"></span>
-								Create A Job	
-							</a>
-						</li>
-
-						<!-- 
-						<li class="nav-item">
-							<a class="nav-link" href="#">
-								<span data-feather="file-text"></span>
-								My Files	
-							</a>
-						</li>
-						-->
-						<li class="nav-item">
-							<a class="nav-link" href="/account">
-								<span data-feather="user"></span>
-								My Account	
-							</a>
-						</li>
-					</ul>
-
-					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-						<span>JOB HISTORY</span>
-						<a class="d-flex align-items-center text-muted" href="#">
-						</a>
-					</h6>
-					<ul class="nav flex-column mb-2">
-						<li ng-repeat="job in job_history | filter: searchText">
-							<a class="nav-link" href="/job/{{job.uuid}}">
-								<span data-feather="file-text"></span>
-								{{job.name}}
-							</a>
-						</li>
-					</ul>
-				</div>
-			</nav>
-
-			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-					<h1 class="h2">Create A Job</h1>
-				</div>
+{% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+		<h1 class="h2">Create A Job</h1>
+	</div>
 
 
-				<div class="card">
-					<div class="card-body">
-						<p>You are now creating a job for processing on our servers.</p>
-						<h4>Server Status</h4>
-						<span>Total jobs currently running: </span><span ng-cloak>{{jobsRunning}}</span><br>
-						<span>Total jobs in queue: </span><span ng-cloak>{{jobsQueued}}</span><br><br>
+	<div class="card">
+		<div class="card-body">
+			<p>You are now creating a job for processing on our servers.</p>
+			<h4>Server Status</h4>
+			<span>Total jobs currently running: </span><span ng-cloak>{{jobsRunning}}</span><br>
+			<span>Total jobs in queue: </span><span ng-cloak>{{jobsQueued}}</span><br><br>
 
-						<!--
+			<!--
 						<p>
 							<div class="progress">
 								<div class="progress-bar" role="progressbar" style="width: 35%;" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100">35%</div>
@@ -111,251 +25,284 @@
 						</p>
 						!-->
 
-						<h4>Input Files</h4>
-						<div class="form-group">
-							<label for="exampleFormControlFile1">Please select <b>2 input files</b> you'd like for the job</label>
-							<input type="file" accept=".top,.conf,.dat,.oxdna" autocomplete="off" class="form-control-file" id="exampleFormControlFile1" multiple onchange="openFiles(this.files)">
-						</div>
-					</form>
+			<h4>Input Files</h4>
+			<div class="form-group">
+				<label for="exampleFormControlFile1">Please select <b>2 input files</b> you'd like for the job</label>
+				<input type="file" accept=".top,.conf,.dat,.oxdna" autocomplete="off" class="form-control-file"
+					id="exampleFormControlFile1" multiple onchange="openFiles(this.files)">
+			</div>
+			</form>
 
-					<iframe name="editor-frame" style="resize:vertical;overflow:auto;width:95%;height:550px;margin:10px auto;display:block;"src="/static/oxdna-viewer/index.html"></iframe>
-					
-					<h4>Parameters</h4>
+			<iframe name="editor-frame"
+				style="resize:vertical;overflow:auto;width:95%;height:550px;margin:10px auto;display:block;"
+				src="/static/oxdna-viewer/index.html"></iframe>
 
-					<div class="input-group mb-3">
-						<div class="input-group-prepend">
-							<span class="input-group-text" id="basic-addon1">Job Title</span>
-						</div>
-						<input ng-model="data.job_title" maxlength="16" type="text" class="form-control" placeholder="A title for your reference" aria-label="Username" aria-describedby="basic-addon1">
-					</div>
-					<p>
-						<h6>Interaction Type</h6>
-						<div class="form-check form-check-inline">
-							<input ng-model="data.interaction_type" class="form-check-input" type="radio" name="interaction_type" id="inlineRadio1" value="DNA">
-							<label class="form-check-label" for="inlineRadio1">DNA</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input ng-model="data.interaction_type" class="form-check-input" type="radio" name="interaction_type" id="inlineRadio2" value="RNA">
-							<label class="form-check-label" for="inlineRadio2">RNA</label>
-						</div></p>
-						<div class="input-group mb-3">
-							<div class="input-group-prepend">
-								<span class="input-group-text" id="basic-addon1">Salt Concentration</span>
-							</div>
-							<input ng-model="data.salt_concentration" type="number" step=0.01 class="form-control" placeholder="Sets the salt concentration in M" aria-label="sets the salt concentration in M" aria-describedby="basic-addon1">
-						</div>
+			<h4>Parameters</h4>
 
-						<div class="input-group mb-3">
-							<div class="input-group-prepend">
-								<span class="input-group-text" id="basic-addon1">Steps</span>
-							</div>
-							<input ng-model="data.steps" type="number" class="form-control" placeholder="Length of the simulation, in time step" aria-label="sets the salt concentration in M" aria-describedby="basic-addon1">
-						</div>
-
-						<p>
-							<h6>Temperature Units</h6>
-							<div class="form-check form-check-inline">
-								<input ng-model="auxillary.temperature_units" class="form-check-input" type="radio" name="temperature_units" id="inlineRadio1" value="kelvin">
-								<label class="form-check-label" for="inlineRadio1">Kelvin</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input ng-model="auxillary.temperature_units" class="form-check-input" type="radio" name="temperature_units" id="inlineRadio1" value="celsius">
-								<label class="form-check-label" for="inlineRadio2">Celsius</label>
-							</div></p>
-
-
-
-							<div class="input-group mb-3">
-								<div class="input-group-prepend">
-									<span class="input-group-text" id="basic-addon1">Temperature</span>
-								</div>
-								<input ng-model="auxillary.temperature" type="number" class="form-control" placeholder="Temperature of the simulation" aria-label="sets the salt concentration in M" aria-describedby="basic-addon1">
-							</div>
-
-							<p>
-								<h6>Relaxation</h6>
-								<p>
-									<div class="form-check form-check-inline">
-										<input ng-model="data.needs_relax" class="form-check-input" type="checkbox" name="needs_relax" id="inlinecheckbox1" value="true">
-										<label class="form-check-label" for="inlinecheckbox1">Needs Relax</label>
-									</div>
-								</p>
-
-								<p>
-									<a class="btn btn-primary" data-toggle="collapse" href="#relaxParams" role="button" aria-expanded="false" aria-controls="relaxParams">View relax parameters</a>
-									
-									<div class="collapse" id="relaxParams">
-										<h4>Relax Parameters</h4>
-
-										<p>
-											<div class="input-group mb-3">
-												<div class="input-group-prepend">
-													<span class="input-group-text" id="MC_steps">MC steps</span>
-												</div>
-												<input ng-model="data.MC_steps" type="number" class="form-control" placeholder="The number of Monte Carlo steps in the initial relax" aria-label="The number of Monte Carlo steps in the initial relax" aria-describedby="basic">
-											</div>
-										</p>
-										<p>
-											<div class="input-group mb-3">
-												<div class="input-group-prepend">
-													<span class="input-group-text" id="MD_steps">MD steps</span>
-												</div>
-												<input ng-model="data.MD_steps" type="number" class="form-control" placeholder="The number of molecular dynamics steps in the secondary relax" aria-label="The number of molecular dynamics steps in the secondary relax" aria-describedby="basic">
-											</div>
-										</p>
-										<p>
-											<div class="input-group mb-3">
-												<div class="input-group-prepend">
-													<span class="input-group-text" id="MD_dt">MD timestep</span>
-												</div>
-												<input ng-model="data.MD_dt" type="number" step=0.00001 class="form-control" placeholder="The timestep of the MD simulation" aria-label="The timestep of the MD simulation" aria-describedby="basic">
-											</div>
-										</p>
-									</div>
-								</p>
-							</p>
-
-							<p>
-								<a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">View advanced parameters</a>
-
-								<div class="collapse" id="multiCollapseExample1">
-									<h4>Advanced Parameters</h4>
-
-									<p>
-										<h6>Backend</h6>
-										<div class="form-check form-check-inline">
-											<input ng-model="data.backend" class="form-check-input" type="radio" name="backend" id="inlineRadio1" value="CPU">
-											<label class="form-check-label" for="inlineRadio1">CPU</label>
-										</div>
-										<div class="form-check form-check-inline">
-											<input ng-model="data.backend" class="form-check-input" type="radio" name="backend" id="inlineRadio2" value="CUDA">
-											<label class="form-check-label" for="inlineRadio2">CUDA</label>
-										</div>
-									</p>
-
-									<p>
-										<h6>Simulation timestep</h6>
-										<div class="input-group mb-3">
-											<div class="input-group-prepend">
-												<span class="input-group-text" id="basic-addon1">dt</span>
-											</div>
-											<input ng-model="data.dt" type="number" step=0.0001 class="form-control" placeholder="The timestep of integration for the simulation" aria-label="The timestep of integration for the simulation" aria-describedby="basic-addon1">
-										</div>
-									</p>
-
-									<p>
-										<h6>External force file</h6>
-										<input fileread="force_file" type="file" class="form-control-file" id="force-file">
-									</p>
-
-									<p>
-										<h6>Mismatch Repulsion (RNA only)</h6>
-										<div class="form-check form-check-inline">
-											<input ng-model="auxillary.mismatch_repulsion" class="form-check-input" type="radio" name="mismatch_repulsion" id="inlineRadio1" value="true">
-											<label class="form-check-label" for="inlineRadio1">Yes</label>
-										</div>
-										<div class="form-check form-check-inline">
-											<input ng-model="auxillary.mismatch_repulsion" class="form-check-input" type="radio" name="mismatch_repulsion" id="inlineRadio2" value="false">
-											<label class="form-check-label" for="inlineRadio2">No</label>
-										</div>
-									</p>
-
-									<p>
-										<div class="input-group mb-3">
-											<div class="input-group-prepend">
-												<span class="input-group-text" id="basic-addon1">Print conf_interval</span>
-											</div>
-											<input ng-model="data.print_conf_interval" type="number" class="form-control" placeholder="The time steps between the outputting of configurations" aria-label="sets the salt concentration in M" aria-describedby="basic-addon1">
-										</div>
-
-										<div class="input-group mb-3">
-											<div class="input-group-prepend">
-												<span class="input-group-text" id="basic-addon1">Print energy_every</span>
-											</div>
-											<input ng-model="data.print_energy_every" type="number" class="form-control" placeholder="The time steps between the outputting of energy" aria-label="sets the salt concentration in M" aria-describedby="basic">
-										</div>
-									</p>
-								</div>
-							</p>
-
-							<p>
-								<button ng-click="submitJob()" type="submit" class="btn btn-primary">Submit Job</button>
-							</p>
-
-							<div nf-if="submissionStatus != ''" ng-cloak>
-								<h3>{{submissionStatus}}</h3>
-							</div>
-
-							<div ng-if="error != ''" ng-cloak>
-								<h3>Error</h3>
-								<p>{{error}}</p>
-							</div>
-
-							</div>
-
-
-							</div>
-
-						</main>
-					</div>
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">Job Title</span>
 				</div>
-				</body>
-				<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-				<script>
-					feather.replace()
+				<input ng-model="data.job_title" maxlength="16" type="text" class="form-control"
+					placeholder="A title for your reference" aria-label="Username" aria-describedby="basic-addon1">
+			</div>
+			<p>
+			<h6>Interaction Type</h6>
+			<div class="form-check form-check-inline">
+				<input ng-model="data.interaction_type" class="form-check-input" type="radio" name="interaction_type"
+					id="inlineRadio1" value="DNA">
+				<label class="form-check-label" for="inlineRadio1">DNA</label>
+			</div>
+			<div class="form-check form-check-inline">
+				<input ng-model="data.interaction_type" class="form-check-input" type="radio" name="interaction_type"
+					id="inlineRadio2" value="RNA">
+				<label class="form-check-label" for="inlineRadio2">RNA</label>
+			</div>
+			</p>
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">Salt Concentration</span>
+				</div>
+				<input ng-model="data.salt_concentration" type="number" step=0.01 class="form-control"
+					placeholder="Sets the salt concentration in M" aria-label="sets the salt concentration in M"
+					aria-describedby="basic-addon1">
+			</div>
 
-					var frame = window.frames['editor-frame'];
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">Steps</span>
+				</div>
+				<input ng-model="data.steps" type="number" class="form-control"
+					placeholder="Length of the simulation, in time step" aria-label="sets the salt concentration in M"
+					aria-describedby="basic-addon1">
+			</div>
 
-					var openFiles = function(files) {
-						//console.log(files);
-						//frame.document.dispatchEvent(new Event('drop'));
-						//console.log("EVENT DISPATCHED!")
-						console.log(files);
-						dispatchFakeDrop(files);
-					}
+			<p>
+			<h6>Temperature Units</h6>
+			<div class="form-check form-check-inline">
+				<input ng-model="auxillary.temperature_units" class="form-check-input" type="radio"
+					name="temperature_units" id="inlineRadio1" value="kelvin">
+				<label class="form-check-label" for="inlineRadio1">Kelvin</label>
+			</div>
+			<div class="form-check form-check-inline">
+				<input ng-model="auxillary.temperature_units" class="form-check-input" type="radio"
+					name="temperature_units" id="inlineRadio1" value="celsius">
+				<label class="form-check-label" for="inlineRadio2">Celsius</label>
+			</div>
+			</p>
 
-					var dispatchFakeDrop = function(files) {
-						console.log("called");
-						var fakeDropEvent = new DragEvent('drop');
-					// You override dataTransfer with whichever property
-					// and method the drop function needs
 
-					Object.defineProperty(fakeDropEvent, 'dataTransfer', {
-						value: new FakeDataTransfer(files)
-					});
-					frame.renderer.domElement.dispatchEvent(fakeDropEvent);
 
-					}
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">Temperature</span>
+				</div>
+				<input ng-model="auxillary.temperature" type="number" class="form-control"
+					placeholder="Temperature of the simulation" aria-label="sets the salt concentration in M"
+					aria-describedby="basic-addon1">
+			</div>
 
-					var finishedLoading = function() {
-						console.log("child finished loading!");
-						//dispatchFakeDrop();
-					}
+			<p>
+			<h6>Relaxation</h6>
+			<p>
+			<div class="form-check form-check-inline">
+				<input ng-model="data.needs_relax" class="form-check-input" type="checkbox" name="needs_relax"
+					id="inlinecheckbox1" value="true">
+				<label class="form-check-label" for="inlinecheckbox1">Needs Relax</label>
+			</div>
+			</p>
 
-					function FakeDataTransfer(files) {
-					this.dropEffect = 'all';
-					this.effectAllowed = 'all';
-					this.items = [];
-					this.types = ['Files'];
-					this.getData = function() {
+			<p>
+				<a class="btn btn-primary" data-toggle="collapse" href="#relaxParams" role="button"
+					aria-expanded="false" aria-controls="relaxParams">View relax parameters</a>
 
-					return files;
-					};
-					this.files = files;
-					};
+			<div class="collapse" id="relaxParams">
+				<h4>Relax Parameters</h4>
 
-					var files = {};
+				<p>
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="MC_steps">MC steps</span>
+					</div>
+					<input ng-model="data.MC_steps" type="number" class="form-control"
+						placeholder="The number of Monte Carlo steps in the initial relax"
+						aria-label="The number of Monte Carlo steps in the initial relax" aria-describedby="basic">
+				</div>
+				</p>
+				<p>
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="MD_steps">MD steps</span>
+					</div>
+					<input ng-model="data.MD_steps" type="number" class="form-control"
+						placeholder="The number of molecular dynamics steps in the secondary relax"
+						aria-label="The number of molecular dynamics steps in the secondary relax"
+						aria-describedby="basic">
+				</div>
+				</p>
+				<p>
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="MD_dt">MD timestep</span>
+					</div>
+					<input ng-model="data.MD_dt" type="number" step=0.00001 class="form-control"
+						placeholder="The timestep of the MD simulation" aria-label="The timestep of the MD simulation"
+						aria-describedby="basic">
+				</div>
+				</p>
+			</div>
+			</p>
+			</p>
 
-					function FakeDataDownload(file, filename) {
-						console.log("Fake file download: ", file, filename);
-						files[filename] = file;
-					}
+			<p>
+				<a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button"
+					aria-expanded="false" aria-controls="multiCollapseExample1">View advanced parameters</a>
 
-					function TriggerFileDownloads() {
-						frame.makeOutputFiles()
-					}
-				</script>
+			<div class="collapse" id="multiCollapseExample1">
+				<h4>Advanced Parameters</h4>
 
-				<script src="/static/angular.min.js"></script>
-				<script src="/static/script.js"></script>
-				</html>
+				<p>
+				<h6>Backend</h6>
+				<div class="form-check form-check-inline">
+					<input ng-model="data.backend" class="form-check-input" type="radio" name="backend"
+						id="inlineRadio1" value="CPU">
+					<label class="form-check-label" for="inlineRadio1">CPU</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input ng-model="data.backend" class="form-check-input" type="radio" name="backend"
+						id="inlineRadio2" value="CUDA">
+					<label class="form-check-label" for="inlineRadio2">CUDA</label>
+				</div>
+				</p>
+
+				<p>
+				<h6>Simulation timestep</h6>
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">dt</span>
+					</div>
+					<input ng-model="data.dt" type="number" step=0.0001 class="form-control"
+						placeholder="The timestep of integration for the simulation"
+						aria-label="The timestep of integration for the simulation" aria-describedby="basic-addon1">
+				</div>
+				</p>
+
+				<p>
+				<h6>External force file</h6>
+				<input fileread="force_file" type="file" class="form-control-file" id="force-file">
+				</p>
+
+				<p>
+				<h6>Mismatch Repulsion (RNA only)</h6>
+				<div class="form-check form-check-inline">
+					<input ng-model="auxillary.mismatch_repulsion" class="form-check-input" type="radio"
+						name="mismatch_repulsion" id="inlineRadio1" value="true">
+					<label class="form-check-label" for="inlineRadio1">Yes</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input ng-model="auxillary.mismatch_repulsion" class="form-check-input" type="radio"
+						name="mismatch_repulsion" id="inlineRadio2" value="false">
+					<label class="form-check-label" for="inlineRadio2">No</label>
+				</div>
+				</p>
+
+				<p>
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">Print conf_interval</span>
+					</div>
+					<input ng-model="data.print_conf_interval" type="number" class="form-control"
+						placeholder="The time steps between the outputting of configurations"
+						aria-label="sets the salt concentration in M" aria-describedby="basic-addon1">
+				</div>
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">Print energy_every</span>
+					</div>
+					<input ng-model="data.print_energy_every" type="number" class="form-control"
+						placeholder="The time steps between the outputting of energy"
+						aria-label="sets the salt concentration in M" aria-describedby="basic">
+				</div>
+				</p>
+			</div>
+			</p>
+
+			<p>
+				<button ng-click="submitJob()" type="submit" class="btn btn-primary">Submit Job</button>
+			</p>
+
+			<div nf-if="submissionStatus != ''" ng-cloak>
+				<h3>{{submissionStatus}}</h3>
+			</div>
+
+			<div ng-if="error != ''" ng-cloak>
+				<h3>Error</h3>
+				<p>{{error}}</p>
+			</div>
+
+		</div>
+	</div>
+</main>
+{% endblock %}
+
+{% block additionalScript %}
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+	feather.replace()
+
+	var frame = window.frames['editor-frame'];
+
+	var openFiles = function (files) {
+		//console.log(files);
+		//frame.document.dispatchEvent(new Event('drop'));
+		//console.log("EVENT DISPATCHED!")
+		console.log(files);
+		dispatchFakeDrop(files);
+	}
+
+	var dispatchFakeDrop = function (files) {
+		console.log("called");
+		var fakeDropEvent = new DragEvent('drop');
+		// You override dataTransfer with whichever property
+		// and method the drop function needs
+
+		Object.defineProperty(fakeDropEvent, 'dataTransfer', {
+			value: new FakeDataTransfer(files)
+		});
+		frame.renderer.domElement.dispatchEvent(fakeDropEvent);
+
+	}
+
+	var finishedLoading = function () {
+		console.log("child finished loading!");
+		//dispatchFakeDrop();
+	}
+
+	function FakeDataTransfer(files) {
+		this.dropEffect = 'all';
+		this.effectAllowed = 'all';
+		this.items = [];
+		this.types = ['Files'];
+		this.getData = function () {
+
+			return files;
+		};
+		this.files = files;
+	};
+
+	var files = {};
+
+	function FakeDataDownload(file, filename) {
+		console.log("Fake file download: ", file, filename);
+		files[filename] = file;
+	}
+
+	function TriggerFileDownloads() {
+		frame.makeOutputFiles()
+	}
+</script>
+
+<script src="/static/angular.min.js"></script>
+<script src="/static/script.js"></script>
+{% endblock %}

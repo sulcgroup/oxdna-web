@@ -28,7 +28,7 @@ def create_job():
 	if session.get("user_id") is None:
 		return redirect("/login")
 	else:
-		return send_file("templates/index.html")
+		return render_template("index.html")
 
 @app.route('/create_job', methods=['POST'])
 def handle_form():
