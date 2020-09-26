@@ -334,7 +334,7 @@ def jobs():
 	if session.get("user_id") is None:
 		return redirect("/login")
 	else:
-		return send_file("templates/jobs.html")
+		return render_template("jobs.html")
 
 @app.route("/job/<job_id>")
 def view_job(job_id):
