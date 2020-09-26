@@ -1,6 +1,6 @@
 import os
 import sys
-from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort
+from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort, render_template
 import requests
 import Login
 import Job
@@ -637,7 +637,7 @@ def getImage(image=None):
 
 @app.route("/")
 def index():
-	return send_file("templates/landing.html")
+	return render_template("landing.html")
 
 if __name__ == '__main__':
 	app.run(host="0.0.0.0", port=9000)
