@@ -10,6 +10,8 @@ import EmailScript
 
 import Database
 
+from flask import request
+
 defaultJobLimit = 4
 add_user_query = (
 "INSERT INTO Users"
@@ -44,8 +46,8 @@ def registerUser(user, requires_verification=True):
 	user_id = Account.getUserId(name)
 
 	if requires_verification:
-		verifylink = "http://oxdna.org/verify?id={userId}&verify={verifycode}".format(userId = user_id, verifycode = verifycode)
-		EmailScript.SendEmail("-t 0 -n {username} -u {verifylink} -d {email}".format(username = name, verifylink = verifylink, email = name).split(" "))
+		verifylink = request.url_root + "verify?id={userId}&verify={verifycode}".format(userId = user_id, verifycode = verifycode)
+		EmailScript.SendEmail("-t 0 -n {username} -u {verifylink} -d {email}".format(username = firstName, verifylink = verifylink, email = name).split(" "))
 
 	connection.close()
 	return "Success"
