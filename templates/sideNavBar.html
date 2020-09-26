@@ -1,36 +1,61 @@
 <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-    <div class="sidebar-sticky">
+    <div class="sidebar-sticky" ng-cloak>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link" href="/">
+                <a class="nav-link {% if active_page == 'landing' %} active {% endif %}" href="/">
                     <span data-feather="home"></span>
                     Dashboard <span class="sr-only">(current)</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/jobs">
-                    <span data-feather="list"></span>
-                    View Jobs
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/create">
-                    <span data-feather="edit"></span>
-                    Create a Job
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/account">
-                    <span data-feather="user"></span>
-                    My Account	
-                </a>
-            </li>
-            <!--<li class="nav-item">
-                <a class="nav-link" href="/database">
-                    <span data-feather="list"></span>
-                    Database-->
-                </a>
-            </li>
+            {% if session['user_id'] %}
+                <li class="nav-item">
+                    <a class="nav-link {% if active_page == 'jobs' %} active {% endif %}" href="/jobs">
+                        <span data-feather="list"></span>
+                        View Jobs
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_page == 'create' %} active {% endif %}" href="/create">
+                        <span data-feather="edit"></span>
+                        Create A Job
+                    </a>
+                </li>
+
+                <!-- 
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <span data-feather="file-text"></span>
+                        My Files	
+                    </a>
+                </li>
+                -->
+            
+                <li class="nav-item">
+                    <a class="nav-link {% if active_page == 'account' %} active {% endif %}" href="/account">
+                        <span data-feather="user"></span>
+                        My Account
+                    </a>
+                </li>
+            {% endif %}
         </ul>
+
+        {% if session['user_id'] %}
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                <span>JOB HISTORY</span>
+                <a class="d-flex align-items-center text-muted" href="#">
+                </a>
+            </h6>
+
+            {% if job %}
+                <ul class="nav flex-column mb-2">
+                    <li ng-repeat="job in job_history | filter: searchText">
+                        <a class="nav-link" href="/job/{{job.uuid}}">
+                            <span data-feather="file-text"></span>
+                            {{job.name}}
+                        </a>
+                    </li>
+                </ul>
+            {% endif %}
+        {% endif %}
     </div>
 </nav>
