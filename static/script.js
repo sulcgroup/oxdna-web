@@ -646,7 +646,6 @@ app.controller("MainCtrl", function($scope, $http) {
 	$scope.submissionStatus = "";
 	$scope.jobsRunning = 0;
 	$scope.jobsQueued = 0;
-	$scope.email = "";
 
 	$scope.auxillary = {
 		"temperature":20,
@@ -744,22 +743,42 @@ app.controller("MainCtrl", function($scope, $http) {
 		})
 	}
 
-	$scope.registerGuest = function(email) {
+	$scope.registerGuest = function() {
 		return new Promise(resolve => {
 			const request = new XMLHttpRequest();
 			request.open("POST", "/registerguest");
 			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-			request.send(JSON.stringify(email));
+			request.send();
 			request.onload = () => resolve(request.response);
 		});
 	}
 
-	$scope.emailGuest = function(link, email) {
+	$scope.getCookie = function() {
 		return new Promise(resolve => {
 			const request = new XMLHttpRequest();
-			request.open("POST", "/emailguest");
+			request.open("POST", "/getcookie");
 			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-			request.send(JSON.stringify({"email":email, "link":link}));
+			request.send();
+			request.onload = () => resolve(request.response);
+		});
+	}
+
+	$scope.setCookie = function(id) {
+		return new Promise(resolve => {
+			const request = new XMLHttpRequest();
+			request.open("POST", "/setcookie");
+			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			request.send(JSON.stringify(id));
+			request.onload = () => resolve(request.response);
+		});
+	}
+
+	$scope.setSessionId= function(id) {
+		return new Promise(resolve => {
+			const request = new XMLHttpRequest();
+			request.open("POST", "/setsessionid");
+			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			request.send(JSON.stringify(id));
 			request.onload = () => resolve(request.response);
 		});
 	}
@@ -769,31 +788,42 @@ app.controller("MainCtrl", function($scope, $http) {
 		$scope.error = '';
 
 		if (window.location.href.includes("guestcreate")) {
-			if (!$scope.email) {
-				$scope.error = "Invalid email";
-				$scope.submissionStatus = "";
-				return;
-			}
-			const response = await $scope.registerGuest($scope.email).then(res => res);
-			console.log(response);
-			if (response === "User exists") {
-				$scope.error = response;
-				$scope.submissionStatus = "";
-				$scope.$apply();
-				return;
-			}
-			else if (response === "Guest exists") {
-
-			}
-			else if (response === "Success") {
-
+			// GET COOKIE
+			const cookie = await $scope.getCookie().then(res => res);
+			// IF NO COOKIE
+			if (cookie === "-1") {
+				console.log("no cookie", cookie)
+				const response = await $scope.registerGuest().then(res => res);
+				await $scope.setCookie(response);
+                console.log("response", response)
 			}
 			else {
-				$scope.error = "Server error";
-				$scope.submissionStatus = "";
-				$scope.$apply();
-				return;
+				console.log("yes cookie", cookie)
+				await $scope.setSessionId(cookie.replace(/\"/g, ""));
 			}
+
+			console.log("--------------------")
+			// return;
+			// const response = await $scope.registerGuest().then(res => res);
+			// console.log(response);
+			// if (response === "User exists") {
+			// 	$scope.error = response;
+			// 	$scope.submissionStatus = "";
+			// 	$scope.$apply();
+			// 	return;
+			// }
+			// else if (response === "Guest exists") {
+
+			// }
+			// else if (response === "Success") {
+
+			// }
+			// else {
+			// 	$scope.error = "Server error";
+			// 	$scope.submissionStatus = "";
+			// 	$scope.$apply();
+			// 	return;
+			// }
 		}
 		
 		$scope.parseData()
@@ -827,10 +857,8 @@ app.controller("MainCtrl", function($scope, $http) {
 				console.log("post job response:", response)
 				if (response.startsWith("http://")) {
 					console.log("guest")
-					const emailResponse = await $scope.emailGuest(response, $scope.email);
-					console.log(emailResponse);
-					
-					// window.location = "/logout"
+					setTimeout(() => window.open(response, '_blank'), 100);
+					window.location = "/logout";
 				}
 				else if (response === "user job submitted") {
 					console.log(response)

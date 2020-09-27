@@ -742,8 +742,3 @@ def getQueue():
 			queued += 1
 	
 	return str(running) + ' ' + str(queued)
-
-def emailGuest(email,link):
-	jobname = getJobNameForUuid(link.split("/")[-1]).replace(" ", "_")
-	SendEmail("-t 8 -n {username} -j {jobname} -u {link} -d {email}".format(username = email, jobname = jobname, link = link, email = email).split(" "))
-	return "Test email"

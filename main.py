@@ -1,7 +1,7 @@
 import os
 import sys
 import uuid
-from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort
+from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort, make_response
 import requests
 import Login
 import Job
@@ -60,8 +60,15 @@ def handle_form():
 		return "You must be logged in to submit a job!"
 
 	user_id = session["user_id"]
+	if type(user_id) == str:
+		user_id = int(user_id.strip('"'))
 	activeJobCount = Admin.getUserActiveJobCount(user_id)
 	jobLimit = Admin.getJobLimit(user_id)
+	print("SESSIONID", user_id)
+	print(type(user_id))
+	print("MAX", jobLimit)
+	print("CURRENT", activeJobCount)
+
 	if (activeJobCount >= jobLimit):
 		return "You have reached the maximum number of running jobs."
 
@@ -105,18 +112,7 @@ def handle_form():
 
 @app.route("/guestcreate", methods=["GET"])
 def create_guest_job():
-	if session.get("user_id"):
-		return redirect("/create")
-	else:
-		return send_file("templates/guestcreate.html")
-		
-@app.route("/emailguest", methods=["POST"])
-def email_guest():
-	if request.method == "POST":
-		json_data = request.get_json()
-		email = json_data["email"]
-		link = json_data["link"]
-		return Job.emailGuest(email, link)
+	return send_file("templates/guestcreate.html")
 
 @app.route('/cancel_job', methods=['POST'])
 def cancel_job():
@@ -199,16 +195,29 @@ def register():
 		user = request.get_json()
 		return Register.registerUser(user)
 
+@app.route("/getcookie", methods=["POST"])
+def get_cookie():
+	cookie = request.cookies.get('guest_id')
+	return cookie if cookie else "-1"
+
+@app.route("/setcookie", methods=["POST"])
+def set_cookie():
+	id = request.data.decode("utf-8")
+	resp = make_response()
+	resp.set_cookie('guest_id', id)
+	return resp
+
+@app.route("/setsessionid", methods=["POST"])
+def set_session_id():
+	session["user_id"] = request.data.decode("utf-8")
+	return "Success"
+
 @app.route("/registerguest", methods=["POST"])
 def register_guest():
 	print("NOW REGISTERING GUEST USER!")
-
 	if request.method == "POST":
-		email = str(request.data.decode("utf-8")).strip('"')
-		response = Register.registerGuest(email)
-		if (response != "User exists"):
-			session["user_id"] = Account.getUserId(email)
-
+		response = Register.registerGuest()
+		session["user_id"] = response
 		return response
 
 @app.route("/login", methods=["GET", "POST"])

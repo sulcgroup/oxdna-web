@@ -1,5 +1,6 @@
 from __future__ import print_function
 from datetime import date, datetime, timedelta
+from flask import Flask, make_response, render_template, request
 import time
 import Login
 import Account
@@ -7,6 +8,7 @@ import bcrypt
 import os
 import binascii
 import EmailScript
+import random
 
 import Database
 
@@ -17,6 +19,7 @@ add_user_query = (
 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 )
 group_query = ("SELECT `group` FROM Users WHERE username = %s")
+max_id_query = ("SELECT MAX(id) FROM Users")
 
 def registerUser(user, requires_verification=True):
 	connection = Database.pool.get_connection()
@@ -83,13 +86,27 @@ def getGroup(email):
 	connection.close()
 	return result if result else None
 
-def registerGuest(email):
+def getMaxId():
 	connection = Database.pool.get_connection()
-	user_id = Account.getUserId(email)
-	if user_id:
-		return "Guest exists" if getGroup(email) == 1 else "User exists"
+	result = None
+
+	with connection.cursor() as cursor:
+		cursor.execute(max_id_query, ())
+		result = cursor.fetchone()[0]
+
+	connection.close()
+	return result if result else None
+
+
+def registerGuest():
+	connection = Database.pool.get_connection()
+
+	id = getMaxId() + 1
+	# user_id = Account.getUserId(COOKIE)
+	# if user_id:
+		# return "Guest exists" if getGroup(email) == 1 else "User exists"
 	
-	name = email
+	name = str(id)
 	firstName = "Guest"
 	lastName = "Guest"
 	institution = "Guest"
@@ -101,4 +118,4 @@ def registerGuest(email):
 	connection.cursor().execute(add_user_query, user_data)
 
 	connection.close()
-	return "Success"
+	return str(id)
