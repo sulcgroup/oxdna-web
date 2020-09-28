@@ -787,43 +787,16 @@ app.controller("MainCtrl", function($scope, $http) {
 		$scope.submissionStatus = 'Processing submission...';
 		$scope.error = '';
 
+		// Handle guest job submission
 		if (window.location.href.includes("guestcreate")) {
-			// GET COOKIE
 			const cookie = await $scope.getCookie().then(res => res);
-			// IF NO COOKIE
 			if (cookie === "-1") {
-				console.log("no cookie", cookie)
-				const response = await $scope.registerGuest().then(res => res);
-				await $scope.setCookie(response);
-                console.log("response", response)
+				const userId = await $scope.registerGuest().then(res => res);
+				await $scope.setCookie(userId);
 			}
 			else {
-				console.log("yes cookie", cookie)
 				await $scope.setSessionId(cookie.replace(/\"/g, ""));
 			}
-
-			console.log("--------------------")
-			// return;
-			// const response = await $scope.registerGuest().then(res => res);
-			// console.log(response);
-			// if (response === "User exists") {
-			// 	$scope.error = response;
-			// 	$scope.submissionStatus = "";
-			// 	$scope.$apply();
-			// 	return;
-			// }
-			// else if (response === "Guest exists") {
-
-			// }
-			// else if (response === "Success") {
-
-			// }
-			// else {
-			// 	$scope.error = "Server error";
-			// 	$scope.submissionStatus = "";
-			// 	$scope.$apply();
-			// 	return;
-			// }
 		}
 		
 		$scope.parseData()
@@ -854,10 +827,8 @@ app.controller("MainCtrl", function($scope, $http) {
 			if(fullyRead == 2) {
 				$scope.data["files"] = file_data;
 				const response = await $scope.postJob();
-				console.log("post job response:", response)
 				if (response.startsWith("http://")) {
-					console.log("guest")
-					setTimeout(() => window.open(response, '_blank'), 100);
+					window.open(response, '_blank');
 					window.location = "/logout";
 				}
 				else if (response === "user job submitted") {
@@ -865,7 +836,6 @@ app.controller("MainCtrl", function($scope, $http) {
 					window.location = "/jobs";
 				}
 				else {
-					console.log("job submission error")
 					$scope.submissionStatus = '';
 					$scope.error = response;
 					$scope.$apply();

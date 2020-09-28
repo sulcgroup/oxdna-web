@@ -64,10 +64,6 @@ def handle_form():
 		user_id = int(user_id.strip('"'))
 	activeJobCount = Admin.getUserActiveJobCount(user_id)
 	jobLimit = Admin.getJobLimit(user_id)
-	print("SESSIONID", user_id)
-	print(type(user_id))
-	print("MAX", jobLimit)
-	print("CURRENT", activeJobCount)
 
 	if (activeJobCount >= jobLimit):
 		return "You have reached the maximum number of running jobs."

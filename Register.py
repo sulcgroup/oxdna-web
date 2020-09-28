@@ -102,9 +102,6 @@ def registerGuest():
 	connection = Database.pool.get_connection()
 
 	id = getMaxId() + 1
-	# user_id = Account.getUserId(COOKIE)
-	# if user_id:
-		# return "Guest exists" if getGroup(email) == 1 else "User exists"
 	
 	name = str(id)
 	firstName = "Guest"
