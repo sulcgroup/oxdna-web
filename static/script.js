@@ -731,8 +731,7 @@ app.controller("MainCtrl", function($scope, $http) {
 			request.onload = function() {
 				if(request.response.startsWith("Success")) {
 					if (window.location.href.includes("guestcreate")) {
-						const jobLink = "http://localhost:9000/guestjob/" + request.response.replace("Success", "");
-						resolve(jobLink);
+						resolve(request.response);
 					}
 					else resolve("user job submitted");
 				} else {
@@ -792,7 +791,9 @@ app.controller("MainCtrl", function($scope, $http) {
 			const cookie = await $scope.getCookie().then(res => res);
 			if (cookie === "-1") {
 				const userId = await $scope.registerGuest().then(res => res);
-				await $scope.setCookie(userId);
+				if (!isNaN(parseInt(userId))) {
+					await $scope.setCookie(userId);
+				}
 			}
 			else {
 				await $scope.setSessionId(cookie.replace(/\"/g, ""));
@@ -827,12 +828,10 @@ app.controller("MainCtrl", function($scope, $http) {
 			if(fullyRead == 2) {
 				$scope.data["files"] = file_data;
 				const response = await $scope.postJob();
-				if (response.startsWith("http://")) {
-					window.open(response, '_blank');
-					window.location = "/logout";
+				if (response.startsWith("Success")) {
+					window.location = "/guestjob/" + response.replace("Success", "");
 				}
 				else if (response === "user job submitted") {
-					console.log(response)
 					window.location = "/jobs";
 				}
 				else {

@@ -61,7 +61,11 @@ def handle_form():
 
 	user_id = session["user_id"]
 	if type(user_id) == str:
-		user_id = int(user_id.strip('"'))
+		try:
+			user_id = int(user_id.strip('"'))
+		except ValueError:
+			return "Submission error"
+			
 	activeJobCount = Admin.getUserActiveJobCount(user_id)
 	jobLimit = Admin.getJobLimit(user_id)
 
