@@ -16,3 +16,6 @@ cron.txt
 static/oxdna-viewer
 static/oxdna-viewer/*
 static/oxviewer-azdna-integration/*
+
+#password file
+AZDNALogin.txt

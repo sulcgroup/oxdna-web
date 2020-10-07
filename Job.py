@@ -156,6 +156,7 @@ cd {job_directory}""".	format(
 	backend=backend,
 	job_name=job_name
 	)
+		oxdna_binary = "/opt/oxdna-cpu-only/oxDNA/build/bin/oxDNA"
 	
 	else:
 		sbatch_file = """#!/bin/bash
@@ -170,9 +171,10 @@ cd {job_directory}""".	format(
 	backend=backend,
 	job_name=job_name
 	)
+		oxdna_binary = "/opt/oxdna/oxDNA/build/bin/oxDNA"
 
 	for f in input_files:
-		sbatch_file += "\n/opt/oxdna/oxDNA/build/bin/oxDNA {file_name}".format(file_name=f)
+		sbatch_file += "\n{oxdna_binary} {file_name}".format(oxdna_binary = oxdna_binary, file_name=f)
 		if f == "input_relax_MC":
 			sbatch_file += "\n/opt/oxdna_analysis_tools/generate_force.py -o force.txt input_relax_MC MC_relax.dat"
 			sbatch_file += "\nsed -i 's/0\.9/{force}/g' force.txt".format(force=force)
@@ -212,7 +214,7 @@ def createOxDNAInput(parameters, job_directory, file_name, needs_relax):
 			unique_parameters["dt"] = 0.05
 			unique_parameters["lastconf_file"] = "MC_relax.dat"
 			unique_parameters["sim_type"] = "MC"
-			unique_parameters.update([("relax_type", "harmonic_force"), ("max_backbone_force", 10), ("delta_translation", 0.22), ("delta_rotation", 0.22)])
+			unique_parameters.update([("relax_type", "harmonic_force"), ("max_backbone_force", 10), ("delta_translation", 0.02), ("delta_rotation", 0.04)])
 
 
 	#the initial relax is a set length, in monte-carlo on a CPU.
@@ -694,8 +696,8 @@ def getJobStatus(job_name):
 	if cache_entry: 
 		#print("Found CompletedJobsCache entry for:", job_name)
 		return cache_entry
-	else:
-		print("Did not find entry for:", job_name)
+	#else:
+		#print("Did not find entry for:", job_name)
 
 	connection = Database.pool.get_connection()
 	
@@ -713,7 +715,7 @@ def getJobStatus(job_name):
 	#that would make this interface a lot more REST-y too
 	#would just query MySQL only, without ever having to look at the squeue
 	with connection.cursor() as cursor:
-		print("JOB NAME: ", job_name)
+		#print("JOB NAME: ", job_name)
 		cursor.execute(update_status, (status, job_name,))	
 
 	connection.close()
