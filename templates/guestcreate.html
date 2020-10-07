@@ -26,7 +26,6 @@
 <body ng-controller="MainCtrl">
 	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
 		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">oxDNA.org</a>
-		<input ng-model="searchText" class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
 		<ul class="navbar-nav px-3">
 			<li class="nav-item text-nowrap">
 				<a class="nav-link" href="/logout">Sign out</a>
@@ -34,56 +33,21 @@
 		</ul>
 	</nav>
 
-	<div  class="container-fluid">
+	<div>
 		<div class="row">
 			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-				<div class="sidebar-sticky mt-5" ng-cloak>
+				<div class="sidebar-sticky" ng-cloak>
 					<ul class="nav flex-column">
 						<li class="nav-item">
 							<a class="nav-link" href="#">
 								<span data-feather="home"></span>
 								Dashboard <span class="sr-only">(current)</span>
 							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/jobs">
-								<span data-feather="list"></span>
-								View Jobs
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" href="#">
-								<span data-feather="edit"></span>
-								Create A Job	
-							</a>
-						</li>
-
-						<!-- 
-						<li class="nav-item">
-							<a class="nav-link" href="#">
-								<span data-feather="file-text"></span>
-								My Files	
-							</a>
-						</li>
-						-->
-						<li class="nav-item">
-							<a class="nav-link" href="/account">
+                        </li>
+                        <li class="nav-item">
+							<a class="nav-link" href="/login">
 								<span data-feather="user"></span>
-								My Account	
-							</a>
-						</li>
-					</ul>
-
-					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-						<span>JOB HISTORY</span>
-						<a class="d-flex align-items-center text-muted" href="#">
-						</a>
-					</h6>
-					<ul class="nav flex-column mb-2">
-						<li ng-repeat="job in job_history | filter: searchText">
-							<a class="nav-link" href="/job/{{job.uuid}}">
-								<span data-feather="file-text"></span>
-								{{job.name}}
+								Login
 							</a>
 						</li>
 					</ul>
@@ -92,13 +56,17 @@
 
 			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-					<h1 class="h2">Create A Job</h1>
+					<h1 class="h2">Create A Guest Job</h1>
 				</div>
 
 
 				<div class="card">
 					<div class="card-body">
-						<p>You are now creating a job for processing on our servers.</p>
+                        <p>You are now creating a guest job for processing on our servers.</p>
+                        <ul>
+                            <li>The limit of running 4 jobs at a time still applies.</li>
+                            <li>The page for your job will open after you press submit. Make sure to save the link!</li>
+                        </ul>
 						<h4>Server Status</h4>
 						<span>Total jobs currently running: </span><span ng-cloak>{{jobsRunning}}</span><br>
 						<span>Total jobs in queue: </span><span ng-cloak>{{jobsQueued}}</span><br><br>
@@ -276,13 +244,7 @@
 										</div>
 									</p>
 								</div>
-							</p>
-
-							<p>
-								NOTICE
-								
-								Due to a resource allocation bug in oxDNA, GPU jobs may fail with the error "ERROR: No suitable devices available".  We have implemented a workaround, however it will take a few days for affected jobs to clear the queue.  If your job fails with this error, please try resubmitting in a few hours.
-							</p>
+                            </p>
 
 							<p>
 								<button ng-click="submitJob()" type="submit" class="btn btn-primary">Submit Job</button>

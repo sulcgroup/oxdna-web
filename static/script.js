@@ -90,10 +90,12 @@ app.factory("JobsService", function($http) {
 				data[job]["dateString"] = date;
 			}
 
-			data.sort((a,b) => parseInt(b["creation_date"]) - parseInt(a["creation_date"]));
-			data = data.filter(x => x.job_type == 0);
-
-			cb(data);
+			if (data !== "You must be logged in to view your jobs") {
+				data.sort((a,b) => parseInt(b["creation_date"]) - parseInt(a["creation_date"]));
+				data = data.filter(x => x.job_type == 0);
+				cb(data);
+			}
+			
 		}, function errorCallback() {
 			cb([]);
 		});
@@ -347,13 +349,17 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 	updateJobScope = function (data) {
 		console.log("DATA!:", data);
 		$scope.job = data["job_data"][0];
+		const jobstamp = data["job_data"][0]["creation_date"];
+		data["job_data"][0]["dateString"] = new Date(jobstamp * 1000).toLocaleString("en-US");
 		document.title = `oxDNA.org ${data["job_data"][0].name} Analyses`;
 		$scope.associated_jobs = data["associated_jobs"];
+
 		for(job in $scope.associated_jobs) {
 			var timestamp = $scope.associated_jobs[job]["creation_date"];
 			var date = new Date(timestamp * 1000).toLocaleString("en-US");			
 			$scope.associated_jobs[job]["dateString"] = date;
 		}
+
 		$scope.associated_jobs.sort((a, b) => parseInt(b["creation_date"]) - parseInt(a["creation_date"]))
 		$scope.mean = [$scope.associated_jobs.filter(x => x["job_type"] == MEAN)[0]];
 		$scope.align = [$scope.associated_jobs.filter(x => x["job_type"] == ALIGN)[0]];
@@ -430,6 +436,48 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 			url: `/job/update_name/${name}/${$scope.job.uuid}`
 		}).then(() => location.reload());
 	}
+
+	$scope.cancelJob = function(job){
+		var request = new XMLHttpRequest();
+		request.open("POST", "/cancel_job");
+		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+		var payload = {};
+		payload["jobId"] = job.uuid
+
+
+		request.send(JSON.stringify(payload));
+
+		request.onload = function() {
+			console.log(request.response);
+			job.status = "Completed"
+		}
+	}
+
+	$scope.deleteJob = function(job){
+		var request = new XMLHttpRequest();
+		request.open("POST", "/delete_job");
+		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+		var payload = {};
+		payload["jobId"] = job.uuid
+
+
+		request.send(JSON.stringify(payload));
+
+		request.onload = function() {
+			console.log(request.response);
+			job.status = "Deleted"
+			window.location = "/login";
+		}
+	}
+
+	$scope.confirmDelete = function(job) {
+		var r = confirm("Are you sure you want to delete job " + job.name + "?\nAll files related to this job will no longer be available.");
+		if (r == true) {
+		  $scope.deleteJob(job);
+		} 
+	  }
 
 })
 
@@ -595,6 +643,7 @@ app.controller("MainCtrl", function($scope, $http) {
 
 	$scope.data = {};
 	$scope.error = "";
+	$scope.submissionStatus = "";
 	$scope.jobsRunning = 0;
 	$scope.jobsQueued = 0;
 
@@ -658,48 +707,98 @@ app.controller("MainCtrl", function($scope, $http) {
 	$scope.setDefaults();
 	$scope.getQueue();
 
-	$scope.submissionStatus = '';
-
-
 	$scope.postJob = function() {
-
 		//At this point
 		//all data has been parsed, files have been read into a JSON bundle
 		//and is sent to the server
 
-		var request = new XMLHttpRequest();
-		request.open("POST", "/create_job");
-		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		return new Promise (resolve => {
+			const request = new XMLHttpRequest();
+			request.open("POST", "/create_job");
+			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-		var payload = {};
-		payload["files"] = $scope.data["files"];
-		delete $scope.data["files"];
-		if ($scope.data["force_file"]) {
-			payload["force_file"] = $scope.data["force_file"];
-			delete $scope.data["force_file"];
-		}
-		payload["parameters"] = $scope.data;
-
-		request.send(JSON.stringify(payload));
-
-		request.onload = function() {
-			if(request.response == "Success") {
-				window.location = "/jobs";
-				console.log("Job submission was a success!")
-			} else {
-				$scope.submissionStatus = '';
-				$scope.error = request.response;
-				$scope.$apply();
-
-				console.log("Error set?:", $scope.error)
+			const payload = {};
+			payload["files"] = $scope.data["files"];
+			delete $scope.data["files"];
+			if ($scope.data["force_file"]) {
+				payload["force_file"] = $scope.data["force_file"];
+				delete $scope.data["force_file"];
 			}
-			console.log(request.response);
-			//window.location = "/jobs"
-		}
+			payload["parameters"] = $scope.data;
+
+			request.send(JSON.stringify(payload));
+
+			request.onload = function() {
+				if(request.response.startsWith("Success")) {
+					if (window.location.href.includes("guestcreate")) {
+						resolve(request.response);
+					}
+					else resolve("user job submitted");
+				} else {
+					resolve(request.response)
+				}
+				console.log(request.response);
+			}
+		})
 	}
 
-	$scope.submitJob = function() {
+	$scope.registerGuest = function() {
+		return new Promise(resolve => {
+			const request = new XMLHttpRequest();
+			request.open("POST", "/registerguest");
+			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			request.send();
+			request.onload = () => resolve(request.response);
+		});
+	}
+
+	$scope.getCookie = function() {
+		return new Promise(resolve => {
+			const request = new XMLHttpRequest();
+			request.open("POST", "/getcookie");
+			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			request.send();
+			request.onload = () => resolve(request.response);
+		});
+	}
+
+	$scope.setCookie = function(id) {
+		return new Promise(resolve => {
+			const request = new XMLHttpRequest();
+			request.open("POST", "/setcookie");
+			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			request.send(JSON.stringify(id));
+			request.onload = () => resolve(request.response);
+		});
+	}
+
+	$scope.setSessionId= function(id) {
+		return new Promise(resolve => {
+			const request = new XMLHttpRequest();
+			request.open("POST", "/setsessionid");
+			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			request.send(JSON.stringify(id));
+			request.onload = () => resolve(request.response);
+		});
+	}
+
+	$scope.submitJob = async function() {
 		$scope.submissionStatus = 'Processing submission...';
+		$scope.error = '';
+
+		// Handle guest job submission
+		if (window.location.href.includes("guestcreate")) {
+			const cookie = await $scope.getCookie().then(res => res);
+			if (cookie === "-1") {
+				const userId = await $scope.registerGuest().then(res => res);
+				if (!isNaN(parseInt(userId))) {
+					await $scope.setCookie(userId);
+				}
+			}
+			else {
+				await $scope.setSessionId(cookie.replace(/\"/g, ""));
+			}
+		}
 		
 		$scope.parseData()
 		TriggerFileDownloads();
@@ -725,10 +824,21 @@ app.controller("MainCtrl", function($scope, $http) {
  			reader.readAsText(files[fileName])
 		}
 
-		var readCallback = function() {
+		var readCallback = async function() {
 			if(fullyRead == 2) {
 				$scope.data["files"] = file_data;
-				$scope.postJob();
+				const response = await $scope.postJob();
+				if (response.startsWith("Success")) {
+					window.location = "/guestjob/" + response.replace("Success", "");
+				}
+				else if (response === "user job submitted") {
+					window.location = "/jobs";
+				}
+				else {
+					$scope.submissionStatus = '';
+					$scope.error = response;
+					$scope.$apply();
+				}
 			}
 		}
 	}
