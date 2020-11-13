@@ -387,7 +387,6 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 							if (job.job_type === 3 || job.job_type === 6 || job.job_type === 7) {
 								reload(`traj_${job.uuid}`);
 								reload(`hist_${job.uuid}`);
-
 							}
 						}
 					});
@@ -398,6 +397,33 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 			}
 			$scope.$apply();
 		}, 1000);
+	}
+
+	$scope.updateJobStatus = function(){
+		const jobUpdate = setInterval(() => {
+			let keepUpdating = false;
+			const job = $scope.job;
+			if (job.status !== "Completed") {
+				keepUpdating = true;
+				$http({
+					method: 'GET',
+					url: `/api/jobs_status/${job.uuid}`
+				}).then(response => {
+					if (response.data !== job.status) {
+						$scope.job.status = response.data;
+						$scope.getQueue();
+					}
+				});
+			}
+			if (!keepUpdating) {
+				clearInterval(jobUpdate);
+				return;
+			}
+			$scope.$apply();
+		}, 1000);
+	}
+	if (window.location.href.includes("guestjob")) {
+		$scope.updateJobStatus();
 	}
 
 	// Helper for $scope.updateStatus
@@ -830,7 +856,11 @@ app.controller("MainCtrl", function($scope, $http) {
 				$scope.data["files"] = file_data;
 				const response = await $scope.postJob();
 				if (response.startsWith("Success")) {
-					window.location = "/guestjob/" + response.replace("Success", "");
+					setTimeout(() => {
+						console.log("RELOAD 1")
+						window.location = "/guestjob/" + response.replace("Success", "");
+						console.log("RELOAD 1")
+					}, 100);
 				}
 				else if (response === "user job submitted") {
 					window.location = "/jobs";
