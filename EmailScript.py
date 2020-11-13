@@ -90,8 +90,9 @@ def SendEmail(args):
 		#print(mailtosend[0])
 		subject = subject.replace("\n", "")
 		subject = codecs.decode(subject, 'unicode_escape')
-		print("EMAIL SENT!")
+
 		yag.send(argdict.get("d")[0], subject, mailtosend)
+		print("EMAIL SENT!")
 
 #parse arguments
 if("-h" in sys.argv):

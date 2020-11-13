@@ -650,7 +650,8 @@ app.controller("MainCtrl", function($scope, $http) {
 	$scope.auxillary = {
 		"temperature":20,
 		"temperature_units":"celsius",
-		"mismatch_repulsion":"false"
+		"mismatch_repulsion":"false",
+		"use_average_seq":"true"
 	}
 
 	$scope.getQueue = function() {
@@ -669,11 +670,11 @@ app.controller("MainCtrl", function($scope, $http) {
 		//convert all boolean values from strings to actual booleans
 		for(key in $scope.auxillary) {
 			var value = $scope.auxillary[key];
-			if(key === "false") {
-				$scope.data[key] = false;
+			if(value === "false") {
+				$scope.data[key] = 0;
 			}
-			if(key === "true") {
-				$scope.data[key] = true;
+			if(value === "true") {
+				$scope.data[key] = 1;
 			}
 		}
 

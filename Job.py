@@ -307,8 +307,6 @@ def createAnalysisForUserIdWithJob(userId, analysis_parameters):
 
 	jobId = analysis_parameters["jobId"]
 	analysis_type = analysis_parameters["type"]
-	print(analysis_type)
-	print(analysis_parameters)
 	if analysis_type == "mean":
 		analysis_parameters["name"] = "mean"
 	elif analysis_type == "align":
@@ -325,11 +323,10 @@ def createAnalysisForUserIdWithJob(userId, analysis_parameters):
 	user_directory = "/users/"+str(userId) + "/"
 	job_directory = user_directory + jobId + "/"
 
-	print("Now creating analysis file...")
 	createSlurmAnalysisFile(job_directory, randomAnalysisId, analysis_type, analysis_parameters)
 	job_number = startSlurmAnalysis(job_directory)
 
-	print("Creating analysis now..., received job number:", job_number)
+	print("Creating analysis for user {}, received job number: {}".format(userId, job_number), flush=True)
 
 	update_data = (
 		jobId,
@@ -410,6 +407,12 @@ def createJobForUserIdWithData(userId, jsonData, randomJobId):
 	#empty optional parameters need to be removed from the list
 	if parameters["external_forces_file"] == '':
 		parameters.pop("external_forces_file")
+
+	if parameters["use_average_seq"] == 0:
+		if parameters["interaction_type"] == "DNA2":
+			parameters.update({"seq_dep_file":"/opt/oxdna/oxDNA/oxDNA2_sequence_dependent_parameters.txt"})
+		if parameters["interaction_type"] == "RNA2":
+			parameters.update({"seq_dep_file":"/opt/oxdna/oxDNA/rna_sequence_dependent_parameters.txt"})
 
 	input_files = createOxDNAFile(parameters, job_directory, needs_relax)
 	createSlurmJobFile(job_directory, randomJobId, backend, input_files, force=relax_force)
@@ -580,15 +583,6 @@ def runOneStepJob(job_directory):
 	)
 	stdout, stderr = pipe.communicate()
 
-	'''
-	print("OUT:", stdout)
-	print("\n\n\n\n-------------_")
-	print("ERR:", stderr)
-	print("\n\n\n\n-------------_")
-	print(len(stdout), len(stderr))
-	print("\n\n\n\n-------------_")
-	'''
-
 	if len(stdout) == 0 and len(stderr) > 0:
 		return False, stderr
 	else:
@@ -640,7 +634,7 @@ def cancelJob(job_name):
 	connection.close()
 
 def deleteJob(job_uuid):
-	print("Deleting Job")
+	print("Deleting Job {}".format(job_uuid), flush=True)
 	#need job name and user id
 	#get user id
 
