@@ -87,9 +87,9 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 	}
 
 	if analysis_type == "mean":
-		run_command = "compute_mean.py -p {n} -d deviations.json -f oxDNA -o mean.dat trajectory.dat output.top".format(n = cpu_allocation[analysis_type])
+		run_command = "compute_mean.py -p {n} -d deviations.json -f oxDNA -o mean.dat trajectory.dat".format(n = cpu_allocation[analysis_type])
 	elif analysis_type == "align":
-		run_command = "align_trajectory.py trajectory.dat output.top aligned.dat\npython3 /opt/zip_traj.py aligned.dat aligned.zip\nrm aligned.dat"
+		run_command = "align_trajectory.py trajectory.dat aligned.dat\npython3 /opt/zip_traj.py aligned.dat aligned.zip\nrm aligned.dat"
 	elif analysis_type == "distance":
 		job_output_file = job_directory + analysis_parameters["name"] +".log"
 		p1s = analysis_parameters["p1"].split(" ")
