@@ -72,3 +72,13 @@ Your job "<j>" has been completed. You can access it at the following link <u>.
 
 <TAIL>
 ;;
+OxDNA Guest Job Submission
+::
+<HEADER>
+
+Your job has been submitted. You can access it at the following link <u>.
+
+Please keep in mind the limit of 4 jobs per user. Subsequent submissions will delete the oldest job, and any job older than a week will be deleted automatically.
+
+<TAIL>
+;;

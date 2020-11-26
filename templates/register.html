@@ -65,10 +65,10 @@
 		</ul>
 	</nav>
 
-	<div class="container-fluid">
+	<div  class="container-fluid">
 		<div class="row">
 			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-				<div class="sidebar-sticky" ng-cloak>
+				<div class="sidebar-sticky mt-5" ng-cloak>
 					<ul class="nav flex-column">
 						<li class="nav-item">
 							<a class="nav-link" href="/">
@@ -153,13 +153,17 @@
 									<input ng-model="user.password" name="password" id="password" type="password">
 									<span class="font-weight-normal text-danger">{{errors.password}}</span>
 								</p>
+								<br/><br/>
+								<p class="card-body" style="margin-left: 0.55em; display: inline;"> 
+									<input ng-model="user.iAgree" name="iAgree" id="iAgree" type="checkbox">
+									I agree with Terms and Conditions of the server usage, as specified <a href="https://oxdna.org">here</a>
+									<span class="font-weight-normal text-danger">{{errors.iAgree}}</span>
+								</p>
 								<br><br>
+								
 								<p><sup class="font-weight-bold">*</sup>You must check for an email to verify your account before running simulations.</p>
 								<input ng-click="register(user)" type="submit"> {{loadingMessage}}
 							</form>
-						</div>
-						<div class="card-body">
-							By registering, you agree with the Terms and Conditions of Use, as specified <a href="https://oxdna.org">here</a>
 						</div>
 						
 					</div>

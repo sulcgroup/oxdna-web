@@ -1,6 +1,7 @@
 import os
 import sys
-from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort
+import uuid
+from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort, make_response
 import requests
 import Login
 import Job
@@ -59,8 +60,15 @@ def handle_form():
 		return "You must be logged in to submit a job!"
 
 	user_id = session["user_id"]
+	if type(user_id) == str:
+		try:
+			user_id = int(user_id.strip('"'))
+		except ValueError:
+			return "Submission error"
+			
 	activeJobCount = Admin.getUserActiveJobCount(user_id)
 	jobLimit = Admin.getJobLimit(user_id)
+
 	if (activeJobCount >= jobLimit):
 		return "You have reached the maximum number of running jobs."
 
@@ -94,13 +102,17 @@ def handle_form():
 		"parameters": parameters, 
 		"files": files
 	}
-
-	success, error_message = Job.createJobForUserIdWithData(user_id, job_data)
+	job_id = str(uuid.uuid4())
+	success, error_message = Job.createJobForUserIdWithData(user_id, job_data, job_id)
 
 	if success:
-		return "Success"
+		return "Success" + job_id
 	else:
 		return error_message
+
+@app.route("/guestcreate", methods=["GET"])
+def create_guest_job():
+	return send_file("templates/guestcreate.html")
 
 @app.route('/cancel_job', methods=['POST'])
 def cancel_job():
@@ -182,6 +194,31 @@ def register():
 	if request.method == "POST":
 		user = request.get_json()
 		return Register.registerUser(user)
+
+@app.route("/getcookie", methods=["POST"])
+def get_cookie():
+	cookie = request.cookies.get('guest_id')
+	return cookie if cookie else "-1"
+
+@app.route("/setcookie", methods=["POST"])
+def set_cookie():
+	id = request.data.decode("utf-8")
+	resp = make_response()
+	resp.set_cookie('guest_id', id)
+	return resp
+
+@app.route("/setsessionid", methods=["POST"])
+def set_session_id():
+	session["user_id"] = request.data.decode("utf-8")
+	return "Success"
+
+@app.route("/registerguest", methods=["POST"])
+def register_guest():
+	print("NOW REGISTERING GUEST USER!")
+	if request.method == "POST":
+		response = Register.registerGuest()
+		session["user_id"] = response
+		return response
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -335,6 +372,11 @@ def jobs():
 		return redirect("/login")
 	else:
 		return send_file("templates/jobs.html")
+
+@app.route("/guestjob/<job_id>")
+def view_guest_job(job_id):
+	session["user_id"] = Job.getUserIdForJob(job_id)
+	return send_file("templates/guestjob.html")
 
 @app.route("/job/<job_id>")
 def view_job(job_id):
