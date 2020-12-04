@@ -10,6 +10,7 @@ find_by_user_id_query = ("SELECT id, password FROM Users WHERE id = %s")
 update_password_query = ("UPDATE Users SET password = %s WHERE id = %s")
 get_verified_query = ("SELECT verified FROM Users WHERE id = %s")
 
+
 def loginUser(username, password):
 
 	print("Now logging in user:", username)

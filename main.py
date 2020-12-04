@@ -1,6 +1,7 @@
 import os
 import sys
-from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort, render_template
+import uuid
+from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort, make_response, render_template
 import requests
 import Login
 import Job
@@ -25,10 +26,7 @@ def after_request(response):
 
 @app.route('/create', methods=['GET'])
 def create_job():
-	if session.get("user_id") is None:
-		return redirect("/login")
-	else:
-		return render_template("index.html")
+	return render_template("index.html")
 
 @app.route('/create_job', methods=['POST'])
 def handle_form():
@@ -55,12 +53,19 @@ def handle_form():
 			if key not in parameters:
 				parameters[key] = default_parameters[key]
 
-	if session.get("user_id") is None:
-		return "You must be logged in to submit a job!"
+	#if session.get("user_id") is None:
+	#	return "You must be logged in to submit a job!"
 
 	user_id = session["user_id"]
+	if type(user_id) == str:
+		try:
+			user_id = int(user_id.strip('"'))
+		except ValueError:
+			return "Submission error"
+			
 	activeJobCount = Admin.getUserActiveJobCount(user_id)
 	jobLimit = Admin.getJobLimit(user_id)
+
 	if (activeJobCount >= jobLimit):
 		return "You have reached the maximum number of running jobs."
 
@@ -94,13 +99,17 @@ def handle_form():
 		"parameters": parameters, 
 		"files": files
 	}
-
-	success, error_message = Job.createJobForUserIdWithData(user_id, job_data)
+	job_id = str(uuid.uuid4())
+	success, error_message = Job.createJobForUserIdWithData(user_id, job_data, job_id)
 
 	if success:
-		return "Success"
+		return "Success" + job_id
 	else:
 		return error_message
+
+@app.route("/guestcreate", methods=["GET"])
+def create_guest_job():
+	return render_template("guestcreate.html")
 
 @app.route('/cancel_job', methods=['POST'])
 def cancel_job():
@@ -140,7 +149,6 @@ def create_analysis():#jobId, analysis_type):
 
 	json_data = request.get_json()
 	from sys import stderr
-	print(json_data, file=stderr)
 
 	userId = session["user_id"]
 
@@ -177,17 +185,48 @@ def register():
 	print("NOW REGISTERING USER!")
 
 	if request.method == "GET":
-		return send_file("templates/register.html")
+		return render_template("register.html")
 
 	if request.method == "POST":
 		user = request.get_json()
 		return Register.registerUser(user)
 
+@app.route("/getcookie", methods=["POST"])
+def get_cookie():
+	cookie = request.cookies.get('guest_id')
+	return cookie if cookie else "-1"
+
+@app.route("/setcookie", methods=["POST"])
+def set_cookie():
+	id = request.data.decode("utf-8")
+	resp = make_response()
+	resp.set_cookie('guest_id', id)
+	return resp
+
+@app.route("/setsessionid", methods=["POST"])
+def set_session_id():
+	session["user_id"] = request.data.decode("utf-8")
+	session["name"] = Account.getFirstName(session[user_id])
+	return "Success"
+
+@app.route("/getsessionid", methods=["POST"])
+def get_session_id():
+	return session["user_id"] if session["user_id"] else "None"
+
+@app.route("/registerguest", methods=["POST"])
+def register_guest():
+	print("NOW REGISTERING GUEST USER!")
+	if request.method == "POST":
+		response = Register.registerGuest()
+		session["user_id"] = response
+		session["name"] = Account.getFirstName()
+		return response
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
 	if request.method == "GET":
-		return send_file("templates/login.html")
+		return render_template("login.html")
 
 	if request.method == "POST":
 		username = request.form["username"]
@@ -196,6 +235,7 @@ def login():
 		user_id = Login.loginUser(username, password)
 		if(user_id > -1):
 			session["user_id"] = user_id
+			session["name"] = Account.getFirstName(user_id)
 			return redirect("/")
 		elif(user_id == -2):
 			return "Error, user not verified. Please verify using the link sent to the email you registered with."
@@ -207,6 +247,7 @@ def login():
 @app.route("/logout")
 def logout():
 	session["user_id"] = None
+	session["name"] = None
 	return redirect("/")
 
 
@@ -336,13 +377,19 @@ def jobs():
 	else:
 		return render_template("jobs.html")
 
+@app.route("/guestjob/<job_id>")
+def view_guest_job(job_id):
+	session["user_id"] = Job.getUserIdForJob(job_id)
+	session["name"] = Account.getFirstName(user_id)
+	return render_template("guestjob.html")
+
 @app.route("/job/<job_id>")
 def view_job(job_id):
 
 	if session.get("user_id") is None:
 		return redirect("/login")
 	else:
-		return send_file("templates/job.html")
+		return render_template("job.html")
 
 @app.route("/job/update_name/<name>/<uuid>")
 def update_job_name(name, uuid):
@@ -439,7 +486,6 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 
 	if "log" in desired_output_map:
 		try:
-			print(desired_file_path)
 			desired_file = open(desired_file_path, "r")
 			desired_file_contents = desired_file.read()
 			return Response(desired_file_contents, mimetype='text/plain')
@@ -522,7 +568,7 @@ def admin():
 	userID = session.get("user_id")
 	isAdmin = Admin.checkIfAdmin(userID)
 	if isAdmin == 1:
-		return send_file("templates/admin.html")
+		return render_template("admin.html")
 	else:
 		return "You must be an admin to access this page."
 
@@ -628,8 +674,6 @@ def getUserInfo(username):
 
 @app.route("/images/<image>")
 def getImage(image=None):
-	print(image)
-	print(os.path.isfile("images/{}".format(image)), flush=True)
 	if os.path.isfile("images/{}".format(image)):
 		return send_file("images/{}".format(image))
 	else:

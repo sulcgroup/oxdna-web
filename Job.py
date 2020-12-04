@@ -9,6 +9,8 @@ import Database
 import Cache
 import Admin
 import Utilities
+from EmailScript import SendEmail
+
 
 add_job_query = (
 	"INSERT INTO Jobs "
@@ -27,8 +29,18 @@ remove_jobs_for_user_id = ("DELETE FROM Jobs WHERE userId = %s")
 get_status = ("SELECT status FROM Jobs WHERE uuid = %s")
 update_status = ("UPDATE Jobs SET status = %s WHERE uuid = %s")
 
+def getUserIdForJob(job_id):
+	connection = Database.pool.get_connection()
+	result = None
 
-def startSlurmJob(job_directory, job_id):
+	with connection.cursor() as cursor:
+		cursor.execute(get_userId_for_job_uuid, (job_id,))
+		result = cursor.fetchone()[0]
+
+	connection.close()
+	return result
+
+def startSlurmJob(job_directory):
 	sbatch_file = job_directory + "sbatch.sh"
 	
 	pipe = subprocess.Popen(["sbatch", sbatch_file], stdout=subprocess.PIPE)
@@ -75,9 +87,9 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 	}
 
 	if analysis_type == "mean":
-		run_command = "compute_mean.py -p {n} -d deviations.json -f oxDNA -o mean.dat trajectory.dat output.top".format(n = cpu_allocation[analysis_type])
+		run_command = "compute_mean.py -p {n} -d deviations.json -f oxDNA -o mean.dat trajectory.dat".format(n = cpu_allocation[analysis_type])
 	elif analysis_type == "align":
-		run_command = "align_trajectory.py trajectory.dat output.top aligned.dat\npython3 /opt/zip_traj.py aligned.dat aligned.zip\nrm aligned.dat"
+		run_command = "align_trajectory.py trajectory.dat aligned.dat\npython3 /opt/zip_traj.py aligned.dat aligned.zip\nrm aligned.dat"
 	elif analysis_type == "distance":
 		job_output_file = job_directory + analysis_parameters["name"] +".log"
 		p1s = analysis_parameters["p1"].split(" ")
@@ -156,6 +168,7 @@ cd {job_directory}""".	format(
 	backend=backend,
 	job_name=job_name
 	)
+		oxdna_binary = "/opt/oxdna-cpu-only/oxDNA/build/bin/oxDNA"
 	
 	else:
 		sbatch_file = """#!/bin/bash
@@ -170,9 +183,10 @@ cd {job_directory}""".	format(
 	backend=backend,
 	job_name=job_name
 	)
+		oxdna_binary = "/opt/oxdna/oxDNA/build/bin/oxDNA"
 
 	for f in input_files:
-		sbatch_file += "\n/opt/oxdna/oxDNA/build/bin/oxDNA {file_name}".format(file_name=f)
+		sbatch_file += "\n{oxdna_binary} {file_name}".format(oxdna_binary = oxdna_binary, file_name=f)
 		if f == "input_relax_MC":
 			sbatch_file += "\n/opt/oxdna_analysis_tools/generate_force.py -o force.txt input_relax_MC MC_relax.dat"
 			sbatch_file += "\nsed -i 's/0\.9/{force}/g' force.txt".format(force=force)
@@ -212,7 +226,7 @@ def createOxDNAInput(parameters, job_directory, file_name, needs_relax):
 			unique_parameters["dt"] = 0.05
 			unique_parameters["lastconf_file"] = "MC_relax.dat"
 			unique_parameters["sim_type"] = "MC"
-			unique_parameters.update([("relax_type", "harmonic_force"), ("max_backbone_force", 10), ("delta_translation", 0.22), ("delta_rotation", 0.22)])
+			unique_parameters.update([("relax_type", "harmonic_force"), ("max_backbone_force", 10), ("delta_translation", 0.02), ("delta_rotation", 0.04)])
 
 
 	#the initial relax is a set length, in monte-carlo on a CPU.
@@ -293,8 +307,6 @@ def createAnalysisForUserIdWithJob(userId, analysis_parameters):
 
 	jobId = analysis_parameters["jobId"]
 	analysis_type = analysis_parameters["type"]
-	print(analysis_type)
-	print(analysis_parameters)
 	if analysis_type == "mean":
 		analysis_parameters["name"] = "mean"
 	elif analysis_type == "align":
@@ -311,11 +323,10 @@ def createAnalysisForUserIdWithJob(userId, analysis_parameters):
 	user_directory = "/users/"+str(userId) + "/"
 	job_directory = user_directory + jobId + "/"
 
-	print("Now creating analysis file...")
 	createSlurmAnalysisFile(job_directory, randomAnalysisId, analysis_type, analysis_parameters)
 	job_number = startSlurmAnalysis(job_directory)
 
-	print("Creating analysis now..., received job number:", job_number)
+	print("Creating analysis for user {}, received job number: {}".format(userId, job_number), flush=True)
 
 	update_data = (
 		jobId,
@@ -342,9 +353,7 @@ def createAnalysisForUserIdWithJob(userId, analysis_parameters):
 	return randomAnalysisId
 
 
-def createJobForUserIdWithData(userId, jsonData):
-	randomJobId = str(uuid.uuid4())
-
+def createJobForUserIdWithData(userId, jsonData, randomJobId):
 	user_directory = "/users/"+str(userId) + "/"
 	job_directory = user_directory + randomJobId + "/"
 	print("Creating job {uuid} for user {user}".format(uuid=randomJobId, user=userId), flush=True)
@@ -399,6 +408,12 @@ def createJobForUserIdWithData(userId, jsonData):
 	if parameters["external_forces_file"] == '':
 		parameters.pop("external_forces_file")
 
+	if parameters["use_average_seq"] == 0:
+		if parameters["interaction_type"] == "DNA2":
+			parameters.update({"seq_dep_file":"/opt/oxdna/oxDNA/oxDNA2_sequence_dependent_parameters.txt"})
+		if parameters["interaction_type"] == "RNA2":
+			parameters.update({"seq_dep_file":"/opt/oxdna/oxDNA/rna_sequence_dependent_parameters.txt"})
+
 	input_files = createOxDNAFile(parameters, job_directory, needs_relax)
 	createSlurmJobFile(job_directory, randomJobId, backend, input_files, force=relax_force)
 		
@@ -411,7 +426,7 @@ def createJobForUserIdWithData(userId, jsonData):
 		return False, error
 	
 
-	job_number = startSlurmJob(job_directory, randomJobId)
+	job_number = startSlurmJob(job_directory)
 	job_title = parameters["job_title"]
 
 	job_data = (
@@ -568,15 +583,6 @@ def runOneStepJob(job_directory):
 	)
 	stdout, stderr = pipe.communicate()
 
-	'''
-	print("OUT:", stdout)
-	print("\n\n\n\n-------------_")
-	print("ERR:", stderr)
-	print("\n\n\n\n-------------_")
-	print(len(stdout), len(stderr))
-	print("\n\n\n\n-------------_")
-	'''
-
 	if len(stdout) == 0 and len(stderr) > 0:
 		return False, stderr
 	else:
@@ -628,7 +634,7 @@ def cancelJob(job_name):
 	connection.close()
 
 def deleteJob(job_uuid):
-	print("Deleting Job")
+	print("Deleting Job {}".format(job_uuid), flush=True)
 	#need job name and user id
 	#get user id
 
@@ -694,8 +700,8 @@ def getJobStatus(job_name):
 	if cache_entry: 
 		#print("Found CompletedJobsCache entry for:", job_name)
 		return cache_entry
-	else:
-		print("Did not find entry for:", job_name)
+	#else:
+		#print("Did not find entry for:", job_name)
 
 	connection = Database.pool.get_connection()
 	
@@ -713,7 +719,7 @@ def getJobStatus(job_name):
 	#that would make this interface a lot more REST-y too
 	#would just query MySQL only, without ever having to look at the squeue
 	with connection.cursor() as cursor:
-		print("JOB NAME: ", job_name)
+		#print("JOB NAME: ", job_name)
 		cursor.execute(update_status, (status, job_name,))	
 
 	connection.close()

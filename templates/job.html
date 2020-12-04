@@ -1,42 +1,11 @@
-<html ng-app="app" ng-controller="AppCtrl">
-<head>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-173472997-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+{% extends 'base.html' %}
+{% set active_page = "job" %}
+{% set page_controller = "JobCtrl" %}
 
-  gtag('config', 'UA-173472997-1');
-</script>
-
-	<title></title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-
-</head>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css">
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<script src="https://kit.fontawesome.com/7edb57c827.js" crossorigin="anonymous"></script>
-
-<script>
-	$(document).ready(function(){
-    $('[data-toggle=tooltip]').hover(function(){
-        // on mouseenter
-        $(this).tooltip('show');
-    }, function(){
-        // on mouseleave
-        $(this).tooltip('hide');
-    });
-});
-</script>
+{% block title %}Job{% endblock %}
 
 
-<link rel="stylesheet" href="/static/style.css">
+{% block additionalStylesheet %}
 <style>
 	table, th , td {
 	  border: 1px solid grey;
@@ -81,446 +50,316 @@
 		padding-left: 20px;
 	}
 	</style>
-<body ng-controller="JobCtrl">
-	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">oxDNA.org</a>
-		<input ng-model="searchText" class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
-		<ul class="navbar-nav px-3">
-			<li class="nav-item text-nowrap">
-				<a class="nav-link" href="/logout">Sign out</a>
-			</li>
-		</ul>
-	</nav>
+{% endblock %}
 
-	<div>
-		<div class="row">
-			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-				<div class="sidebar-sticky" ng-cloak>
-					<ul class="nav flex-column">
-						<li class="nav-item">
-							<a class="nav-link" href="/">
-								<span data-feather="home"></span>
-								Dashboard <span class="sr-only">(current)</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" href="/jobs">
-								<span data-feather="list"></span>
-								View Jobs
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/create">
-								<span data-feather="edit"></span>
-								Create A Job	
-							</a>
-						</li>
-
-						<!--
-						<li class="nav-item">
-							<a class="nav-link" href="#">
-								<span data-feather="file-text"></span>
-								My Files	
-							</a>
-						</li>
-						!--> 
-
-						<li class="nav-item">
-							<a class="nav-link" href="/account">
-								<span data-feather="user"></span>
-								My Account	
-							</a>
-						</li>
-					</ul>
-
-					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-						<span>JOB HISTORY</span>
-						<a class="d-flex align-items-center text-muted" href="#">
-						</a>
-					</h6>
-					<ul class="nav flex-column mb-2">
-					<ul class="nav flex-column mb-2">
-						<li ng-repeat="job in job_history | filter: searchText">
-							<a class="nav-link" href="/job/{{job.uuid}}">
-								<span data-feather="file-text"></span>
-								{{job.name}}
-							</a>
-						</li>
-					</ul>
-				</div>
-			</nav>
-
-			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4" ng-cloak>
-				<div class="pb-2 mb-3 border-bottom">
-					<h1 class="h2 d-inline-block">Viewing Analyses for Job:</h1>
-					<input class="h2 d-inline-block" id="job-name" type="text" value={{job.name}} size={{job.name.length}}
-						   onkeydown="this.size = this.value.length < 1 ? 1 : this.value.length">
-					<button class="rounded" type="button" ng-click="updateJobName()">Change Name</button>
-					<a class="h2 d-inline-block text-primary float-right" target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{job.uuid}}/last_conf&topology=/job_output/{{job.uuid}}/topology">View Last Configuration</a>
-				</div>
+{% block content %}
+	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4" ng-cloak>
+		<div class="pb-2 mb-3 border-bottom">
+			<h1 class="h2 d-inline-block">Viewing Analyses for Job:</h1>
+			<input class="h2 d-inline-block" id="job-name" type="text" value=[[job.name]] size=[[job.name.length]]
+				   onkeydown="this.size = this.value.length < 1 ? 1 : this.value.length">
+			<button class="rounded" type="button" ng-click="updateJobName()">Change Name</button>
+			<a class="h2 d-inline-block text-primary float-right" target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/[[job.uuid]]/last_conf&topology=/job_output/[[job.uuid]]/topology">View Last Configuration</a>
+		</div>
 			
 
 
-				<div class="card">
-					<div id=meanCard class="card-body">
+		<div class="card">
+				<div id=meanCard class="card-body">
 
-						<h2>Mean and RMSF <a href="#" style="color:#999" 
-										title="Calculates the mean structure and computes per-nucleotide root mean square fluctuation from the mean" 
-										data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
-						</h2>
-						
-						
-						<div ng-show="mean[0] == undefined"> 
-							<button class="rounded mb-2" type="button" ng-click="startAnalysis('mean')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
-						</div>
-						<div ng-hide="mean[0] == undefined"> 
-							<button class="rounded mb-2" type="button" ng-click="startAnalysis('mean')" ngbTooltip="Help?" placement="right" container="body"> Redo analysis</button>	
-						</div>
+			<h2>Mean and RMSF <a href="#" style="color:#999" 
+						title="Calculates the mean structure and computes per-nucleotide root mean square fluctuation from the mean" 
+						data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
+			</h2>
 
-						<div ng-hide="mean[0] == undefined">
-							<table>
-								<tr class="font-weight-bold">
-									<td>Job Name</td>
-									<td>Status</td>
-									<td>Creation Date</td>
-									<td>Log</td>
-									<td>Mean+Deviations</td>
-								</tr>
-								<tr>
-									<td>Compute Mean</td>
-									<td><span ng-class="{'completed': mean[0].status == 'Completed', 'pending': mean[0].status == 'Pending', 'running': mean[0].status == 'Running'}">{{mean[0].status}}</span></td>
-									<td>{{ mean[0].dateString }}</td>
-									<td><a href="/job_output/{{mean[0].sim_job_id}}/mean_log" target="_blank">View log</a></td>
-									<td><a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{mean[0].sim_job_id}}/mean&topology=/job_output/{{mean[0].sim_job_id}}/topology&overlay=/job_output/{{mean[0].sim_job_id}}/deviations">View mean+deviations</a></br>
-										<a href="/job_output/{{mean[0].sim_job_id}}/mean" target="_blank" download={{job.name}}_mean.dat>Download mean</a></br>
-										<a href="/job_output/{{mean[0].sim_job_id}}/deviations" target="_blank" download={{job.name}}_devs.json>Download deviations</a></br>
-									</td>
-								</tr>
 
-							</table>
-						</div>
-						<br>
+			<div ng-show="mean[0] == undefined"> 
+				<button class="rounded mb-2" type="button" ng-click="startAnalysis('mean')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
+			</div>
+			<div ng-hide="mean[0] == undefined"> 
+				<button class="rounded mb-2" type="button" ng-click="startAnalysis('mean')" ngbTooltip="Help?" placement="right" container="body"> Redo analysis</button>	
+			</div>
 
-					</div>
+			<div ng-hide="mean[0] == undefined">
+				<table>
+					<tr class="font-weight-bold">
+						<td>Job Name</td>
+						<td>Status</td>
+						<td>Creation Date</td>
+						<td>Log</td>
+						<td>Mean+Deviations</td>
+					</tr>
+					<tr>
+						<td>Compute Mean</td>
+						<td><span ng-class="{'completed': mean[0].status == 'Completed', 'pending': mean[0].status == 'Pending', 'running': mean[0].status == 'Running'}">[[mean[0].status]]</span></td>
+						<td>[[ mean[0].dateString ]]</td>
+						<td><a href="/job_output/[[mean[0].sim_job_id]]/mean_log" target="_blank">View log</a></td>
+						<td><a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/[[mean[0].sim_job_id]]/mean&topology=/job_output/[[mean[0].sim_job_id]]/topology&overlay=/job_output/[[mean[0].sim_job_id]]/deviations">View mean+deviations</a></br>
+							<a href="/job_output/[[mean[0].sim_job_id]]/mean" target="_blank" download=[[job.name]]_mean.dat>Download mean</a></br>
+							<a href="/job_output/[[mean[0].sim_job_id]]/deviations" target="_blank" download=[[job.name]]_devs.json>Download deviations</a></br>
+						</td>
+					</tr>
 
-				</div>
-				<div class="card">
-					<div id=alignCard class="card-body">
-						<h2>Align Trajectory  <a href="#" style="color:#999" 
-							title="Aligns all frames in a trajectory to the first, creating a smoother viewing experience" 
-							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
-						</h2>
-						<div ng-show="align[0] == undefined"> 
-							<button class="rounded mb-2" type="button" ng-click="startAnalysis('align')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
-						</div>
-						<div ng-hide="align[0] == undefined"> 
-							<button class="rounded mb-2" type="button" ng-click="startAnalysis('align')" ngbTooltip="Help?" placement="right" container="body"> Redo analysis</button>	
-						</div>
-
-						<div ng-hide="align[0] == undefined">
-							<table>
-								<tr class="font-weight-bold">
-									<td>Job Name</td>
-									<td>Status</td>
-									<td>Creation Date</td>
-									<td>Log</td>
-									<td>Aligned Trajectory</td>
-								</tr>
-								<tr>
-									<td>Align Trajectory</td>
-									<td><span ng-class="{'completed': align[0].status == 'Completed', 'pending': align[0].status == 'Pending', 'running': align[0].status == 'Running'}">{{align[0].status}}</span></td>
-									<td>{{ align[0].dateString }}</td>
-									<td><a href="/job_output/{{align[0].sim_job_id}}/align_log" target="_blank">View log</a></td>
-									<td><a href="/job_output/{{align[0].sim_job_id}}/aligned_traj" target="_blank">Download aligned trajectory</a></br>
-									</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div id="distanceCard" class="card-body">
-						<h2> Distance <a href="#" style="color:#999" 
-							title="Calculate the distances between pairs of nucleotides" 
-							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
-						</h2>
-						<label for="name">Job Name: </label>
-						<input type="text" value="distance" id="name" size=16 maxlength="16">
-						<label class="lpadded" for="p1">Particle 1s: </label>
-						<input type="text" value="1 2 3" id="p1" size=6>
-						<label class = "lpadded" for="p2">Particle 2s: </label>
-						<input type="text" value="4 5 6" id="p2" size=6>
-						<br>
-						<button class="rounded mb-2" type="button" ng-click="startAnalysis('distance')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
-						<div ng-hide="distance[0] == undefined">
-							<table>
-								<tr class="font-weight-bold">
-									<td style="width:8%">Job Name</td>
-									<td style="width:5%">Status</td>
-									<td style="width:5%">Creation Date</td>
-									<td style="width:5%">Log</td>
-									<td style="width:8%">Distance Data</td>
-									<td>Distance Histogram</td>
-									<td>Distance Trajectory</td>
-								</tr>
-								<tr ng-cloak ng-repeat="x in distance">
-									<td style="width:8%">{{ x.name }}</td>
-									<td style="width:5%"><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
-									<td style="width:5%">{{ x.dateString }}</td>
-									<td style="width:5%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_log" target="_blank">View log</a></td>
-									<td style="width:8%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_data" target="_blank" download={{x.name}}.txt>Download distance as text</a></td>
-									<td>
-										<a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" target="_blank" download={{x.name}}_hist.png>
-											<img id="hist_{{x.uuid}}" src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_hist" width=100%>
-										</a>
-									</td>
-									<td>
-										<a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" target="_blank" download={{x.name}}_traj.png>
-											<img id="traj_{{x.uuid}}" src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/distance_traj" width=100%>
-										</a>
-									</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div id=energyCard class="card-body">
-						<h2> Energy Plotter <a href="#" style="color:#999" 
-							title="Plots the potential energy of the structure and produces a histogram" 
-							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
-						</h2>
-						<div ng-show="energy[0] == undefined"> 
-							<button class="rounded mb-2" type="button" ng-click="startAnalysis('energy')" ngbTooltip="Help?" placement="right" container="body">Start Plotting</button>	
-						</div>
-						<div ng-hide="energy[0] == undefined"> 
-							<button class="rounded mb-2" type="button" ng-click="startAnalysis('energy')" ngbTooltip="Help?" placement="right" container="body">Redo Plot</button>	
-						</div>
-
-						<div ng-hide="energy[0] == undefined">
-							<table>
-								<tr class="font-weight-bold">
-									<td style="width:8%">Job Name</td>
-									<td style="width:5%">Status</td>
-									<td style="width:5%">Creation Date</td>
-									<td style="width:5%">Log</td>
-									<td style="width:8%">Energy Data</td>
-									<td>Energy Histogram</td>
-									<td>Energy Trajectory</td>
-								</tr>
-								<tr>
-									<td style="width:8%">Energy</td>
-									<td style="width:5%"><span ng-class="{'completed': energy[0].status == 'Completed', 'pending': energy[0].status == 'Pending', 'running': energy[0].status == 'Running'}">{{energy[0].status}}</span></td>
-									<td style="width:5%">{{ energy[0].dateString }}</td>
-									<td style="width:5%"><a href="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_log" target="_blank">View log</a></td>
-									<td style="width:8%"><a href="/job_output/{{energy[0].sim_job_id}}/energy" download={{job.name}}_energy.dat>Download energy as text</a></td>
-									<td>
-										<a href="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_hist" target="_blank" download={{energy[0].name}}_hist.png>
-											<img id="hist_{{energy[0].uuid}}" src="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_hist" width=100%>
-										</a>
-									</td>
-									<td>
-										<a href="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_traj" target="_blank" download={{energy[0].name}}_traj.png>
-											<img id="traj_{{energy[0].uuid}}" src="/analysis_output/{{energy[0].sim_job_id}}/{{energy[0].uuid}}/energy_traj" width=100%>
-										</a>
-									</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div id=bondCard class="card-body">
-						<h2> Bond Occupancy <a href="#" style="color:#999" 
-							title="Calculates the hydrogen bond occupancy compared with the intended design.  The intended design is guessed from the relaxed state." 
-							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
-						</h2>
-						<div ng-show="bond[0] == undefined"> 
-							<button class="rounded mb-2" type="button" ng-click="startAnalysis('bond')" ngbTooltip="Help?" placement="right" container="body">Start analysis</button>	
-						</div>
-						<div ng-hide="bond[0] == undefined"> 
-							<button class="rounded mb-2" type="button" ng-click="startAnalysis('bond')" ngbTooltip="Help?" placement="right" container="body">Redo analysis</button>	
-						</div>
-
-						<div ng-hide="bond[0] == undefined">
-							<table>
-								<tr class="font-weight-bold">
-									<td>Job Name</td>
-									<td>Status</td>
-									<td>Creation Date</td>
-									<td>Log</td>
-									<td>Bond Analysis</td>
-								</tr>
-								<tr>
-									<td>Bond Occupancy</td>
-									<td><span ng-class="{'completed': bond[0].status == 'Completed', 'pending': bond[0].status == 'Pending', 'running': bond[0].status == 'Running'}">{{bond[0].status}}</span></td>
-									<td>{{ bond[0].dateString }}</td>
-									<td><a href="/job_output/{{bond[0].sim_job_id}}/bond_log" target="_blank">View log</a></td>
-									<td>
-										<a href="/static/oxdna-viewer/index.html?configuration=/job_output/{{bond[0].sim_job_id}}/last_conf&topology=/job_output/{{bond[0].sim_job_id}}/topology&overlay=/job_output/{{bond[0].sim_job_id}}/bond_output" target="_blank">View colormap</a></br>
-										<a href="/job_output/{{bond[0].sim_job_id}}/bond_output" target="_blank" download={{job.name}}_occupancy.json>Download colormap</a></br>
-									</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div id=angle_findCard class="card-body">
-						<h2> Duplex Angle Finder <a href="#" style="color:#999" 
-							title="Produces an angle file containing identification information for all duplexes at each configuration in the trajectory" 
-							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
-						</h2>
-						<div ng-show="angle_find[0] == undefined"> 
-							<button class="rounded mb-2" type="button" ng-click="startAnalysis('angle_find')" ngbTooltip="Help?" placement="right" container="body">Start analysis</button>	
-						</div>
-						<div ng-hide="angle_find[0] == undefined"> 
-							<button class="rounded mb-2" type="button" ng-click="startAnalysis('angle_find')" ngbTooltip="Help?" placement="right" container="body">Redo analysis</button>	
-						</div>
-
-						<div ng-hide="angle_find[0] == undefined">
-							<table>
-								<tr class="font-weight-bold">
-									<td>Job Name</td>
-									<td>Status</td>
-									<td>Creation Date</td>
-									<td>Log</td>
-									<td>Angle Finder</td>
-								</tr>
-								<tr>
-									<td>Duplex Angle Finder</td>
-									<td><span ng-class="{'completed': angle_find[0].status == 'Completed', 'pending': angle_find[0].status == 'Pending', 'running': angle_find[0].status == 'Running'}">{{angle_find[0].status}}</span></td>
-									<td>{{ angle_find[0].dateString }}</td>
-									<td><a href="/job_output/{{angle_find[0].sim_job_id}}/angle_find_log" target="_blank">View log</a></td>
-									<td><a href="/job_output/{{angle_find[0].sim_job_id}}/angle_find_output" target="_blank" download={{job.name}}_duplex_angle.txt
-											data-toggle="tooltip" data-placement="bottom" data-html="true" title="
-											File format<br>
-											0: time<br>
-											1: duplex id<br>
-											2: strand 1 start nucleotide<br>
-											3: strand 1 end nucleotide<br>
-											4: strand 2 start nucleotide<br>
-											5: strand 2 end nucleotide<br>
-											6: axis vector X-component<br>
-											7: axis vector Y-component<br>
-											8: axis vector Z-component<br>
-											9: Helix position">Download angle file</a></br>
-									</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div id=angle_plotCard class="card-body">
-						<h2> Duplex Angle Plotter <a href="#" style="color:#999" 
-							title="Reads file from duplex angle finder and plots the angle between the specified duplexes. &#013;&#010; Specify which duplexes you want with the first nucleotide in the duplex (use oxView to find the particle ids)" 
-							data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
-						</h2>
-						<label for="name">Job Name: </label>
-						<input type="text" value="angle_plot" id="name_angle" size=16 maxlength="16">
-						<label class="lpadded" for="p1">Particle 1: </label>
-						<input type="text" value="" id="p1_angle" size=16 maxlength="16">
-						<label class = "lpadded" for="p2">Particle 2: </label>
-						<input type="text" value="" id="p2_angle" size=16 maxlength="16">
-						<br>
-						<button class="rounded mb-2" type="button" ng-click="startAnalysis('angle_plot')" ngbTooltip="Help?" placement="right" container="body"> Start plotting</button>	
-						<div ng-hide="angle_plot[0] == undefined">
-							<table>
-								<tr class="font-weight-bold">
-									<td style="width:8%">Job Name</td>
-									<td style="width:5%">Status</td>
-									<td style="width:5%">Creation Date</td>
-									<td style="width:5%">Log</td>
-									<td>Angle Histogram</td>
-									<td>Angle Trajectory</td>
-								</tr>
-								<tr ng-repeat="x in angle_plot">
-									<td style="width:8%">{{ x.name }}</td>
-									<td style="width:5%"><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
-									<td style="width:5%">{{ x.dateString }}</td>
-									<td style="width:5%"><a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_log" target="_blank">View log</a></td>
-									<td>
-										<a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_hist" target="_blank" download={{x.name}}_hist.png>
-											<img id="hist_{{x.uuid}}" src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_hist" width=100%>
-										</a>
-									</td>
-									<td>
-										<a href="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_traj" target="_blank" download={{x.name}}_traj.png>
-											<img id="traj_{{x.uuid}}" src="/analysis_output/{{x.sim_job_id}}/{{x.uuid}}/angle_plot_traj" width=100%>
-										</a>
-									</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				</div>
-
-			</main>
+				</table>
+			</div>
+			<br>
 		</div>
-	</div>
 
-				<!-- Bootstrap core JavaScript
-					================================================== -->
-					<!-- Placed at the end of the document so the pages load faster -->
+		<div class="card">
+			<div id=alignCard class="card-body">
+				<h2>Align Trajectory  <a href="#" style="color:#999" 
+					title="Aligns all frames in a trajectory to the first, creating a smoother viewing experience" 
+					data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
+				</h2>
+				<div ng-show="align[0] == undefined"> 
+					<button class="rounded mb-2" type="button" ng-click="startAnalysis('align')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
+				</div>
+				<div ng-hide="align[0] == undefined"> 
+					<button class="rounded mb-2" type="button" ng-click="startAnalysis('align')" ngbTooltip="Help?" placement="right" container="body"> Redo analysis</button>	
+				</div>
 
-				</body>
-				<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-				<script>
-					feather.replace()
+				<div ng-hide="align[0] == undefined">
+					<table>
+						<tr class="font-weight-bold">
+							<td>Job Name</td>
+							<td>Status</td>
+							<td>Creation Date</td>
+							<td>Log</td>
+							<td>Aligned Trajectory</td>
+						</tr>
+						<tr>
+							<td>Align Trajectory</td>
+							<td><span ng-class="{'completed': align[0].status == 'Completed', 'pending': align[0].status == 'Pending', 'running': align[0].status == 'Running'}">[[align[0].status]]</span></td>
+							<td>[[ align[0].dateString ]]</td>
+							<td><a href="/job_output/[[align[0].sim_job_id]]/align_log" target="_blank">View log</a></td>
+							<td><a href="/job_output/[[align[0].sim_job_id]]/aligned_traj" target="_blank">Download aligned trajectory</a></br>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
 
-					var frame = window.frames['editor-frame'];
+		<div class="card">
+			<div id="distanceCard" class="card-body">
+				<h2> Distance <a href="#" style="color:#999" 
+					title="Calculate the distances between pairs of nucleotides" 
+					data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
+				</h2>
+				<label for="name">Job Name: </label>
+				<input type="text" value="distance" id="name" size=16 maxlength="16">
+				<label class="lpadded" for="p1">Particle 1s: </label>
+				<input type="text" value="1 2 3" id="p1" size=6>
+				<label class = "lpadded" for="p2">Particle 2s: </label>
+				<input type="text" value="4 5 6" id="p2" size=6>
+				<br>
+				<button class="rounded mb-2" type="button" ng-click="startAnalysis('distance')" ngbTooltip="Help?" placement="right" container="body"> Start analysis</button>	
+				<div ng-hide="distance[0] == undefined">
+					<table>
+						<tr class="font-weight-bold">
+							<td style="width:8%">Job Name</td>
+							<td style="width:5%">Status</td>
+							<td style="width:5%">Creation Date</td>
+							<td style="width:5%">Log</td>
+							<td style="width:8%">Distance Data</td>
+							<td>Distance Histogram</td>
+							<td>Distance Trajectory</td>
+						</tr>
+						<tr ng-cloak ng-repeat="x in distance">
+							<td style="width:8%">[[ x.name ]]</td>
+							<td style="width:5%"><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">[[x.status]]</span></td>
+							<td style="width:5%">[[ x.dateString ]]</td>
+							<td style="width:5%"><a href="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/distance_log" target="_blank">View log</a></td>
+							<td style="width:8%"><a href="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/distance_data" target="_blank" download=[[x.name]].txt>Download distance as text</a></td>
+							<td>
+								<a href="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/distance_hist" target="_blank" download=[[x.name]]_hist.png>
+									<img id="hist_[[x.uuid]]" src="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/distance_hist" width=100%>
+								</a>
+							</td>
+							<td>
+								<a href="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/distance_traj" target="_blank" download=[[x.name]]_traj.png>
+									<img id="traj_[[x.uuid]]" src="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/distance_traj" width=100%>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
 
-					var openFiles = function(files) {
-						//console.log(files);
-						//frame.document.dispatchEvent(new Event('drop'));
-						//console.log("EVENT DISPATCHED!")
-						console.log(files);
-						dispatchFakeDrop(files);
-					}
+		<div class="card">
+			<div id=energyCard class="card-body">
+				<h2> Energy Plotter <a href="#" style="color:#999" 
+					title="Plots the potential energy of the structure and produces a histogram" 
+					data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
+				</h2>
+				<div ng-show="energy[0] == undefined"> 
+					<button class="rounded mb-2" type="button" ng-click="startAnalysis('energy')" ngbTooltip="Help?" placement="right" container="body">Start Plotting</button>	
+				</div>
+				<div ng-hide="energy[0] == undefined"> 
+					<button class="rounded mb-2" type="button" ng-click="startAnalysis('energy')" ngbTooltip="Help?" placement="right" container="body">Redo Plot</button>	
+				</div>
+				<div ng-hide="energy[0] == undefined">
+					<table>
+						<tr class="font-weight-bold">
+							<td style="width:8%">Job Name</td>
+							<td style="width:5%">Status</td>
+							<td style="width:5%">Creation Date</td>
+							<td style="width:5%">Log</td>
+							<td style="width:8%">Energy Data</td>
+							<td>Energy Histogram</td>
+							<td>Energy Trajectory</td>
+						</tr>
+						<tr>
+							<td style="width:8%">Energy</td>
+							<td style="width:5%"><span ng-class="{'completed': energy[0].status == 'Completed', 'pending': energy[0].status == 'Pending', 'running': energy[0].status == 'Running'}">[[energy[0].status]]</span></td>
+							<td style="width:5%">[[ energy[0].dateString ]]</td>
+							<td style="width:5%"><a href="/analysis_output/[[energy[0].sim_job_id]]/[[energy[0].uuid]]/energy_log" target="_blank">View log</a></td>
+							<td style="width:8%"><a href="/job_output/[[energy[0].sim_job_id]]/energy" download=[[job.name]]_energy.dat>Download energy as text</a></td>
+							<td>
+								<a href="/analysis_output/[[energy[0].sim_job_id]]/[[energy[0].uuid]]/energy_hist" target="_blank" download=[[energy[0].name]]_hist.png>
+									<img id="hist_[[energy[0].uuid]]" src="/analysis_output/[[energy[0].sim_job_id]]/[[energy[0].uuid]]/energy_hist" width=100%>
+								</a>
+							</td>
+							<td>
+								<a href="/analysis_output/[[energy[0].sim_job_id]]/[[energy[0].uuid]]/energy_traj" target="_blank" download=[[energy[0].name]]_traj.png>
+									<img id="traj_[[energy[0].uuid]]" src="/analysis_output/[[energy[0].sim_job_id]]/[[energy[0].uuid]]/energy_traj" width=100%>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
 
-					var dispatchFakeDrop = function(files) {
-						console.log("called");
-						var fakeDropEvent = new DragEvent('drop');
-					// You override dataTransfer with whichever property
-					// and method the drop function needs
+		<div class="card">
+			<div id=bondCard class="card-body">
+				<h2> Bond Occupancy <a href="#" style="color:#999" 
+					title="Calculates the hydrogen bond occupancy compared with the intended design.  The intended design is guessed from the relaxed state." 
+					data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
+				</h2>
+				<div ng-show="bond[0] == undefined"> 
+					<button class="rounded mb-2" type="button" ng-click="startAnalysis('bond')" ngbTooltip="Help?" placement="right" container="body">Start analysis</button>	
+				</div>
+				<div ng-hide="bond[0] == undefined"> 
+					<button class="rounded mb-2" type="button" ng-click="startAnalysis('bond')" ngbTooltip="Help?" placement="right" container="body">Redo analysis</button>	
+				</div>
 
-					Object.defineProperty(fakeDropEvent, 'dataTransfer', {
-						value: new FakeDataTransfer(files)
-					});
-					frame.renderer.domElement.dispatchEvent(fakeDropEvent);
+				<div ng-hide="bond[0] == undefined">
+					<table>
+						<tr class="font-weight-bold">
+							<td>Job Name</td>
+							<td>Status</td>
+							<td>Creation Date</td>
+							<td>Log</td>
+							<td>Bond Analysis</td>
+						</tr>
+						<tr>
+							<td>Bond Occupancy</td>
+							<td><span ng-class="{'completed': bond[0].status == 'Completed', 'pending': bond[0].status == 'Pending', 'running': bond[0].status == 'Running'}">[[bond[0].status]]</span></td>
+							<td>[[ bond[0].dateString ]]</td>
+							<td><a href="/job_output/[[bond[0].sim_job_id]]/bond_log" target="_blank">View log</a></td>
+							<td>
+								<a href="/static/oxdna-viewer/index.html?configuration=/job_output/[[bond[0].sim_job_id]]/last_conf&topology=/job_output/[[bond[0].sim_job_id]]/topology&overlay=/job_output/[[bond[0].sim_job_id]]/bond_output" target="_blank">View colormap</a></br>
+								<a href="/job_output/[[bond[0].sim_job_id]]/bond_output" target="_blank" download=[[job.name]]_occupancy.json>Download colormap</a></br>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
 
-					}
+		<div class="card">
+			<div id=angle_findCard class="card-body">
+				<h2> Duplex Angle Finder <a href="#" style="color:#999" 
+					title="Produces an angle file containing identification information for all duplexes at each configuration in the trajectory" 
+					data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
+				</h2>
+				<div ng-show="angle_find[0] == undefined"> 
+					<button class="rounded mb-2" type="button" ng-click="startAnalysis('angle_find')" ngbTooltip="Help?" placement="right" container="body">Start analysis</button>	
+				</div>
+				<div ng-hide="angle_find[0] == undefined"> 
+					<button class="rounded mb-2" type="button" ng-click="startAnalysis('angle_find')" ngbTooltip="Help?" placement="right" container="body">Redo analysis</button>	
+				</div>
 
-					var finishedLoading = function() {
-						console.log("child finished loading!");
-						//dispatchFakeDrop();
-					}
+				<div ng-hide="angle_find[0] == undefined">
+					<table>
+						<tr class="font-weight-bold">
+							<td>Job Name</td>
+							<td>Status</td>
+							<td>Creation Date</td>
+							<td>Log</td>
+							<td>Angle Finder</td>
+						</tr>
+						<tr>
+							<td>Duplex Angle Finder</td>
+							<td><span ng-class="{'completed': angle_find[0].status == 'Completed', 'pending': angle_find[0].status == 'Pending', 'running': angle_find[0].status == 'Running'}">[[angle_find[0].status]]</span></td>
+							<td>[[ angle_find[0].dateString ]]</td>
+							<td><a href="/job_output/[[angle_find[0].sim_job_id]]/angle_find_log" target="_blank">View log</a></td>
+							<td><a href="/job_output/[[angle_find[0].sim_job_id]]/angle_find_output" target="_blank" download=[[job.name]]_duplex_angle.txt
+									data-toggle="tooltip" data-placement="bottom" data-html="true" title="
+									File format<br>
+									0: time<br>
+									1: duplex id<br>
+									2: strand 1 start nucleotide<br>
+									3: strand 1 end nucleotide<br>
+									4: strand 2 start nucleotide<br>
+									5: strand 2 end nucleotide<br>
+									6: axis vector X-component<br>
+									7: axis vector Y-component<br>
+									8: axis vector Z-component<br>
+									9: Helix position">Download angle file</a></br>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
 
-					function FakeDataTransfer(files) {
-					this.dropEffect = 'all';
-					this.effectAllowed = 'all';
-					this.items = [];
-					this.types = ['Files'];
-					this.getData = function() {
+		<div class="card">
+			<div id=angle_plotCard class="card-body">
+				<h2> Duplex Angle Plotter <a href="#" style="color:#999" 
+					title="Reads file from duplex angle finder and plots the angle between the specified duplexes. &#013;&#010; Specify which duplexes you want with the first nucleotide in the duplex (use oxView to find the particle ids)" 
+					data-toggle="tooltip" data-placement="right" tooltip><i class="far fa-question-circle fa-sm"></i></a>
+				</h2>
+				<label for="name">Job Name: </label>
+				<input type="text" value="angle_plot" id="name_angle" size=16 maxlength="16">
+				<label class="lpadded" for="p1">Particle 1: </label>
+				<input type="text" value="" id="p1_angle" size=16 maxlength="16">
+				<label class = "lpadded" for="p2">Particle 2: </label>
+				<input type="text" value="" id="p2_angle" size=16 maxlength="16">
+				<br>
+				<button class="rounded mb-2" type="button" ng-click="startAnalysis('angle_plot')" ngbTooltip="Help?" placement="right" container="body"> Start plotting</button>	
+				<div ng-hide="angle_plot[0] == undefined">
+					<table>
+						<tr class="font-weight-bold">
+							<td style="width:8%">Job Name</td>
+							<td style="width:5%">Status</td>
+							<td style="width:5%">Creation Date</td>
+							<td style="width:5%">Log</td>
+							<td>Angle Histogram</td>
+							<td>Angle Trajectory</td>
+						</tr>
+						<tr ng-repeat="x in angle_plot">
+							<td style="width:8%">[[ x.name ]]</td>
+							<td style="width:5%"><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">[[x.status]]</span></td>
+							<td style="width:5%">[[ x.dateString ]]</td>
+							<td style="width:5%"><a href="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/angle_plot_log" target="_blank">View log</a></td>
+							<td>
+								<a href="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/angle_plot_hist" target="_blank" download=[[x.name]]_hist.png>
+									<img id="hist_[[x.uuid]]" src="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/angle_plot_hist" width=100%>
+								</a>
+							</td>
+							<td>
+								<a href="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/angle_plot_traj" target="_blank" download=[[x.name]]_traj.png>
+									<img id="traj_[[x.uuid]]" src="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/angle_plot_traj" width=100%>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
 
-					return files;
-					};
-					this.files = files;
-					};
-
-					var files = {};
-
-					function FakeDataDownload(file, filename) {
-						console.log("Fake file download: ", file, filename);
-						files[filename] = file;
-					}
-
-					function TriggerFileDownloads() {
-						frame.makeOutputFiles()
-					}
-				</script>
-
-				<script src="/static/angular.min.js"></script>
-				<script src="/static/script.js"></script>
-				</html>
+	</main>
+{% endblock %}

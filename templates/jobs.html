@@ -35,17 +35,6 @@ table tr:nth-child(even) {
 	color: black;
 }
 
-.pending{
-	color: blue;
-}
-
-.cancelled{
-	color: yellow;
-}
-
-.error{
-	color: red;
-}
 </style>
 {% endblock %}
 
@@ -55,14 +44,13 @@ table tr:nth-child(even) {
 			<h1 class="h2">View Jobs</h1>
 		</div>
 
-
 		<div class="card">
 			<div class="card-body">
 				<p> <b>Server status:</b> <br>
-				Total jobs currently running: <span ng-cloak>{{jobsRunning}}</span><br>
-				Total jobs in queue: <span ng-cloak>{{jobsQueued}}</span><br><br>
+				Total jobs currently running: <span ng-cloak>[[jobsRunning]]</span><br>
+				Total jobs in queue: <span ng-cloak>[[jobsQueued]]</span><br><br>
 				</p>
-				<p><b>Your simulations:</b><br>Here is a list of the jobs you have currently running, pending or finished under your account. Please be aware trajectory files get automatically deleted one week after the job finishes. To access analysis tools, click on your job name.</p>
+				<p><b>Your simulations:</b><br> Here is a list of the jobs you have currently running, pending or finished under your account. Please be aware trajectory files get automatically deleted one week after the job finishes. To access analysis tools, click on your job name.</p>
 				<table>
 					<tr class="font-weight-bold">
 						<td>Job Name</td>
@@ -77,29 +65,27 @@ table tr:nth-child(even) {
 						<td>Cancel</td>
 						<td>Delete</td>
 					</tr>
-					{% if x %}
 						<tr ng-repeat="x in jobs" ng-cloak>
-							<td><a href="/job/{{x.uuid}}">{{ x.name }}</a></td>
-							<td><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
-							<td>{{ x.dateString }}</td>
-							<td><a target="_blank" href="/job_output/{{x.uuid}}/input">view</a>
-								<a href="/job_output/{{x.uuid}}/input" download="{{x.name}}_input">download</a>
+							<td><a href="/job/[[x.uuid]]">[[ x.name ]]</a></td>
+							<td><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">[[x.status]]</span></td>
+							<td>[[ x.dateString ]]</td>
+							<td><a target="_blank" href="/job_output/[[x.uuid]]/input">view</a>
+								<a href="/job_output/[[x.uuid]]/input" download="[[x.name]]_input">download</a>
 							</td>
-							<td><a target="_blank" href="/job_output/{{x.uuid}}/log">view</a>
-								<a href="/job_output/{{x.uuid}}/log" download="{{x.name}}.log">download</a>
+							<td><a target="_blank" href="/job_output/[[x.uuid]]/log">view</a>
+								<a href="/job_output/[[x.uuid]]/log" download="[[x.name]].log">download</a>
 							</td>
-							<td><a href="/job_output/{{x.uuid}}/topology" download="{{x.name}}.top">download</a></td>
-							<td ng-cloak><a id="init-view" ng-cloak target="_blank" href={{x.initConf[0]}}>view</a>
-								<a id="init-download" ng-cloak href={{x.initConf[1]}} download="{{x.name}}_init_conf.dat">download</a>
+							<td><a href="/job_output/[[x.uuid]]/topology" download="[[x.name]].top">download</a></td>
+							<td ng-cloak><a id="init-view" ng-cloak target="_blank" href="[[ x.initConf[0] ]]">view</a>
+								<a id="init-download" ng-cloak href="[[ x.initConf[1] ]]" download="[[x.name]]_init_conf.dat">download</a>
 							</td>
-							<td><a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{x.uuid}}/last_conf&topology=/job_output/{{x.uuid}}/topology">view</a>
-								<a href="/job_output/{{x.uuid}}/last_conf" download="{{x.name}}_last_conf.dat">download</a>
+							<td><a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/[[x.uuid]]/last_conf&topology=/job_output/[[x.uuid]]/topology">view</a>
+								<a href="/job_output/[[x.uuid]]/last_conf" download="[[x.name]]_last_conf.dat">download</a>
 							</td>
-							<td><a id="traj_{{x.uuid}}" href="/job_output/{{x.uuid}}/trajectory_zip">download</a></td>
+							<td><a id="traj_[[x.uuid]]" href="/job_output/[[x.uuid]]/trajectory_zip">download</a></td>
 							<td><button class="rounded" ng-click="cancelJob(x); x.status = 'Completed'" ng-disabled="x.status == 'Completed'">Cancel Job</button></td>
 							<td><button class="rounded"ng-click="confirmDelete(x)" ng-disabled="x.status != 'Completed' && x.status != 'Canceled'">Delete Job</button></td>
 						</tr>
-					{% endif %}
 				</table>
 
 			</div>
@@ -107,60 +93,4 @@ table tr:nth-child(even) {
 		</div>
 
 	</main>
-{% endblock %}
-
-{% block additionalScript %}		
-	<script>
-
-		var frame = window.frames['editor-frame'];
-
-		var openFiles = function(files) {
-			//console.log(files);
-			//frame.document.dispatchEvent(new Event('drop'));
-			//console.log("EVENT DISPATCHED!")
-			console.log(files);
-			dispatchFakeDrop(files);
-		}
-
-		var dispatchFakeDrop = function(files) {
-			console.log("called");
-			var fakeDropEvent = new DragEvent('drop');
-		// You override dataTransfer with whichever property
-		// and method the drop function needs
-
-		Object.defineProperty(fakeDropEvent, 'dataTransfer', {
-			value: new FakeDataTransfer(files)
-		});
-		frame.renderer.domElement.dispatchEvent(fakeDropEvent);
-
-		}
-
-		var finishedLoading = function() {
-			console.log("child finished loading!");
-			//dispatchFakeDrop();
-		}
-
-		function FakeDataTransfer(files) {
-		this.dropEffect = 'all';
-		this.effectAllowed = 'all';
-		this.items = [];
-		this.types = ['Files'];
-		this.getData = function() {
-
-		return files;
-		};
-		this.files = files;
-		};
-
-		var files = {};
-
-		function FakeDataDownload(file, filename) {
-			console.log("Fake file download: ", file, filename);
-			files[filename] = file;
-		}
-
-		function TriggerFileDownloads() {
-			frame.makeOutputFiles()
-		}
-	</script>
 {% endblock %}

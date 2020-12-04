@@ -37,6 +37,27 @@
                     </a>
                 </li>
             {% endif %}
+
+            {% if not session['user_id'] %}
+            <li class="nav-item">
+                <a class="nav-link {% if active_page == 'login' %} active {% endif %}" href="/login">
+                    <span data-feather="list"></span>
+                    Login
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if active_page == 'register' %} active {% endif %}" href="/register">
+                    <span data-feather="list"></span>
+                    Register
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if active_page == 'create' %} active {% endif %}" href="/create">
+                    <span data-feather="list"></span>
+                    Submit as guest
+                </a>
+            </li>
+            {% endif %}
         </ul>
 
         {% if session['user_id'] %}
@@ -46,16 +67,14 @@
                 </a>
             </h6>
 
-            {% if job %}
                 <ul class="nav flex-column mb-2">
                     <li ng-repeat="job in job_history | filter: searchText">
-                        <a class="nav-link" href="/job/{{job.uuid}}">
+                        <a class="nav-link" href="/job/[[job.uuid]]">
                             <span data-feather="file-text"></span>
-                            {{job.name}}
+                            [[job.name]]
                         </a>
                     </li>
                 </ul>
-            {% endif %}
         {% endif %}
     </div>
 </nav>
