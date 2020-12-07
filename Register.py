@@ -27,7 +27,6 @@ def registerUser(user, requires_verification=True):
 	connection = Database.pool.get_connection()
 
 	response = validate(user)
-	print(response)
 	if len(response) > 0:
 		connection.close()
 		return response

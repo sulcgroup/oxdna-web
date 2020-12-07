@@ -635,7 +635,28 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 })
 
 app.controller("LoginCtrl", function($scope) {
+	$scope.errors = {}
 
+	$scope.login = function(user) {
+		for (field in $scope.errors) {
+			$scope.errors[field] = "";
+		}
+		const request = new XMLHttpRequest();
+		request.open("POST", "/login");
+		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		request.send(JSON.stringify(user));
+		request.onload = () => {
+			if (request.response == "Success") {
+				window.location = "/"
+			} else {
+				const response = JSON.parse(request.response);
+				for (field in response) {
+					$scope.errors[field] = response[field];
+				}
+			}
+			$scope.$apply();
+		}
+	}
 })
 
 app.controller("RegisterCtrl", function($scope) {
@@ -768,7 +789,6 @@ app.controller("MainCtrl", function($scope, $http) {
 				} else {
 					resolve(request.response)
 				}
-				console.log(request.response);
 			}
 		})
 	}
@@ -829,9 +849,7 @@ app.controller("MainCtrl", function($scope, $http) {
 
 		// Handle guest job submission
 		const sId = await $scope.getSessionId().then(res => res);
-		console.log(sId);
 		if ( sId == "None") {
-			console.log("here")
 			const cookie = await $scope.getCookie().then(res => res);
 			if (cookie === "-1") {
 				const userId = await $scope.registerGuest().then(res => res);

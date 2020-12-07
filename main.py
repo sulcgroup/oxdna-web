@@ -65,6 +65,7 @@ def handle_form():
 			
 	activeJobCount = Admin.getUserActiveJobCount(user_id)
 	jobLimit = Admin.getJobLimit(user_id)
+	print(activeJobCount, jobLimit, flush=True)
 
 	if (activeJobCount >= jobLimit):
 		return "You have reached the maximum number of running jobs."
@@ -205,15 +206,18 @@ def set_cookie():
 
 @app.route("/setsessionid", methods=["POST"])
 def set_session_id():
-	print(request.data.decode("utf-8"), flush=True)
-	session["user_id"] = request.data.decode("utf-8")
+	uid =  request.data.decode("utf-8").strip('\"')
+	session["user_id"] = uid
 	session["name"] = Account.getFirstName(session["user_id"])
 	return "Success"
 
 @app.route("/getsessionid", methods=["POST"])
 def get_session_id():
 	try:
-		return session["user_id"]
+		if session["user_id"]:
+			return session["user_id"]
+		else:
+			return "None"
 	except:
 		return "None"
 
@@ -233,18 +237,18 @@ def login():
 		return render_template("login.html")
 
 	if request.method == "POST":
-		username = request.form["username"]
-		password = request.form["password"]
+		user = request.get_json()
+		username = user["email"]
+		password = user["password"]
 	if username is not None and password is not None:
 		user_id = Login.loginUser(username, password)
-		if(user_id > -1):
+		if(isinstance(user_id, int)):
 			session["user_id"] = user_id
 			session["name"] = Account.getFirstName(user_id)
-			return redirect("/")
-		elif(user_id == -2):
-			return "Error, user not verified. Please verify using the link sent to the email you registered with."
+			return "Success"
 		else:
-			return "Invalid username or password"
+			return user_id #user_id is a dict with errors if there are errors
+		
 		
 	return "Invalid username or password"
 
@@ -450,8 +454,6 @@ def getJobs():
 
 	if session.get("user_id") is None:
 		return "You must be logged in to view your jobs"
-
-	print(session["user_id"], type(session["user_id"]), "2", flush=True)
 
 	user_id = int(session["user_id"])
 
@@ -684,6 +686,17 @@ def getImage(image=None):
 		return send_file("images/{}".format(image))
 	else:
 		abort(404, discription="Image not found")
+
+@app.route("/example")
+def example():
+	return render_template("example.html")
+
+@app.route("/example/<fname>")
+def getExample(fname):
+	if os.path.isfile("example/{}".format(fname)):
+		return send_file("example/{}".format(fname))
+	else:
+		abort(404, description="File not found")
 
 @app.route("/")
 def index():

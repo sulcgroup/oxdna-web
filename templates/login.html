@@ -39,17 +39,17 @@
 
 		<div class="card">
 			<div class="card-body">
-				<form action="/login" method="POST">
-					<p class="font-weight-bold" style="margin-left: 2em;">Email: <input ng-model="email" name="username" id="username" type="text"></p>
-					<p class="font-weight-bold" style="display: inline;">Password: <input name="password" id="password" type="password"></p>
+				<form novalidate>
+					<p class="font-weight-bold" style="margin-left: 2em;">Email: <input ng-model="user.email" name="username" id="username" type="text"></p>
+					<p class="font-weight-bold" style="display: inline;">Password: <input ng-model="user.password" name="password" id="password" type="password"></p>
 					<a href="/password/forgot">Forgot password?</a>
 					<br><br>
-					<input type="submit">
+					<input ng-click="login(user)" type="submit"><span class="font-weight-normal text-danger">[[errors.loginError]]</span>
 				</form>
 
 
 				<br>
-				Don't have an account? <a href="/register">Register</a> or <a href="/guestcreate">Create as Guest</a>.
+				Don't have an account? <a href="/register">Register</a> or <a href="/create">Create as Guest</a>.
 
 				</main>
 {% endblock %}

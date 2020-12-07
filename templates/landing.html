@@ -55,8 +55,6 @@
     }
 </style>
 
-<body ng-controller="LandingCtrl">
-
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h1">Welcome to oxDNA.org!</h1>
@@ -79,6 +77,9 @@
                 The simulations this server supports are equilibrium sampling of assembled designs, meant to 
                 assist users to test in silico their designs before taking them to the lab. The server is provided for free for anyone. All you need to do is register and agree with 
                 the Terms of Use. We ask you to be considerate to other users and keep the server usage reasonable. We also ask you to review FAQ below prior to submitting your first job.
+            </p>
+            <p>
+                If you are looking for a tutorial to get started, check out the <a href="/example">example</a> page.
             </p>
         </div>
     </div>
@@ -108,7 +109,7 @@
                  this can be done in <a target="_blank" href="https://github.com/sulcgroup/oxdna-viewer">oxView</a> (hit the "try it!" link in the description).</p>
             </div>
             
-            <button class="accordion" onclick="toggle(this)"><b>How large structures can I simulate?</b></button>
+            <button class="accordion" onclick="toggle(this)"><b>How large of structures can I simulate?</b></button>
             <div class="panel">
                 <p>These simulations are run on NVIDIA 2080 RTX GPUs, which easily handle origami-sized (10-20k bases) designs.
                 Designs with more than 50k bases may not finish in the time allotted to each job. It also makes sense to only use GPU cards for simulations of structures of sizes at least 300 nucleotides,
@@ -261,6 +262,8 @@
             <h4>Usage Limit</h4>
             <p>
                 Users are limited to submitting 4 jobs at a time.  We reserve the right to limit the usage of any user. 
+                </br>
+                Trajectory files will be deleted after 1 week due to limited storage space.
             </p>
             
             <h4>Disclaimer</h4>
