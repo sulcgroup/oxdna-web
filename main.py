@@ -205,13 +205,17 @@ def set_cookie():
 
 @app.route("/setsessionid", methods=["POST"])
 def set_session_id():
+	print(request.data.decode("utf-8"), flush=True)
 	session["user_id"] = request.data.decode("utf-8")
-	session["name"] = Account.getFirstName(session[user_id])
+	session["name"] = Account.getFirstName(session["user_id"])
 	return "Success"
 
 @app.route("/getsessionid", methods=["POST"])
 def get_session_id():
-	return session["user_id"] if session["user_id"] else "None"
+	try:
+		return session["user_id"]
+	except:
+		return "None"
 
 @app.route("/registerguest", methods=["POST"])
 def register_guest():
@@ -219,7 +223,7 @@ def register_guest():
 	if request.method == "POST":
 		response = Register.registerGuest()
 		session["user_id"] = response
-		session["name"] = Account.getFirstName()
+		session["name"] = Account.getFirstName(session["user_id"])
 		return response
 
 @app.route("/login", methods=["GET", "POST"])
@@ -446,6 +450,8 @@ def getJobs():
 
 	if session.get("user_id") is None:
 		return "You must be logged in to view your jobs"
+
+	print(session["user_id"], type(session["user_id"]), "2", flush=True)
 
 	user_id = int(session["user_id"])
 

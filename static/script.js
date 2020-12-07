@@ -829,6 +829,7 @@ app.controller("MainCtrl", function($scope, $http) {
 
 		// Handle guest job submission
 		const sId = await $scope.getSessionId().then(res => res);
+		console.log(sId);
 		if ( sId == "None") {
 			console.log("here")
 			const cookie = await $scope.getCookie().then(res => res);
