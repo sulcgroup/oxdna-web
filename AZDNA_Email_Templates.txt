@@ -38,8 +38,6 @@ OxDNA File Deletion Notice
 ::
 <HEADER>
 
-File size limit has been updated, hopefully this is a more reasonable list.
-
 You have files that are approaching the one-week time limit and will soon be deleted. You can access the files here <u>
 The files are
 <j>
