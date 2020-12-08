@@ -22,7 +22,7 @@ check_reset_token = ("SELECT id FROM Users WHERE resetToken = %s")
 reset_password = ("UPDATE Users SET password = %s WHERE id = %s")
 set_reset_token_expiration = ("UPDATE Users SET resetTokenExpiration = %s WHERE username = %s")
 get_reset_token_expiration = ("SELECT resetTokenExpiration FROM Users WHERE id = %s")
-
+get_name_by_id_query = ("SELECT firstName FROM Users WHERE id = %s")
 
 def getEmailPrefs(userId):
 	connection = Database.pool.get_connection()
@@ -223,3 +223,11 @@ def resetPassword(userId, newPassword):
 
 	connection.close()
 	return "Password succesfully changed!"
+
+def getFirstName(userId):
+	connection = Database.pool.get_connection()
+	with connection.cursor() as cursor:
+		cursor.execute(get_name_by_id_query, userId)
+		name = cursor.fetchone()[0]
+	connection.close()
+	return name

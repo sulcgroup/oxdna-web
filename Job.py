@@ -3,6 +3,7 @@ import time
 import uuid
 import subprocess
 import sys
+from math import ceil
 
 import Delete_User_Files
 import Database
@@ -237,7 +238,8 @@ def createOxDNAInput(parameters, job_directory, file_name, needs_relax):
 			unique_parameters["interaction_type"] = "RNA_relax"
 		unique_parameters["sim_type"] = "MC"
 		unique_parameters["steps"] = parameters["MC_steps"]
-		unique_parameters["print_conf_interval"] = 50000
+		unique_parameters["print_energy_every"] = ceil(parameters["MC_steps"] / 10)
+		unique_parameters["print_conf_interval"] = ceil(parameters["MC_steps"] / 10)
 		unique_parameters["backend"] = "CPU"
 		unique_parameters["dt"] = 0.05
 		unique_parameters["lastconf_file"] = "MC_relax.dat"
@@ -246,7 +248,8 @@ def createOxDNAInput(parameters, job_directory, file_name, needs_relax):
 	#the secondary relax is a set length and run in molecular dynamics using GPU if requested
 	if file_name == "input_relax_MD":
 		unique_parameters["steps"] = parameters["MD_steps"]
-		unique_parameters["print_energy_interval"] = 500000
+		unique_parameters["print_energy_every"] = ceil(parameters["MD_steps"] / 10)
+		unique_parameters["print_conf_interval"] = ceil(parameters["MD_steps"] / 10)
 		unique_parameters["dt"] = parameters["MD_dt"]
 		unique_parameters["thermostat"] = "bussi"
 		unique_parameters["T"] = "0C"
