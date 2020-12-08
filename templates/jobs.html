@@ -1,28 +1,11 @@
-<html ng-app="app" ng-controller="AppCtrl">
-<head>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-173472997-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+{% extends 'base.html' %}
+{% set active_page = "jobs" %}
+{% set page_controller = "JobsCtrl" %}
+{% set addSearchBox = True %}
 
-  gtag('config', 'UA-173472997-1');
-</script>
+{% block title %}Jobs{% endblock %}
 
-	<title>oxDNA.org Jobs</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-	<meta http-equiv="Pragma" content="no-cache">
-	<meta http-equiv="Expires" content="0">
-
-</head>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css">
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-<link rel="stylesheet" href="/static/style.css">
+{% block additionalStylesheet %}
 <style>
 table, th , td {
   border: 1px solid grey;
@@ -53,193 +36,61 @@ table tr:nth-child(even) {
 }
 
 </style>
-<body ng-controller="JobsCtrl">
-	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-		<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">oxDNA.org</a>
-		<input ng-model="searchText" class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
-		<ul class="navbar-nav px-3">
-			<li class="nav-item text-nowrap">
-				<a class="nav-link" href="/logout">Sign out</a>
-			</li>
-		</ul>
-	</nav>
+{% endblock %}
 
-	<div  class="container-fluid">
-		<div class="row">
-			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-				<div class="sidebar-sticky mt-5" ng-cloak>
-					<ul class="nav flex-column">
-						<li class="nav-item">
-							<a class="nav-link" href="/">
-								<span data-feather="home"></span>
-								Dashboard <span class="sr-only">(current)</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" href="/jobs">
-								<span data-feather="list"></span>
-								View Jobs
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/create">
-								<span data-feather="edit"></span>
-								Create A Job	
-							</a>
-						</li>
-
-						<!-- 
-						<li class="nav-item">
-							<a class="nav-link" href="#">
-								<span data-feather="file-text"></span>
-								My Files	
-							</a>
-						</li>
-						-->
-						<li class="nav-item">
-							<a class="nav-link" href="/account">
-								<span data-feather="user"></span>
-								My Account	
-							</a>
-						</li>
-					</ul>
-
-					<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-						<span>JOB HISTORY</span>
-						<a class="d-flex align-items-center text-muted" href="#">
-						</a>
-					</h6>
-					<ul class="nav flex-column mb-2">
-					<ul class="nav flex-column mb-2">
-						<li ng-repeat="job in job_history | filter: searchText">
-							<a class="nav-link" href="/job/{{job.uuid}}">
-								<span data-feather="file-text"></span>
-								{{job.name}}
-							</a>
-						</li>
-					</ul>
-				</div>
-			</nav>
-
-			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-					<h1 class="h2">View Jobs</h1>
-				</div>
-
-
-				<div class="card">
-					<div class="card-body">
-						<p> <b>Server status:</b> <br>
-						Total jobs currently running: <span ng-cloak>{{jobsRunning}}</span><br>
-						Total jobs in queue: <span ng-cloak>{{jobsQueued}}</span><br><br>
-						</p>
-						<p><b>Your simulations:</b><br>Here is a list of the jobs you have currently running, pending or finished under your account. Please be aware trajectory files get automatically deleted one week after the job finishes. To access analysis tools, click on your job name.</p>
-						<table>
-							<tr class="font-weight-bold">
-								<td>Job Name</td>
-								<td>Status</td>
-								<td>Started</td>
-								<td>Input</td>
-								<td>Log</td>
-								<td>Topology</td>
-								<td>Initial Configuration</td>
-								<td>Last Configuration</td>
-								<td>Trajectory</td>
-								<td>Cancel</td>
-								<td>Delete</td>
-							</tr>
-							<tr ng-repeat="x in jobs" ng-cloak>
-								<td><a href="/job/{{x.uuid}}">{{ x.name }}</a></td>
-								<td><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">{{x.status}}</span></td>
-								<td>{{ x.dateString }}</td>
-								<td><a target="_blank" href="/job_output/{{x.uuid}}/input">view</a>
-									<a href="/job_output/{{x.uuid}}/input" download="{{x.name}}_input">download</a>
-								</td>
-								<td><a target="_blank" href="/job_output/{{x.uuid}}/log">view</a>
-									<a href="/job_output/{{x.uuid}}/log" download="{{x.name}}.log">download</a>
-								</td>
-								<td><a href="/job_output/{{x.uuid}}/topology" download="{{x.name}}.top">download</a></td>
-								<td ng-cloak><a id="init-view" ng-cloak target="_blank" href={{x.initConf[0]}}>view</a>
-									<a id="init-download" ng-cloak href={{x.initConf[1]}} download="{{x.name}}_init_conf.dat">download</a>
-								</td>
-								<td><a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/{{x.uuid}}/last_conf&topology=/job_output/{{x.uuid}}/topology">view</a>
-									<a href="/job_output/{{x.uuid}}/last_conf" download="{{x.name}}_last_conf.dat">download</a>
-								</td>
-								<td><a id="traj_{{x.uuid}}" href="/job_output/{{x.uuid}}/trajectory_zip">download</a></td>
-								<td><button class="rounded" ng-click="cancelJob(x); x.status = 'Completed'" ng-disabled="x.status == 'Completed'">Cancel Job</button></td>
-								<td><button class="rounded"ng-click="confirmDelete(x)" ng-disabled="x.status != 'Completed' && x.status != 'Canceled'">Delete Job</button></td>
-							</tr>
-						</table>
-
-					</div>
-
-				</div>
-
-			</main>
+{% block content %}
+	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+			<h1 class="h2">View Jobs</h1>
 		</div>
-	</div>
 
-				<!-- Bootstrap core JavaScript
-					================================================== -->
-					<!-- Placed at the end of the document so the pages load faster -->
+		<div class="card">
+			<div class="card-body">
+				<p> <b>Server status:</b> <br>
+				Total jobs currently running: <span ng-cloak>[[jobsRunning]]</span><br>
+				Total jobs in queue: <span ng-cloak>[[jobsQueued]]</span><br><br>
+				</p>
+				<p><b>Your simulations:</b><br> Here is a list of the jobs you have currently running, pending or finished under your account. Please be aware trajectory files get automatically deleted one week after the job finishes. To access analysis tools, click on your job name.</p>
+				<table>
+					<tr class="font-weight-bold">
+						<td>Job Name</td>
+						<td>Status</td>
+						<td>Started</td>
+						<td>Input</td>
+						<td>Log</td>
+						<td>Topology</td>
+						<td>Initial Configuration</td>
+						<td>Last Configuration</td>
+						<td>Trajectory</td>
+						<td>Cancel</td>
+						<td>Delete</td>
+					</tr>
+						<tr ng-repeat="x in jobs" ng-cloak>
+							<td><a href="/job/[[x.uuid]]">[[ x.name ]]</a></td>
+							<td><span ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">[[x.status]]</span></td>
+							<td>[[ x.dateString ]]</td>
+							<td><a target="_blank" href="/job_output/[[x.uuid]]/input">view</a>
+								<a href="/job_output/[[x.uuid]]/input" download="[[x.name]]_input">download</a>
+							</td>
+							<td><a target="_blank" href="/job_output/[[x.uuid]]/log">view</a>
+								<a href="/job_output/[[x.uuid]]/log" download="[[x.name]].log">download</a>
+							</td>
+							<td><a href="/job_output/[[x.uuid]]/topology" download="[[x.name]].top">download</a></td>
+							<td ng-cloak><a id="init-view" ng-cloak target="_blank" href="[[ x.initConf[0] ]]">view</a>
+								<a id="init-download" ng-cloak href="[[ x.initConf[1] ]]" download="[[x.name]]_init_conf.dat">download</a>
+							</td>
+							<td><a target="_blank" href="/static/oxdna-viewer/index.html?configuration=/job_output/[[x.uuid]]/last_conf&topology=/job_output/[[x.uuid]]/topology">view</a>
+								<a href="/job_output/[[x.uuid]]/last_conf" download="[[x.name]]_last_conf.dat">download</a>
+							</td>
+							<td><a id="traj_[[x.uuid]]" href="/job_output/[[x.uuid]]/trajectory_zip">download</a></td>
+							<td><button class="rounded" ng-click="cancelJob(x); x.status = 'Completed'" ng-disabled="x.status == 'Completed'">Cancel Job</button></td>
+							<td><button class="rounded"ng-click="confirmDelete(x)" ng-disabled="x.status != 'Completed' && x.status != 'Canceled'">Delete Job</button></td>
+						</tr>
+				</table>
 
-				</body>
-				<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-				<script>
-					feather.replace()
+			</div>
 
-					var frame = window.frames['editor-frame'];
+		</div>
 
-					var openFiles = function(files) {
-						//console.log(files);
-						//frame.document.dispatchEvent(new Event('drop'));
-						//console.log("EVENT DISPATCHED!")
-						console.log(files);
-						dispatchFakeDrop(files);
-					}
-
-					var dispatchFakeDrop = function(files) {
-						console.log("called");
-						var fakeDropEvent = new DragEvent('drop');
-					// You override dataTransfer with whichever property
-					// and method the drop function needs
-
-					Object.defineProperty(fakeDropEvent, 'dataTransfer', {
-						value: new FakeDataTransfer(files)
-					});
-					frame.renderer.domElement.dispatchEvent(fakeDropEvent);
-
-					}
-
-					var finishedLoading = function() {
-						console.log("child finished loading!");
-						//dispatchFakeDrop();
-					}
-
-					function FakeDataTransfer(files) {
-					this.dropEffect = 'all';
-					this.effectAllowed = 'all';
-					this.items = [];
-					this.types = ['Files'];
-					this.getData = function() {
-
-					return files;
-					};
-					this.files = files;
-					};
-
-					var files = {};
-
-					function FakeDataDownload(file, filename) {
-						console.log("Fake file download: ", file, filename);
-						files[filename] = file;
-					}
-
-					function TriggerFileDownloads() {
-						frame.makeOutputFiles()
-					}
-				</script>
-
-				<script src="/static/angular.min.js"></script>
-				<script src="/static/script.js"></script>
-				</html>
+	</main>
+{% endblock %}
