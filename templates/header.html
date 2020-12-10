@@ -1,0 +1,27 @@
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">oxDNA.org</a>
+    
+    {% if addSearchBox %}
+        <input ng-model="searchText" class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
+    {% endif %}
+
+    {{session['name']}}
+
+    {% if session['user_id'] %}
+    <ul class="navbar-nav ml-auto px-3">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" href="/account"> Welcome {{session['name']}}</a>
+        </li>
+    </ul>
+    {% endif %}
+
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            {% if session['user_id'] %}
+                <a class="nav-link" href="/logout">Sign out</a>
+            {% else %}
+                <a class="nav-link" href="/login">Login</a>
+            {% endif %}
+        </li>
+    </ul>
+</nav>

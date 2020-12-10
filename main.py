@@ -1,7 +1,7 @@
 import os
 import sys
 import uuid
-from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort, make_response
+from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort, make_response, render_template
 import requests
 import Login
 import Job
@@ -26,10 +26,7 @@ def after_request(response):
 
 @app.route('/create', methods=['GET'])
 def create_job():
-	if session.get("user_id") is None:
-		return redirect("/login")
-	else:
-		return send_file("templates/index.html")
+	return render_template("index.html")
 
 @app.route('/create_job', methods=['POST'])
 def handle_form():
@@ -56,8 +53,8 @@ def handle_form():
 			if key not in parameters:
 				parameters[key] = default_parameters[key]
 
-	if session.get("user_id") is None:
-		return "You must be logged in to submit a job!"
+	#if session.get("user_id") is None:
+	#	return "You must be logged in to submit a job!"
 
 	user_id = session["user_id"]
 	if type(user_id) == str:
@@ -68,6 +65,7 @@ def handle_form():
 			
 	activeJobCount = Admin.getUserActiveJobCount(user_id)
 	jobLimit = Admin.getJobLimit(user_id)
+	print(activeJobCount, jobLimit, flush=True)
 
 	if (activeJobCount >= jobLimit):
 		return "You have reached the maximum number of running jobs."
@@ -112,7 +110,7 @@ def handle_form():
 
 @app.route("/guestcreate", methods=["GET"])
 def create_guest_job():
-	return send_file("templates/guestcreate.html")
+	return render_template("guestcreate.html")
 
 @app.route('/cancel_job', methods=['POST'])
 def cancel_job():
@@ -152,7 +150,6 @@ def create_analysis():#jobId, analysis_type):
 
 	json_data = request.get_json()
 	from sys import stderr
-	print(json_data, file=stderr)
 
 	userId = session["user_id"]
 
@@ -189,7 +186,7 @@ def register():
 	print("NOW REGISTERING USER!")
 
 	if request.method == "GET":
-		return send_file("templates/register.html")
+		return render_template("register.html")
 
 	if request.method == "POST":
 		user = request.get_json()
@@ -209,8 +206,20 @@ def set_cookie():
 
 @app.route("/setsessionid", methods=["POST"])
 def set_session_id():
-	session["user_id"] = request.data.decode("utf-8")
+	uid =  request.data.decode("utf-8").strip('\"')
+	session["user_id"] = uid
+	session["name"] = Account.getFirstName(session["user_id"])
 	return "Success"
+
+@app.route("/getsessionid", methods=["POST"])
+def get_session_id():
+	try:
+		if session["user_id"]:
+			return session["user_id"]
+		else:
+			return "None"
+	except:
+		return "None"
 
 @app.route("/registerguest", methods=["POST"])
 def register_guest():
@@ -218,32 +227,35 @@ def register_guest():
 	if request.method == "POST":
 		response = Register.registerGuest()
 		session["user_id"] = response
+		session["name"] = Account.getFirstName(session["user_id"])
 		return response
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
 	if request.method == "GET":
-		return send_file("templates/login.html")
+		return render_template("login.html")
 
 	if request.method == "POST":
-		username = request.form["username"]
-		password = request.form["password"]
+		user = request.get_json()
+		username = user["email"]
+		password = user["password"]
 	if username is not None and password is not None:
 		user_id = Login.loginUser(username, password)
-		if(user_id > -1):
+		if(isinstance(user_id, int)):
 			session["user_id"] = user_id
-			return redirect("/")
-		elif(user_id == -2):
-			return "Error, user not verified. Please verify using the link sent to the email you registered with."
+			session["name"] = Account.getFirstName(user_id)
+			return "Success"
 		else:
-			return "Invalid username or password"
+			return user_id #user_id is a dict with errors if there are errors
+		
 		
 	return "Invalid username or password"
 
 @app.route("/logout")
 def logout():
 	session["user_id"] = None
+	session["name"] = None
 	return redirect("/")
 
 
@@ -253,7 +265,7 @@ def account():
 		return "You must be logged in to modify your account"
 
 	if request.method == "GET":
-		return send_file("templates/account.html")
+		return render_template("account.html")
 
 @app.route("/password/forgot", methods=["GET"])
 def forgotPassword():
@@ -371,12 +383,13 @@ def jobs():
 	if session.get("user_id") is None:
 		return redirect("/login")
 	else:
-		return send_file("templates/jobs.html")
+		return render_template("jobs.html")
 
 @app.route("/guestjob/<job_id>")
 def view_guest_job(job_id):
 	session["user_id"] = Job.getUserIdForJob(job_id)
-	return send_file("templates/guestjob.html")
+	session["name"] = Account.getFirstName(user_id)
+	return render_template("guestjob.html")
 
 @app.route("/job/<job_id>")
 def view_job(job_id):
@@ -384,7 +397,7 @@ def view_job(job_id):
 	if session.get("user_id") is None:
 		return redirect("/login")
 	else:
-		return send_file("templates/job.html")
+		return render_template("job.html")
 
 @app.route("/job/update_name/<name>/<uuid>")
 def update_job_name(name, uuid):
@@ -481,7 +494,6 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 
 	if "log" in desired_output_map:
 		try:
-			print(desired_file_path)
 			desired_file = open(desired_file_path, "r")
 			desired_file_contents = desired_file.read()
 			return Response(desired_file_contents, mimetype='text/plain')
@@ -564,7 +576,7 @@ def admin():
 	userID = session.get("user_id")
 	isAdmin = Admin.checkIfAdmin(userID)
 	if isAdmin == 1:
-		return send_file("templates/admin.html")
+		return render_template("admin.html")
 	else:
 		return "You must be an admin to access this page."
 
@@ -670,16 +682,25 @@ def getUserInfo(username):
 
 @app.route("/images/<image>")
 def getImage(image=None):
-	print(image)
-	print(os.path.isfile("images/{}".format(image)), flush=True)
 	if os.path.isfile("images/{}".format(image)):
 		return send_file("images/{}".format(image))
 	else:
 		abort(404, discription="Image not found")
 
+@app.route("/example")
+def example():
+	return render_template("example.html")
+
+@app.route("/example/<fname>")
+def getExample(fname):
+	if os.path.isfile("example/{}".format(fname)):
+		return send_file("example/{}".format(fname))
+	else:
+		abort(404, description="File not found")
+
 @app.route("/")
 def index():
-	return send_file("templates/landing.html")
+	return render_template("landing.html")
 
 if __name__ == '__main__':
 	app.run(host="0.0.0.0", port=9000)

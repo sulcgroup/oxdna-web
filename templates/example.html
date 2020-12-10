@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% set active_page = "example" %}
+
+{% block title %}Example{% endblock %}
+
+{% block content %}
+
+<main role="main"class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h1">Example of use</h1>
+    </div>
+
+    <div class="card">
+        <div id=exampleCard class="card-body">
+            Thank you for your interest in oxdna.org!  The following tutorial will walk you through an example of using the server to simulate a DNA origami.
+            <p>
+                <h4>
+                    Example files
+                </h4>
+                DNA/RNA structures in an oxDNA simulation are defined by a "configuration" and a "topology".  Download these two files to begin:
+                <ul>
+                    <li><a href="example/23.dat">Configuration</a></li>
+                    <li><a href="example/23.top">Topology</a></li>
+                </ul>
+                These files describe a wireframe DNA origami from <a href="https://advances.sciencemag.org/content/5/1/eaav0655">this paper</a> in oxDNA format.
+            </p>
+            <p>
+                <h4>
+                    Submitting the job
+                </h4>
+                Next, open the "Submit as guest" link in the sidebar in a new tab to go to the job submit page.  On that page you will see a button to upload files.  
+                Click that button, navigate to where you saved 23.dat and 23.top, select both (ctrl+click) and click "Open".
+                 
+            </p>
+            <p>
+                You will see the design appear in the oxView window below.  Take a moment to make sure its the design you mean to submit.
+                Below that are a series of input fields that define a simulation. Since this is an example, we are going to make some modifications from the defaults.
+                <ul>
+                    <li>Change "Steps" to 1000000</li>
+                    <li>Click "View advanced parameters" and change "Print_conf_interval" to 50000</li>
+                </ul>
+            </p>
+            <p>
+                Now click "Submit Job", after a few seconds you will be taken to the job status page.
+            </p>
+            <p>
+                <h4>
+                    Analyzing the output
+                </h4>
+                Once the job status has changed to "Completed", it is ready for analysis.  Click the job name in the leftmost column to go to the analysis page.
+                On the analysis page you will find a series of options for built-in analysis options.  
+                As an example, try clicking on "Compute mean", wait for the status to change to "Completed" and then click "View means+deviations" to see the mean structure and per-nucleotide RMSF during the simulation.
+            </p>
+        </div>
+
+    </div>
+</main>
+
+{% endblock %}

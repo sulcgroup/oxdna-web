@@ -1,4 +1,7 @@
 var app = angular.module("app", [])
+    .config(function($interpolateProvider) {
+	$interpolateProvider.startSymbol('[[').endSymbol(']]');
+	});
 
 //analysis codes
 var MEAN = 1;
@@ -632,7 +635,28 @@ app.controller("JobsCtrl", function($scope, JobsService, $http) {
 })
 
 app.controller("LoginCtrl", function($scope) {
+	$scope.errors = {}
 
+	$scope.login = function(user) {
+		for (field in $scope.errors) {
+			$scope.errors[field] = "";
+		}
+		const request = new XMLHttpRequest();
+		request.open("POST", "/login");
+		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		request.send(JSON.stringify(user));
+		request.onload = () => {
+			if (request.response == "Success") {
+				window.location = "/"
+			} else {
+				const response = JSON.parse(request.response);
+				for (field in response) {
+					$scope.errors[field] = response[field];
+				}
+			}
+			$scope.$apply();
+		}
+	}
 })
 
 app.controller("RegisterCtrl", function($scope) {
@@ -757,14 +781,14 @@ app.controller("MainCtrl", function($scope, $http) {
 
 			request.onload = function() {
 				if(request.response.startsWith("Success")) {
-					if (window.location.href.includes("guestcreate")) {
+					const sId = $scope.getSessionId();
+					if ( sId == "None") {
 						resolve(request.response);
 					}
 					else resolve("user job submitted");
 				} else {
 					resolve(request.response)
 				}
-				console.log(request.response);
 			}
 		})
 	}
@@ -809,12 +833,23 @@ app.controller("MainCtrl", function($scope, $http) {
 		});
 	}
 
+	$scope.getSessionId = function() {
+		return new Promise(resolve => {
+			const request = new XMLHttpRequest();
+			request.open("POST", "/getsessionid");
+			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			request.send();
+			request.onload = () => resolve(request.response);
+		});
+	}
+
 	$scope.submitJob = async function() {
 		$scope.submissionStatus = 'Processing submission...';
 		$scope.error = '';
 
 		// Handle guest job submission
-		if (window.location.href.includes("guestcreate")) {
+		const sId = await $scope.getSessionId().then(res => res);
+		if ( sId == "None") {
 			const cookie = await $scope.getCookie().then(res => res);
 			if (cookie === "-1") {
 				const userId = await $scope.registerGuest().then(res => res);

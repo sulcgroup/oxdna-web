@@ -1,193 +1,91 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>oxDNA.org Admin</title>
-    
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
+{% extends 'base.html' %}
+{% set active_page = "admin" %}
+{% set page_controller = "AdminCtrl" %}
+{% set addSearchBox = True %}
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+{% block title %}Admin{% endblock %}
 
-    <link rel="stylesheet" href="/static/style.css">
-    <style>
-        table, th , td {
-            border: 1px solid grey;
-            border-collapse: collapse;
-            padding: 15px;
-            width:100%;
-        }
+{% block additionalStylesheet %}
+<style>
+	table, th , td {
+		border: 1px solid grey;
+		border-collapse: collapse;
+		padding: 15px;
+		width:100%;
+	}
 
-        table td {
-            width:15%;
-            text-align: center;
-        }
+	table td {
+		width:15%;
+		text-align: center;
+	}
 
-        table tr:nth-child(odd) {
-            background-color: #f1f1f1;
-        }
+	table tr:nth-child(odd) {
+		background-color: #f1f1f1;
+	}
 
-        table tr:nth-child(even) {
-            background-color: #ffffff;
-        }
-    </style>
-</head>
+	table tr:nth-child(even) {
+		background-color: #ffffff;
+	}
+</style>
+{% endblock %}
 
-<body ng-app="app" ng-controller="AdminCtrl">
-    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">oxDNA.org</a>
-        <input class="form-control form-control-dark w-100" type="text" placeholder="Search job history" aria-label="Search">
-        <ul class="navbar-nav px-3">
-            <li class="nav-item text-nowrap">
-                <a class="nav-link" href="/logout">Sign out</a>
-            </li>
-        </ul>
-    </nav>
+{% block content %}
 
-    <div  class="container-fluid">
-        <div class="row">
-            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                <div class="sidebar-sticky mt-5" ng-cloak>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/">
-                                <span data-feather="home"></span>
-                                Dashboard <span class="sr-only">(current)</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/jobs">
-                                <span data-feather="list"></span>
-                                View Jobs
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/create">
-                                <span data-feather="edit"></span>
-                                Create A Job	
-                            </a>
-                        </li>
-
-                        <!-- 
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text"></span>
-                                My Files	
-                            </a>
-                        </li>
-                        !--> 
-                        
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/account">
-                                <span data-feather="user"></span>
-                                My Account	
-                            </a>
-                        </li>
-                    </ul>
-
-                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                        <span>JOB HISTORY</span>
-                        <a class="d-flex align-items-center text-muted" href="#">
-                        </a>
-                    </h6>
-                    <ul class="nav flex-column mb-2">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text"></span>
-                                job_123912312312.log
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text"></span>
-                                job_79797988.log
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text"></span>
-                                job_12391239123.log
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file-text"></span>
-                                job_57412313212.log
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Admin</h1>
-                </div>
-
-
-                <div class="card">
-                    <div class="card-body" ng-cloak>
-
-                        Welcome, here you can manage other user accounts.
-
-                        <br><br>
-                        <h3>Recently Added Users</h3>
-                        <button ng-repeat="x in recentUsers" ng-click="selectRecentUser(x)">{{x}}</button>
-                        <br><br>
-                        <h5>Search User</h5>
-                        <input ng-model="searchInput"><button ng-click="searchUser()">Search</button>
-                        <br><br>
-
-                        <h3>{{selectedUserName}}</h3>
-                        Number of jobs: {{selectedUserJobCount}}
-                        <br>
-                        Job limit: {{selectedUserJobLimit}}
-                        <br>
-                        Time limit: {{selectedUserHours}} hours {{selectedUserMinutes}} minutes {{selectedUserSeconds}} seconds remaining
-                        <br>
-                        Admin: {{selectedUserIsAdmin}}
-                        <br>
-                        Privaleged: {{selectedUserIsPrivaleged}}
-                        <br>
-                        <button ng-click="promoteToPrivaleged()">Make Privaleged</button>
-                        <button ng-click="promoteToAdmin()">Make Admin</button>
-                        <br>
-                        {{message}}
-                        <br>
-                        <h5>Set job limit (# of jobs)</h5>
-                        <input ng-model="jobLimitInput"><button ng-click="setJobLimit()">Set</button>
-                        <br>
-                        {{jobMessage}}
-                        <br>
-                        <h5>Set time limit (hours/month)</h5>
-                        <input ng-model="timeLimitInput"><button ng-click="setTimeLimit()">Set</button>
-                        <br>
-                        {{timeMessage}}
-                        <br>
-                        <h5>Delete User</h5>
-                        <button ng-click="confirmDeleteUser()">Delete</button>
-                        <br>
-                        {{deleteUserMessage}}
-                        <br>
-                        <h3>All Users</h3>
-                        <button ng-repeat="x in allUsers" ng-click="selectRecentUser(x)">{{x}}</button>
-
-                    </div>
-            </main>
-        </div>
-    </div>
-
-    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-    <script>
-        feather.replace()
-    </script>
-    <script src="/static/angular.min.js"></script>
-    <script src="/static/script.js"></script>
-
-</body>
-</html>
+	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+			<h1 class="h2">Admin</h1>
+		</div>
+	
+	
+		<div class="card">
+			<div class="card-body" ng-cloak>
+	
+				Welcome, here you can manage other user accounts.
+	
+				<br><br>
+				<h3>Recently Added Users</h3>
+				<button ng-repeat="x in recentUsers" ng-click="selectRecentUser(x)">[[x]]</button>
+				<br><br>
+				<h5>Search User</h5>
+				<input ng-model="searchInput"><button ng-click="searchUser()">Search</button>
+				<br><br>
+	
+				<h3>[[selectedUserName]]</h3>
+				Number of jobs: [[selectedUserJobCount]]
+				<br>
+				Job limit: [[selectedUserJobLimit]]
+				<br>
+				Time limit: [[selectedUserHours]] hours [[selectedUserMinutes]] minutes [[selectedUserSeconds]] seconds
+				remaining
+				<br>
+				Admin: [[selectedUserIsAdmin]]
+				<br>
+				Privaleged: [[selectedUserIsPrivaleged]]
+				<br>
+				<button ng-click="promoteToPrivaleged()">Make Privaleged</button>
+				<button ng-click="promoteToAdmin()">Make Admin</button>
+				<br>
+				[[message]]
+				<br>
+				<h5>Set job limit (# of jobs)</h5>
+				<input ng-model="jobLimitInput"><button ng-click="setJobLimit()">Set</button>
+				<br>
+				[[jobMessage]]
+				<br>
+				<h5>Set time limit (hours/month)</h5>
+				<input ng-model="timeLimitInput"><button ng-click="setTimeLimit()">Set</button>
+				<br>
+				[[timeMessage]]
+				<br>
+				<h5>Delete User</h5>
+				<button ng-click="confirmDeleteUser()">Delete</button>
+				<br>
+				[[deleteUserMessage]]
+				<br>
+				<h3>All Users</h3>
+				<button ng-repeat="x in allUsers" ng-click="selectRecentUser(x)">[[x]]</button>
+	
+			</div>
+	
+	</main>
+{% endblock %}

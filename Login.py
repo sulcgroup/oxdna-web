@@ -10,9 +10,11 @@ find_by_user_id_query = ("SELECT id, password FROM Users WHERE id = %s")
 update_password_query = ("UPDATE Users SET password = %s WHERE id = %s")
 get_verified_query = ("SELECT verified FROM Users WHERE id = %s")
 
+
 def loginUser(username, password):
 
 	print("Now logging in user:", username)
+	errors = {}
 
 	connection = Database.pool.get_connection()
 
@@ -29,8 +31,9 @@ def loginUser(username, password):
 		user_id, password_hash, verified = result
 
 	if user_id is None or password_hash is None:
+		errors["loginError"] = "Please enter your username and password"
 		connection.close()
-		return -1
+		return errors
 
 	with connection.cursor() as cursor:
 		cursor.execute(get_verified_query, (user_id,))
@@ -44,10 +47,12 @@ def loginUser(username, password):
 		if verified == "True":
 			return user_id
 		else:
-			return -2
+			errors["loginError"] = "User is not verified.  Please check your email for a verification link."
+	else:
+		errors["loginError"] = "Invalid username or password (username is your email)"
 
 
-	return -1
+	return errors
 
 
 def updatePasssword(userId, old_password, new_password):
