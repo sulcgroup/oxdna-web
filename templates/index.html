@@ -41,7 +41,6 @@
 				<input type="file" accept=".top,.conf,.dat,.oxdna" autocomplete="off" class="form-control-file"
 					id="exampleFormControlFile1" multiple onchange="openFiles(this.files)">
 			</div>
-			</form>
 
 			<iframe name="editor-frame"
 				style="resize:vertical;overflow:auto;width:95%;height:550px;margin:10px auto;display:block;"
@@ -56,19 +55,19 @@
 				<input ng-model="data.job_title" maxlength="16" type="text" class="form-control"
 					placeholder="A title for your reference" aria-label="Username" aria-describedby="basic-addon1">
 			</div>
-			<p>
-			<h6>Interaction Type</h6>
-			<div class="form-check form-check-inline">
-				<input ng-model="data.interaction_type" class="form-check-input" type="radio" name="interaction_type"
-					id="inlineRadio1" value="DNA">
-				<label class="form-check-label" for="inlineRadio1">DNA</label>
+			<div class="mb-3">
+                            <h6>Interaction Type</h6>
+                            <div class="form-check form-check-inline">
+                                    <input ng-model="data.interaction_type" class="form-check-input" type="radio" name="interaction_type"
+                                            id="inlineRadio1" value="DNA">
+                                    <label class="form-check-label" for="inlineRadio1">DNA</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                    <input ng-model="data.interaction_type" class="form-check-input" type="radio" name="interaction_type"
+                                            id="inlineRadio2" value="RNA">
+                                    <label class="form-check-label" for="inlineRadio2">RNA</label>
+                            </div>
 			</div>
-			<div class="form-check form-check-inline">
-				<input ng-model="data.interaction_type" class="form-check-input" type="radio" name="interaction_type"
-					id="inlineRadio2" value="RNA">
-				<label class="form-check-label" for="inlineRadio2">RNA</label>
-			</div>
-			</p>
 			<div class="input-group mb-3">
 				<div class="input-group-prepend">
 					<span class="input-group-text" id="basic-addon1">Salt Concentration</span>
@@ -87,19 +86,19 @@
 					aria-describedby="basic-addon1">
 			</div>
 
-			<p>
-			<h6>Temperature Units</h6>
-			<div class="form-check form-check-inline">
-				<input ng-model="auxillary.temperature_units" class="form-check-input" type="radio"
-					name="temperature_units" id="inlineRadio1" value="kelvin">
-				<label class="form-check-label" for="inlineRadio1">Kelvin</label>
+			<div class="mb-3">
+                            <h6>Temperature Units</h6>
+                            <div class="form-check form-check-inline">
+                                    <input ng-model="auxillary.temperature_units" class="form-check-input" type="radio"
+                                            name="temperature_units" id="inlineRadio1" value="kelvin">
+                                    <label class="form-check-label" for="inlineRadio1">Kelvin</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                    <input ng-model="auxillary.temperature_units" class="form-check-input" type="radio"
+                                            name="temperature_units" id="inlineRadio1" value="celsius">
+                                    <label class="form-check-label" for="inlineRadio2">Celsius</label>
+                            </div>
 			</div>
-			<div class="form-check form-check-inline">
-				<input ng-model="auxillary.temperature_units" class="form-check-input" type="radio"
-					name="temperature_units" id="inlineRadio1" value="celsius">
-				<label class="form-check-label" for="inlineRadio2">Celsius</label>
-			</div>
-			</p>
 
 
 
@@ -112,55 +111,55 @@
 					aria-describedby="basic-addon1">
 			</div>
 
-			<p>
+			<div class="mb-3">
 				<h6>Relaxation</h6>
-				<p>
+				<div class="mb-3">
 					<div class="form-check form-check-inline">
 						<input ng-model="data.needs_relax" class="form-check-input" type="checkbox" name="needs_relax" id="inlinecheckbox1" value="true">
 						<label class="form-check-label" for="inlinecheckbox1">Needs Relax</label>
 					</div>
-				</p>
+				</div>
 
-				<p>
+				<div class="mb-3">
 					<a class="btn btn-primary" data-toggle="collapse" href="#relaxParams" role="button" aria-expanded="false" aria-controls="relaxParams">View relax parameters</a>
 					<div class="collapse" id="relaxParams">
 						<h4>Relax Parameters</h4>
 
-						<p>
+						<div class="mb-3">
 							<div class="input-group mb-3">
 								<div class="input-group-prepend">
 									<span class="input-group-text" id="MC_steps">MC steps</span>
 								</div>
 								<input ng-model="data.MC_steps" type="number" class="form-control" placeholder="The number of Monte Carlo steps in the initial relax" aria-label="The number of Monte Carlo steps in the initial relax" aria-describedby="basic">
 							</div>
-						</p>
-						<p>
+						</div>
+						<div class="mb-3">
 							<div class="input-group mb-3">
 								<div class="input-group-prepend">
 									<span class="input-group-text" id="MD_steps">MD steps</span>
 								</div>
 								<input ng-model="data.MD_steps" type="number" class="form-control" placeholder="The number of molecular dynamics steps in the secondary relax" aria-label="The number of molecular dynamics steps in the secondary relax" aria-describedby="basic">
 							</div>
-						</p>
-						<p>
+						</div>
+						<div class="mb-3">
 							<div class="input-group mb-3">
 								<div class="input-group-prepend">
 									<span class="input-group-text" id="MD_dt">MD timestep</span>
 								</div>
 								<input ng-model="data.MD_dt" type="number" step=0.00001 class="form-control" placeholder="The timestep of the MD simulation" aria-label="The timestep of the MD simulation" aria-describedby="basic">
 							</div>
-						</p>
+						</div>
 					</div>
-				</p>
-			</p>
+				</div>
+			</div>
 
-			<p>
+			<div class="mb-3">
 				<a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">View advanced parameters</a>
 
 				<div class="collapse" id="multiCollapseExample1">
 					<h4>Advanced Parameters</h4>
 
-					<p>
+					<div class="mb-3">
 						<h6>Backend</h6>
 						<div class="form-check form-check-inline">
 							<input ng-model="data.backend" class="form-check-input" type="radio" name="backend" id="inlineRadio1" value="CPU">
@@ -170,9 +169,9 @@
 							<input ng-model="data.backend" class="form-check-input" type="radio" name="backend" id="inlineRadio2" value="CUDA">
 							<label class="form-check-label" for="inlineRadio2">CUDA</label>
 						</div>
-					</p>
+					</div>
 
-					<p>
+					<div class="mb-3">
 						<h6>Simulation timestep</h6>
 						<div class="input-group mb-3">
 							<div class="input-group-prepend">
@@ -180,14 +179,14 @@
 							</div>
 							<input ng-model="data.dt" type="number" step=0.0001 class="form-control" placeholder="The timestep of integration for the simulation" aria-label="The timestep of integration for the simulation" aria-describedby="basic-addon1">
 						</div>
-					</p>
+					</div>
 
-					<p>
+					<div class="mb-3">
 						<h6>External force file</h6>
 						<input fileread="force_file" type="file" class="form-control-file" id="force-file">
-					</p>
+					</div>
 
-					<p>
+					<div class="mb-3">
 						<h6>Use average sequence model</h6>
 						<div class="form-check form-check-inline">
 							<input ng-model="auxillary.use_average_seq" class="form-check-input" type="radio" name="use_average_seq" id="inlineRadio1" value="true">
@@ -197,9 +196,9 @@
 							<input ng-model="auxillary.use_average_seq" class="form-check-input" type="radio" name="use_average_seq" id="inlineRadio2" value="false">
 							<label class="form-check-label" for="inlineRadio2">No</label>
 						</div>
-					</p>
+					</div>
 
-					<p>
+					<div class="mb-3">
 						<h6>Mismatch Repulsion (RNA only)</h6>
 						<div class="form-check form-check-inline">
 							<input ng-model="auxillary.mismatch_repulsion" class="form-check-input" type="radio" name="mismatch_repulsion" id="inlineRadio1" value="true">
@@ -209,9 +208,9 @@
 							<input ng-model="auxillary.mismatch_repulsion" class="form-check-input" type="radio" name="mismatch_repulsion" id="inlineRadio2" value="false">
 							<label class="form-check-label" for="inlineRadio2">No</label>
 						</div>
-					</p>
+					</div>
 
-					<p>
+					<div class="mb-3">
 						<div class="input-group mb-3">
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">Print conf_interval</span>
@@ -225,13 +224,13 @@
 							</div>
 							<input ng-model="data.print_energy_every" type="number" class="form-control" placeholder="The time steps between the outputting of energy" aria-label="sets the salt concentration in M" aria-describedby="basic">
 						</div>
-					</p>
+					</div>
 				</div>
-			</p>
+			</div>
 
-			<p>
+			<div class="mb-3">
 				<button ng-click="submitJob()" type="submit" class="btn btn-primary">Submit Job</button>
-			</p>
+			</div>
 
 			<div ng-if="submissionStatus != ''" ng-cloak>
 				<h3>[[submissionStatus]]</h3>
@@ -245,7 +244,6 @@
 		</div>
 	</div>
 </main>
-</html>
 {% endblock %}
 
 {% block additionalScript %}
