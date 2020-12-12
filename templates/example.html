@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% set active_page = "example" %}
+{% set page_controller = "ExampleCtrl" %}
 
 {% block title %}Example{% endblock %}
 
@@ -28,6 +29,7 @@
                 </h4>
                 Next, open the "Submit as guest" link in the sidebar in a new tab to go to the job submit page.  On that page you will see a button to upload files.  
                 Click that button, navigate to where you saved 23.dat and 23.top, select both (ctrl+click) and click "Open".
+                Some browsers have trouble with opening two files like that, if this doesn't work, you can also select the two files and drag and drop them over the oxView window below the upload files button.
                  
             </div></body>
             <div class="mb-3">
@@ -37,9 +39,16 @@
                 <h4>
                     Analyzing the output
                 </h4>
+                <p>
                 Once the job status has changed to "Completed", it is ready for analysis.  Click the job name in the leftmost column to go to the analysis page.
                 On the analysis page you will find a series of options for built-in analysis options.  
+                </p>
+                <p>
                 As an example, try clicking on "Compute mean", wait for the status to change to "Completed" and then click "View means+deviations" to see the mean structure and per-nucleotide RMSF during the simulation.
+                Distance is another good example, in the "particle 1s" box type 7133 3513  and in the "particle 2s" box type 7351 7346 and then click "Start Analysis".  This will compute the end to end distance of one of the long edges and the adjacent short edge of the structure over the simulation.
+                <p>
+                The trajectory can be downloaded from the list of jobs or aligned and downloaded from the analysis page.  Once you have the trajectory downloaded, you can, for example create a movie using oxView, run the trajectory through some of our other <a href="https://github.com/sulcgroup/oxdna_analysis_tools">analysis scripts</a>, or run through your own analyses.
+                </p>
             </div>
         </div>
 

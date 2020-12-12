@@ -947,6 +947,12 @@ app.controller("LandingCtrl", function($scope, SessionManager){
 	
 })
 
+app.controller("ExampleCtrl", function($scope, SessionManager){
+	SessionManager.checkCookie();
+	$scope.apply
+	
+})
+
 app.controller("ForgotPasswordCtrl", function($scope, $http) {
 	$scope.status = null;
 
