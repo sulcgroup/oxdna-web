@@ -32,24 +32,26 @@
 
 
 {% block content %}
-	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-			<h1 class="h2">Login</h1>
+	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+		<h1 class="h2">Login</h1>
+	</div>
+	
+	<div class="card">
+		<div class="card-body">
+			<form novalidate>
+				<p class="font-weight-bold" style="margin-left: 2em;">Email: <input ng-model="user.email" name="username"
+						id="username" type="text"></p>
+				<p class="font-weight-bold" style="display: inline;">Password: <input ng-model="user.password"
+						name="password" id="password" type="password"></p>
+				<a href="/password/forgot">Forgot password?</a>
+				<br><br>
+				<input ng-click="login(user)" type="submit"><span
+					class="font-weight-normal text-danger">[[errors.loginError]]</span>
+			</form>
+	
+	
+			<br>
+			Don't have an account? <a href="/register">Register</a> or <a href="/create">Create as Guest</a>.
 		</div>
-
-		<div class="card">
-			<div class="card-body">
-				<form novalidate>
-					<p class="font-weight-bold" style="margin-left: 2em;">Email: <input ng-model="user.email" name="username" id="username" type="text"></p>
-					<p class="font-weight-bold" style="display: inline;">Password: <input ng-model="user.password" name="password" id="password" type="password"></p>
-					<a href="/password/forgot">Forgot password?</a>
-					<br><br>
-					<input ng-click="login(user)" type="submit"><span class="font-weight-normal text-danger">[[errors.loginError]]</span>
-				</form>
-
-
-				<br>
-				Don't have an account? <a href="/register">Register</a> or <a href="/create">Create as Guest</a>.
-
-				</main>
+	</div>
 {% endblock %}

@@ -29,57 +29,51 @@
 {% endblock %}
 
 {% block content %}
-
-	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-			<h1 class="h2">Account</h1>
+	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+		<h1 class="h2">Account</h1>
+	</div>
+	<div class="card">
+		<div class="card-body">
+			Welcome, here you can manage your account.
+			<br><br>
+			<div class="row">
+				<div class="col-6">
+					<h4>Update your Password</h4>
+					<div>
+						<br>
+						Old password: <input type="text" ng-model="old_password" placeholder="Your current password">
+						<br><br>
+						New password: <input type="password" ng-model="new_password" placeholder="Your new password">
+						<br><br>
+						<br><rb>
+						<button class="d-inline rounded" ng-click="updatePassword()">Update my password</button>
+						<div class="d-inline h6" ng-if="passwordStatus != null" id="password-status" ng-cloak>&nbsp;{{passwordStatus}}</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-
 		<div class="card">
 			<div class="card-body">
-				Welcome, here you can manage your account.
-				<br><br>
 				<div class="row">
 					<div class="col-6">
-						<h4>Update your Password</h4>
+						<h4>Email Preferences</h4>
 						<div>
 							<br>
-							Old password: <input type="text" ng-model="old_password" placeholder="Your current password">
-							<br><br>
-							New password: <input type="password" ng-model="new_password" placeholder="Your new password">
-							<br><br>
-							<br><rb>
-							<button class="d-inline rounded" ng-click="updatePassword()">Update my password</button>
-							<div class="d-inline h6" ng-if="passwordStatus != null" id="password-status" ng-cloak>&nbsp;{{passwordStatus}}</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="card">
-				<div class="card-body">
-					<div class="row">
-						<div class="col-6">
-							<h4>Email Preferences</h4>
-							<div>
-								<br>
-								<input type="checkbox" id="email0">
-								<label for="email0"> Send an email when a job completes</label><br>
-								<input type="checkbox" id="email1">
-								<label for="email1"> Send a warning email prior to file deletion</label><br>
-								<input type="checkbox" id="email2">
-								<label for="email2"> Send an email when a file is deleted</label><br>
-								<br>
-								<button class="d-inline rounded" ng-click="updateEmailPrefs()">Update preferences</button>
-								<div class="d-inline h6" ng-if="emailStatus != null" id="email-status" ng-cloak>&nbsp;{{emailStatus}}</div>
-								</div>
+							<input type="checkbox" id="email0">
+							<label for="email0"> Send an email when a job completes</label><br>
+							<input type="checkbox" id="email1">
+							<label for="email1"> Send a warning email prior to file deletion</label><br>
+							<input type="checkbox" id="email2">
+							<label for="email2"> Send an email when a file is deleted</label><br>
+							<br>
+							<button class="d-inline rounded" ng-click="updateEmailPrefs()">Update preferences</button>
+							<div class="d-inline h6" ng-if="emailStatus != null" id="email-status" ng-cloak>&nbsp;{{emailStatus}}</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		
-	</main>
-			
+	</div>		
 {% endblock %}

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% set active_page = "forgot" %}
+{% set active_page = "password/forgot" %}
 {% set page_controller = "ForgotPasswordCtrl" %}
 
 {% block title %}Forgot Password{% endblock %}
@@ -30,34 +30,31 @@
 {% endblock %}
 
 {% block content %}
-	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-			<h1 class="h2">Forgot password</h1>
-		</div>
+	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+		<h1 class="h2">Forgot password</h1>
+	</div>
 	
 	
-		<div class="card">
-			<div class="card-body">
+	<div class="card">
+		<div class="card-body">
 	
-				Enter your email below, and we will email you a link that allows you to reset your password.
+			Enter your email below, and we will email you a link that allows you to reset your password.
 	
-				<br><br>
+			<br><br>
 	
-				<div class="row">
-					<div class="col-6">
-						<div ng-if="status != null">
-							<h6 ng-cloak>{{status}}</h6>
-						</div>
-						<div>
-							<br>
-							Email: <input type="text" ng-model="email">
-							<br><br>
-							<button ng-click="submit()">Reset password</button>
-						</div>
+			<div class="row">
+				<div class="col-6">
+					<div ng-if="status != null">
+						<h6 ng-cloak>{{status}}</h6>
+					</div>
+					<div>
+						<br>
+						Email: <input type="text" ng-model="email">
+						<br><br>
+						<button ng-click="submit()">Reset password</button>
 					</div>
 				</div>
-	
 			</div>
 	
-	</main>
+		</div>
 {% endblock %}

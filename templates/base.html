@@ -14,18 +14,32 @@
 <script src="https://kit.fontawesome.com/7edb57c827.js" crossorigin="anonymous"></script>
 
 <link rel="stylesheet" href="/static/style.css">
-{% block additionalStylesheet %}{% endblock %}
+{% block additionalStylesheet %}
+{% endblock %}
 
 <body ng-controller="{{ page_controller }}">
     {% include "header.html" %}
-
     <div>
         <div class="row">
             {% include "sideNavBar.html" %}
 
-            {% block content %}{% endblock %}
+            <main role="main" class="ml-sm-auto col-lg-10 pt-3 px-4">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul class=flashes>
+                            {% for message in messages %}
+                            <div class='alert alert-warning' role="alert">
+                                <li>{{ message }} <a class=alert-link href="/realLogout">Logout</a> / <a class="alert-link" data-dismiss="alert">Go back</a></li>
+                            </div>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+                {% block content %}{% endblock %}
 
+            </main>
         </div>
+
     </div>    
 </body>
 

@@ -4,58 +4,66 @@
 
 {% block title %}Dashboard{% endblock %}
 
+{% block additionalStylesheet %}
+    <style>
+        .accordion {
+            background-color: rgb(239, 239, 243);
+            color: rgb(30, 32, 36);
+            cursor: pointer;
+            padding: 14px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            transition: 0.4s;
+            border: 1px solid rgb(100, 99, 99);
+            border-radius: 2px;
+            margin: 3px;
+        }
+    
+        .active, .accordion:hover {
+            background-color: #ccc;
+        }
+    
+        .panel {
+            padding: 0 18px;
+            background-color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+        }
+    
+        .accordion:after {
+            content: '\02795'; /* Unicode "plus" sign (+) */
+            font-size: 13px;
+            color: #777;
+            float: right;
+            margin-left: 5px;
+        }
+    
+        .active:after {
+            content: "\2796"; /* Unicode "minus" sign (-) */
+        }
+    </style>
+{% endblock %}
+
+{% block additionalScript %}
+    <script>
+        const toggle = element => {
+            element.classList.toggle("active");
+            const panel = element.nextElementSibling;
+            panel.style.maxHeight = panel.style.maxHeight ? null : panel.scrollHeight + "px";
+        }
+    </script>
+{% endblock %}
+
 {% block content %}
 
-<script>
-    const toggle = element => {
-        element.classList.toggle("active");
-        const panel = element.nextElementSibling;
-        panel.style.maxHeight = panel.style.maxHeight ? null : panel.scrollHeight + "px";
-    }
-</script>
 
-<style>
-    .accordion {
-        background-color: rgb(239, 239, 243);
-        color: rgb(30, 32, 36);
-        cursor: pointer;
-        padding: 14px;
-        width: 100%;
-        text-align: left;
-        border: none;
-        outline: none;
-        transition: 0.4s;
-        border: 1px solid rgb(100, 99, 99);
-        border-radius: 2px;
-        margin: 3px;
-    }
 
-    .active, .accordion:hover {
-        background-color: #ccc;
-    }
 
-    .panel {
-        padding: 0 18px;
-        background-color: white;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.2s ease-out;
-    }
 
-    .accordion:after {
-        content: '\02795'; /* Unicode "plus" sign (+) */
-        font-size: 13px;
-        color: #777;
-        float: right;
-        margin-left: 5px;
-    }
 
-    .active:after {
-        content: "\2796"; /* Unicode "minus" sign (-) */
-    }
-</style>
-
-<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h1">Welcome to oxDNA.org!</h1>
     </div>
@@ -282,7 +290,6 @@
             We gratefully acknowledge NSF grant no. 1931487 which funds the oxdna.org server development.
         </div>
     </div>
-</main>
 {% endblock %}
                 
 
