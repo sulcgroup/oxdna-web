@@ -875,7 +875,7 @@ app.controller("MainCtrl", function($scope, $http, SessionManager) {
 		const id = await SessionManager.checkCookie().then(res => res);
 		console.log(id);
 		if (id < 0) {
-			const userId = $scope.registerGuest().then(res => res);
+			const userId = await $scope.registerGuest().then(res => res);
 			if (!isNaN(parseInt(userId))) {
 				SessionManager.setCookie(userId);
 			}

@@ -294,7 +294,7 @@ def forgotPassword():
 		return "You must be logged out"
 
 	if request.method == "GET":
-		return send_file("templates/password/forgot.html")
+		return render_template("password/forgot.html")
 
 @app.route("/password/forgot/send_reset_token", methods=["POST"])
 def sendResetToken():
@@ -311,7 +311,7 @@ def resetPassword():
 		elif userId == -1:
 			return "Reset token expired: please try again"
 		else:
-			return send_file("templates/password/reset.html")
+			return render_template("password/reset.html")
 	
 	if request.method == "POST":
 		token = request.json["token"]
