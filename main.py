@@ -215,7 +215,7 @@ def set_session_id():
 def get_session_id():
 	try:
 		if session["user_id"]:
-			return session["user_id"]
+			return str(session["user_id"])
 		else:
 			return "None"
 	except:
@@ -480,10 +480,12 @@ def getJobs():
 
 @app.route("/analysis_output/<uuid>/<analysis_id>/<desired_output>") 
 def getAnalysisOutput(uuid, analysis_id, desired_output):
-	if session.get("user_id") is None:
+	user = Job.getFirstNameForUuid(analysis_id)
+	if session.get("user_id") is None and user != "Guest":
 		return "You must be logged in to view the output of a job"
 
-	user_directory = "/users/" + str(session["user_id"]) + "/"
+	userid = str(Job.getUserIdForJob(uuid))
+	user_directory = "/users/" + str(userid) + "/"
 	job_directory =  user_directory + uuid + "/"
 
 	desired_output_map = {
@@ -525,7 +527,8 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 @app.route("/job_output/<uuid>/<desired_output>")
 def getJobOutput(uuid, desired_output):
 
-	if session.get("user_id") is None:
+	user = Job.getFirstNameForUuid(uuid)
+	if session.get("user_id") is None and user != "Guest":
 		return "You must be logged in to view the output of a job"
 
 
@@ -554,8 +557,8 @@ def getJobOutput(uuid, desired_output):
 	if desired_output not in desired_output_map:
 		return "You must specify a valid desired output"
 	
-
-	user_directory = "/users/" + str(session["user_id"]) + "/"
+	userid = str(Job.getUserIdForJob(uuid))
+	user_directory = "/users/" + userid + "/"
 	job_directory =  user_directory + uuid + "/"
 	desired_file_path = job_directory + desired_output_map[desired_output]
 

@@ -708,7 +708,7 @@ app.controller("LoginCtrl", function($scope) {
 		request.open("POST", "/login");
 		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 		request.send(JSON.stringify(user));
-		request.onload = () => {
+		request.onreadystatechange = () => {
 			console.log(request.response);
 			if (request.getResponseHeader("Content-Type") === "text/html; charset=utf-8") {
 				window.location = "/";

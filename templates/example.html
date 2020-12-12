@@ -27,11 +27,20 @@
                 <h4>
                     Submitting the job
                 </h4>
+                <p>
                 Next, open the "Submit as guest" link in the sidebar in a new tab to go to the job submit page.  On that page you will see a button to upload files.  
                 Click that button, navigate to where you saved 23.dat and 23.top, select both (ctrl+click) and click "Open".
                 Some browsers have trouble with opening two files like that, if this doesn't work, you can also select the two files and drag and drop them over the oxView window below the upload files button.
-                 
-            </div></body>
+                </p>
+                <p>
+                    Next, make some modifications to the default parameters so the example finishes quickly:
+                    <ul>
+                        <li>Change the number of steps to 1000000 so the example finishes quickly.</li>
+                        <li>In Advanced parameters, change the print conf every to 100000</li>
+                    </ul>
+                    This will make the simulation take about 3 minutes to complete and will produce a trajectory with 10 configurations to analyze.  If you would like more data for the analysis, increase the number of steps.  OxDNA limits how much data can be produced per second, and increasing the configuration print frequency much more will hit the limit, terminating the simulation early.
+                </p>
+            </div>
             <div class="mb-3">
                 Now click "Submit Job", after a few seconds you will be taken to the job status page.
             </div>
