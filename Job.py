@@ -29,6 +29,7 @@ remove_job = ("DELETE FROM Jobs WHERE uuid = %s")
 remove_jobs_for_user_id = ("DELETE FROM Jobs WHERE userId = %s")
 get_status = ("SELECT status FROM Jobs WHERE uuid = %s")
 update_status = ("UPDATE Jobs SET status = %s WHERE uuid = %s")
+get_firstname_for_uuid = ("SELECT u.firstName from Jobs j JOIN Users u on j.userId=u.id WHERE j.uuid=%s")
 
 def getUserIdForJob(job_id):
 	connection = Database.pool.get_connection()
@@ -535,7 +536,7 @@ def getJobsForUserId(userId):
 
 	return payload
 
-def getJobForUserId(jobId, userId):
+def getJobFromUuid(jobId):
 	connection = Database.pool.get_connection()
 
 	result = None
@@ -558,6 +559,22 @@ def getJobNameForUuid(uuid):
 
 	with connection.cursor() as cursor:
 		cursor.execute(get_job_name_for_uuid, (uuid,))
+		result = cursor.fetchone()
+	
+	connection.close()
+	
+	if result is not None:
+		return result[0]
+	else:
+		return None
+
+def getFirstNameForUuid(uuid):
+	connection = Database.pool.get_connection()
+
+	result = None
+
+	with connection.cursor() as cursor:
+		cursor.execute(get_firstname_for_uuid, (uuid,))
 		result = cursor.fetchone()
 	
 	connection.close()

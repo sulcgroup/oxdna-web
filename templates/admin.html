@@ -30,62 +30,59 @@
 {% endblock %}
 
 {% block content %}
-
-	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-			<h1 class="h2">Admin</h1>
+	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+		<h1 class="h2">Admin</h1>
+	</div>
+	
+	
+	<div class="card">
+		<div class="card-body" ng-cloak>
+	
+			Welcome, here you can manage other user accounts.
+	
+			<br><br>
+			<h3>Recently Added Users</h3>
+			<button ng-repeat="x in recentUsers" ng-click="selectRecentUser(x)">[[x]]</button>
+			<br><br>
+			<h5>Search User</h5>
+			<input ng-model="searchInput"><button ng-click="searchUser()">Search</button>
+			<br><br>
+	
+			<h3>[[selectedUserName]]</h3>
+			Number of jobs: [[selectedUserJobCount]]
+			<br>
+			Job limit: [[selectedUserJobLimit]]
+			<br>
+			Time limit: [[selectedUserHours]] hours [[selectedUserMinutes]] minutes [[selectedUserSeconds]] seconds
+			remaining
+			<br>
+			Admin: [[selectedUserIsAdmin]]
+			<br>
+			Privaleged: [[selectedUserIsPrivaleged]]
+			<br>
+			<button ng-click="promoteToPrivaleged()">Make Privaleged</button>
+			<button ng-click="promoteToAdmin()">Make Admin</button>
+			<br>
+			[[message]]
+			<br>
+			<h5>Set job limit (# of jobs)</h5>
+			<input ng-model="jobLimitInput"><button ng-click="setJobLimit()">Set</button>
+			<br>
+			[[jobMessage]]
+			<br>
+			<h5>Set time limit (hours/month)</h5>
+			<input ng-model="timeLimitInput"><button ng-click="setTimeLimit()">Set</button>
+			<br>
+			[[timeMessage]]
+			<br>
+			<h5>Delete User</h5>
+			<button ng-click="confirmDeleteUser()">Delete</button>
+			<br>
+			[[deleteUserMessage]]
+			<br>
+			<h3>All Users</h3>
+			<button ng-repeat="x in allUsers" ng-click="selectRecentUser(x)">[[x]]</button>
+	
 		</div>
-	
-	
-		<div class="card">
-			<div class="card-body" ng-cloak>
-	
-				Welcome, here you can manage other user accounts.
-	
-				<br><br>
-				<h3>Recently Added Users</h3>
-				<button ng-repeat="x in recentUsers" ng-click="selectRecentUser(x)">[[x]]</button>
-				<br><br>
-				<h5>Search User</h5>
-				<input ng-model="searchInput"><button ng-click="searchUser()">Search</button>
-				<br><br>
-	
-				<h3>[[selectedUserName]]</h3>
-				Number of jobs: [[selectedUserJobCount]]
-				<br>
-				Job limit: [[selectedUserJobLimit]]
-				<br>
-				Time limit: [[selectedUserHours]] hours [[selectedUserMinutes]] minutes [[selectedUserSeconds]] seconds
-				remaining
-				<br>
-				Admin: [[selectedUserIsAdmin]]
-				<br>
-				Privaleged: [[selectedUserIsPrivaleged]]
-				<br>
-				<button ng-click="promoteToPrivaleged()">Make Privaleged</button>
-				<button ng-click="promoteToAdmin()">Make Admin</button>
-				<br>
-				[[message]]
-				<br>
-				<h5>Set job limit (# of jobs)</h5>
-				<input ng-model="jobLimitInput"><button ng-click="setJobLimit()">Set</button>
-				<br>
-				[[jobMessage]]
-				<br>
-				<h5>Set time limit (hours/month)</h5>
-				<input ng-model="timeLimitInput"><button ng-click="setTimeLimit()">Set</button>
-				<br>
-				[[timeMessage]]
-				<br>
-				<h5>Delete User</h5>
-				<button ng-click="confirmDeleteUser()">Delete</button>
-				<br>
-				[[deleteUserMessage]]
-				<br>
-				<h3>All Users</h3>
-				<button ng-repeat="x in allUsers" ng-click="selectRecentUser(x)">[[x]]</button>
-	
-			</div>
-	
-	</main>
+	</div>
 {% endblock %}

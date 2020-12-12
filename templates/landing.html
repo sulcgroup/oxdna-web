@@ -4,58 +4,66 @@
 
 {% block title %}Dashboard{% endblock %}
 
+{% block additionalStylesheet %}
+    <style>
+        .accordion {
+            background-color: rgb(239, 239, 243);
+            color: rgb(30, 32, 36);
+            cursor: pointer;
+            padding: 14px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            transition: 0.4s;
+            border: 1px solid rgb(100, 99, 99);
+            border-radius: 2px;
+            margin: 3px;
+        }
+    
+        .active, .accordion:hover {
+            background-color: #ccc;
+        }
+    
+        .panel {
+            padding: 0 18px;
+            background-color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+        }
+    
+        .accordion:after {
+            content: '\02795'; /* Unicode "plus" sign (+) */
+            font-size: 13px;
+            color: #777;
+            float: right;
+            margin-left: 5px;
+        }
+    
+        .active:after {
+            content: "\2796"; /* Unicode "minus" sign (-) */
+        }
+    </style>
+{% endblock %}
+
+{% block additionalScript %}
+    <script>
+        const toggle = element => {
+            element.classList.toggle("active");
+            const panel = element.nextElementSibling;
+            panel.style.maxHeight = panel.style.maxHeight ? null : panel.scrollHeight + "px";
+        }
+    </script>
+{% endblock %}
+
 {% block content %}
 
-<script>
-    const toggle = element => {
-        element.classList.toggle("active");
-        const panel = element.nextElementSibling;
-        panel.style.maxHeight = panel.style.maxHeight ? null : panel.scrollHeight + "px";
-    }
-</script>
 
-<style>
-    .accordion {
-        background-color: rgb(239, 239, 243);
-        color: rgb(30, 32, 36);
-        cursor: pointer;
-        padding: 14px;
-        width: 100%;
-        text-align: left;
-        border: none;
-        outline: none;
-        transition: 0.4s;
-        border: 1px solid rgb(100, 99, 99);
-        border-radius: 2px;
-        margin: 3px;
-    }
 
-    .active, .accordion:hover {
-        background-color: #ccc;
-    }
 
-    .panel {
-        padding: 0 18px;
-        background-color: white;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.2s ease-out;
-    }
 
-    .accordion:after {
-        content: '\02795'; /* Unicode "plus" sign (+) */
-        font-size: 13px;
-        color: #777;
-        float: right;
-        margin-left: 5px;
-    }
 
-    .active:after {
-        content: "\2796"; /* Unicode "minus" sign (-) */
-    }
-</style>
-
-<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h1">Welcome to oxDNA.org!</h1>
     </div>
@@ -207,8 +215,6 @@
                     and not use it excessively. For complex simulation tasks (such as FFS) and large number of designs to try, we recommend that you either purchase your own GPU server or use your own university HPC resources. Most universities have GPU servers available for their researchers.
                     The evaluation scripts that are used on our server are available <a target="_blank" href="https://github.com/sulcgroup/oxdna_analysis_tools">here</a>  and you can use them to evaluate and visualize your results from your local HPC service provider.</p>
             </div>
-            
-            </p>
         </div>
     </div>
     <div class="card">
@@ -227,7 +233,7 @@
             <H2>
                 Citation
             </H2>
-            <p>
+            <div>
                 Citation for this server coming soon!  For now, please cite our paper that covers the visualization and analysis tools offered as part of this webpage: <br>
                 <ul>
                 <li>E. Poppleton, J. Bohlin, M. Matthies, S. Sharma, F. Zhang, P. Šulc, Nucleic Acids Res., 48(12):e72 (2020) (DOI: <a target="_blank" href= https://doi.org/10.1093/nar/gkaa417>10.1093/nar/gkaa417</a>) <br>
@@ -238,7 +244,7 @@
                 <br>
                 We further kindly ask you to cite the following if you use the oxDNA model: <br>
                 <ul>
-                <li>B. E. K. Snodin, F. Randisi, M. Mosayebi, P. Šulc, J. S. Schreck, F. Romano, T. E. Ouldridge, R. Tsukanov, E. Nir, A. A. Louis, J. P. K. Doye, J. Chem. Phys. 142, 234901 (2015) (DOI: <a target="_blank" href="https://aip.scitation.org/doi/10.1063/1.4921957")>10.1063/1.4921957</a>)<br>
+                <li>B. E. K. Snodin, F. Randisi, M. Mosayebi, P. Šulc, J. S. Schreck, F. Romano, T. E. Ouldridge, R. Tsukanov, E. Nir, A. A. Louis, J. P. K. Doye, J. Chem. Phys. 142, 234901 (2015) (DOI: <a target="_blank" href="https://aip.scitation.org/doi/10.1063/1.4921957">10.1063/1.4921957</a>)<br>
                 <li>P. Šulc, F. Romano, T. E. Ouldridge, L. Rovigatti, J. P. K. Doye, A. A. Louis, J. Chem. Phys. 137, 135101 (2012) (DOI: <a target="_blank" href=https://aip.scitation.org/doi/10.1063/1.4754132>10.1063/1.475413</a>) <br>
                 <li>L. Rovigatti, P. Šulc, I. Z. Reguly, F Romano, J. Comput. Chem. 36, 1 (2015) (DOI: <a target="_blank" href= https://doi.org/10.1002/jcc.23763>10.1002/jcc.23763</a>)<br>
                 <li>T. E. Ouldridge, A. A. Louis and J. P. K. Doye, J. Chem. Phys, 134, 085101 (2011) (DOI: <a target="_blank" href=https://aip.scitation.org/doi/10.1063/1.3552946>10.1063/1.3552946</a>)<br>
@@ -249,7 +255,7 @@
                 </ul>
                 <br>
                 The server is developed and maintained by Erik Poppleton, Roger Romero and Aatmik Mallya in Šulc group at ASU.
-            </p>
+            </div>
         </div>
     </div>
     <div class="card">
@@ -262,7 +268,7 @@
             <h4>Usage Limit</h4>
             <p>
                 Users are limited to submitting 4 jobs at a time.  We reserve the right to limit the usage of any user. 
-                </br>
+                <br/>
                 Trajectory files will be deleted after 1 week due to limited storage space.
             </p>
             
@@ -282,7 +288,6 @@
             We gratefully acknowledge NSF grant no. 1931487 which funds the oxdna.org server development.
         </div>
     </div>
-</main>
 {% endblock %}
                 
 

@@ -19,6 +19,70 @@ document.addEventListener("wheel", function(event){
     }
 });
 
+
+
+app.factory("SessionManager", function() {
+
+	var factory = {};
+
+	factory.getCookie = function() {
+		return new Promise(resolve => {
+			const request = new XMLHttpRequest();
+			request.open("POST", "/getcookie");
+			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			request.send();
+			request.onload = () => resolve(request.response);
+		});
+	}
+
+	factory.setCookie = function(id) {
+		return new Promise(resolve => {
+			const request = new XMLHttpRequest();
+			request.open("POST", "/setcookie");
+			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			request.send(JSON.stringify(id));
+			request.onload = () => resolve(request.response);
+		});
+	}
+
+	factory.setSessionId = function(id) {
+		return new Promise(resolve => {
+			const request = new XMLHttpRequest();
+			request.open("POST", "/setsessionid");
+			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			request.send(JSON.stringify(id));
+			request.onload = () => resolve(request.response);
+		});
+	}
+
+	factory.getSessionId = function() {
+		return new Promise(resolve => {
+			const request = new XMLHttpRequest();
+			request.open("POST", "/getsessionid");
+			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			request.send();
+			request.onload = () => resolve(request.response);
+		});
+	}
+
+	factory.checkCookie = async function() {
+		let sId = await factory.getSessionId().then(res => res);
+		if ( sId == "None") {
+			const cookie = await factory.getCookie().then(res => res);
+			if (cookie === "-1") {
+				return -1
+			}
+			else {
+				sId = cookie.replace(/\"/g, "");
+				await factory.setSessionId(sId);
+			}
+		}
+		return(sId)
+	}
+
+	return factory
+})
+
 app.factory("JobService", function($http) {
 
 	var factory = {};
@@ -103,7 +167,6 @@ app.factory("JobsService", function($http) {
 			cb([]);
 		});
 	}
-
 	return factory;
 
 })
@@ -119,12 +182,12 @@ app.controller("AppCtrl", function($scope, JobsService) {
 
 })
 
-app.controller("AccountCtrl", function($scope, $http, $timeout) {
+app.controller("AccountCtrl", function($scope, $http, SessionManager) {
 	$scope.passwordStatus = null;
 	$scope.emailStatus = null;
 	$scope.emailPrefs = [];
 
-	console.log("Now in the acccount ctrl!");
+	SessionManager.checkCookie()
 
 	$scope.getEmailPrefs = function() {
 		$http({
@@ -192,9 +255,9 @@ app.controller("AccountCtrl", function($scope, $http, $timeout) {
 
 })
 
-app.controller("AdminCtrl", function($scope, $http) {
+app.controller("AdminCtrl", function($scope, $http, SessionManager) {
 
-	console.log("Now in the admin ctrl!");
+	SessionManager.checkCookie();
 	$scope.recentUsers = [];
 	$scope.allUsers = [];
 
@@ -341,10 +404,11 @@ app.controller("AdminCtrl", function($scope, $http) {
 	$scope.getAllUsers();
 })
 
-app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $http) {
-	console.log("Now loading job...");
+app.controller("JobCtrl", function($scope, $location, SessionManager, JobService, $http) {
+	
 	$scope.job = {};
 	$scope.job.name = "";
+	SessionManager.checkCookie();
 
 	$scope.viewing_job_uuid = $location.absUrl().split("/").pop();
 
@@ -424,9 +488,6 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 			}
 			$scope.$apply();
 		}, 1000);
-	}
-	if (window.location.href.includes("guestjob")) {
-		$scope.updateJobStatus();
 	}
 
 	// Helper for $scope.updateStatus
@@ -510,11 +571,13 @@ app.controller("JobCtrl", function($scope, $location, $timeout, JobService, $htt
 
 })
 
-app.controller("JobsCtrl", function($scope, JobsService, $http) {
+app.controller("JobsCtrl", function($scope, JobsService, SessionManager, $http) {
 
 	$scope.jobs = [];
 	$scope.jobsRunning = 0;
 	$scope.jobsQueued = 0;
+
+	SessionManager.checkCookie();
 	
 	$scope.getQueue = function() {
 		$http({
@@ -646,8 +709,9 @@ app.controller("LoginCtrl", function($scope) {
 		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 		request.send(JSON.stringify(user));
 		request.onload = () => {
-			if (request.response == "Success") {
-				window.location = "/"
+			console.log(request.response);
+			if (request.getResponseHeader("Content-Type") === "text/html; charset=utf-8") {
+				window.location = "/";
 			} else {
 				const response = JSON.parse(request.response);
 				for (field in response) {
@@ -689,7 +753,7 @@ app.controller("RegisterCtrl", function($scope) {
 	
 })
 
-app.controller("MainCtrl", function($scope, $http) {
+app.controller("MainCtrl", function($scope, $http, SessionManager) {
 
 	$scope.data = {};
 	$scope.error = "";
@@ -781,7 +845,7 @@ app.controller("MainCtrl", function($scope, $http) {
 
 			request.onload = function() {
 				if(request.response.startsWith("Success")) {
-					const sId = $scope.getSessionId();
+					const sId = SessionManager.getSessionId();
 					if ( sId == "None") {
 						resolve(request.response);
 					}
@@ -803,62 +867,17 @@ app.controller("MainCtrl", function($scope, $http) {
 		});
 	}
 
-	$scope.getCookie = function() {
-		return new Promise(resolve => {
-			const request = new XMLHttpRequest();
-			request.open("POST", "/getcookie");
-			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-			request.send();
-			request.onload = () => resolve(request.response);
-		});
-	}
-
-	$scope.setCookie = function(id) {
-		return new Promise(resolve => {
-			const request = new XMLHttpRequest();
-			request.open("POST", "/setcookie");
-			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-			request.send(JSON.stringify(id));
-			request.onload = () => resolve(request.response);
-		});
-	}
-
-	$scope.setSessionId= function(id) {
-		return new Promise(resolve => {
-			const request = new XMLHttpRequest();
-			request.open("POST", "/setsessionid");
-			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-			request.send(JSON.stringify(id));
-			request.onload = () => resolve(request.response);
-		});
-	}
-
-	$scope.getSessionId = function() {
-		return new Promise(resolve => {
-			const request = new XMLHttpRequest();
-			request.open("POST", "/getsessionid");
-			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-			request.send();
-			request.onload = () => resolve(request.response);
-		});
-	}
-
 	$scope.submitJob = async function() {
 		$scope.submissionStatus = 'Processing submission...';
 		$scope.error = '';
 
 		// Handle guest job submission
-		const sId = await $scope.getSessionId().then(res => res);
-		if ( sId == "None") {
-			const cookie = await $scope.getCookie().then(res => res);
-			if (cookie === "-1") {
-				const userId = await $scope.registerGuest().then(res => res);
-				if (!isNaN(parseInt(userId))) {
-					await $scope.setCookie(userId);
-				}
-			}
-			else {
-				await $scope.setSessionId(cookie.replace(/\"/g, ""));
+		const id = await SessionManager.checkCookie().then(res => res);
+		console.log(id);
+		if (id < 0) {
+			const userId = await $scope.registerGuest().then(res => res);
+			if (!isNaN(parseInt(userId))) {
+				SessionManager.setCookie(userId);
 			}
 		}
 		
@@ -890,14 +909,7 @@ app.controller("MainCtrl", function($scope, $http) {
 			if(fullyRead == 2) {
 				$scope.data["files"] = file_data;
 				const response = await $scope.postJob();
-				if (response.startsWith("Success")) {
-					setTimeout(() => {
-						console.log("RELOAD 1")
-						window.location = "/guestjob/" + response.replace("Success", "");
-						console.log("RELOAD 1")
-					}, 100);
-				}
-				else if (response === "user job submitted") {
+				if (response === "user job submitted") {
 					window.location = "/jobs";
 				}
 				else {
@@ -929,7 +941,15 @@ app.directive("fileread", [function () {
     }
 }])
 
-app.controller("LandingCtrl", function(){
+app.controller("LandingCtrl", function($scope, SessionManager){
+	SessionManager.checkCookie();
+	$scope.apply
+	
+})
+
+app.controller("ExampleCtrl", function($scope, SessionManager){
+	SessionManager.checkCookie();
+	$scope.apply
 	
 })
 

@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
 {% set active_page = "example" %}
+{% set page_controller = "ExampleCtrl" %}
 
 {% block title %}Example{% endblock %}
 
 {% block content %}
-
-<main role="main"class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h1">Example of use</h1>
     </div>
@@ -13,7 +12,7 @@
     <div class="card">
         <div id=exampleCard class="card-body">
             Thank you for your interest in oxdna.org!  The following tutorial will walk you through an example of using the server to simulate a DNA origami.
-            <p>
+            <div class="mb-3 mt-3">
                 <h4>
                     Example files
                 </h4>
@@ -23,37 +22,36 @@
                     <li><a href="example/23.top">Topology</a></li>
                 </ul>
                 These files describe a wireframe DNA origami from <a href="https://advances.sciencemag.org/content/5/1/eaav0655">this paper</a> in oxDNA format.
-            </p>
-            <p>
+            </div>
+            <div class="mb-3">
                 <h4>
                     Submitting the job
                 </h4>
                 Next, open the "Submit as guest" link in the sidebar in a new tab to go to the job submit page.  On that page you will see a button to upload files.  
                 Click that button, navigate to where you saved 23.dat and 23.top, select both (ctrl+click) and click "Open".
+                Some browsers have trouble with opening two files like that, if this doesn't work, you can also select the two files and drag and drop them over the oxView window below the upload files button.
                  
-            </p>
-            <p>
-                You will see the design appear in the oxView window below.  Take a moment to make sure its the design you mean to submit.
-                Below that are a series of input fields that define a simulation. Since this is an example, we are going to make some modifications from the defaults.
-                <ul>
-                    <li>Change "Steps" to 1000000</li>
-                    <li>Click "View advanced parameters" and change "Print_conf_interval" to 50000</li>
-                </ul>
-            </p>
-            <p>
+            </div></body>
+            <div class="mb-3">
                 Now click "Submit Job", after a few seconds you will be taken to the job status page.
-            </p>
-            <p>
+            </div>
+            <div class="mb-3">
                 <h4>
                     Analyzing the output
                 </h4>
+                <p>
                 Once the job status has changed to "Completed", it is ready for analysis.  Click the job name in the leftmost column to go to the analysis page.
                 On the analysis page you will find a series of options for built-in analysis options.  
+                </p>
+                <p>
                 As an example, try clicking on "Compute mean", wait for the status to change to "Completed" and then click "View means+deviations" to see the mean structure and per-nucleotide RMSF during the simulation.
-            </p>
+                Distance is another good example, in the "particle 1s" box type 7133 3513  and in the "particle 2s" box type 7351 7346 and then click "Start Analysis".  This will compute the end to end distance of one of the long edges and the adjacent short edge of the structure over the simulation.
+                <p>
+                The trajectory can be downloaded from the list of jobs or aligned and downloaded from the analysis page.  Once you have the trajectory downloaded, you can, for example create a movie using oxView, run the trajectory through some of our other <a href="https://github.com/sulcgroup/oxdna_analysis_tools">analysis scripts</a>, or run through your own analyses.
+                </p>
+            </div>
         </div>
 
     </div>
-</main>
 
 {% endblock %}

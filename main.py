@@ -1,7 +1,7 @@
 import os
 import sys
 import uuid
-from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort, make_response, render_template
+from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort, make_response, render_template, flash
 import requests
 import Login
 import Job
@@ -245,19 +245,40 @@ def login():
 		if(isinstance(user_id, int)):
 			session["user_id"] = user_id
 			session["name"] = Account.getFirstName(user_id)
-			return "Success"
+			resp = make_response(redirect("/"))
+			resp.set_cookie('guest_id', str(user_id))
+			return resp
 		else:
 			return user_id #user_id is a dict with errors if there are errors
 		
 		
 	return "Invalid username or password"
 
-@app.route("/logout")
-def logout():
+@app.route("/logout/<active_page>")
+def logout(active_page):
+	print(session["name"], flush=True)
+	if session["name"] == "Guest":
+		flash('Once you log out from a guest account you cannot log back in. Specific jobs can still be accessed by their URL.')
+		
+		# The active_page variable in the HTML template must be correct!
+		# / in the active_page variable should be | instead so that the routing doesn't break
+		active_page = active_page.replace("|", "/")
+		
+		resp = make_response(redirect("/"+active_page))
+		return resp
 	session["user_id"] = None
 	session["name"] = None
-	return redirect("/")
+	resp = make_response(redirect("/"))
+	resp.set_cookie('guest_id', expires=0)
+	return resp
 
+@app.route("/realLogout")
+def realLogout():
+	session["user_id"] = None
+	session["name"] = None
+	resp = make_response(redirect("/"))
+	resp.set_cookie('guest_id', expires=0)
+	return resp
 
 @app.route("/account", methods=["GET"])
 def account():
@@ -273,7 +294,7 @@ def forgotPassword():
 		return "You must be logged out"
 
 	if request.method == "GET":
-		return send_file("templates/password/forgot.html")
+		return render_template("password/forgot.html")
 
 @app.route("/password/forgot/send_reset_token", methods=["POST"])
 def sendResetToken():
@@ -290,7 +311,7 @@ def resetPassword():
 		elif userId == -1:
 			return "Reset token expired: please try again"
 		else:
-			return send_file("templates/password/reset.html")
+			return render_template("password/reset.html")
 	
 	if request.method == "POST":
 		token = request.json["token"]
@@ -385,16 +406,11 @@ def jobs():
 	else:
 		return render_template("jobs.html")
 
-@app.route("/guestjob/<job_id>")
-def view_guest_job(job_id):
-	session["user_id"] = Job.getUserIdForJob(job_id)
-	session["name"] = Account.getFirstName(user_id)
-	return render_template("guestjob.html")
-
 @app.route("/job/<job_id>")
 def view_job(job_id):
 
-	if session.get("user_id") is None:
+	user = Job.getFirstNameForUuid(job_id)
+	if session.get("user_id") is None and user != "Guest":
 		return redirect("/login")
 	else:
 		return render_template("job.html")
@@ -410,10 +426,11 @@ def update_job_name(name, uuid):
 @app.route("/api/job/<job_id>")
 def get_job_data(job_id):
 
-	if session.get("user_id") is None:
+	user = Job.getFirstNameForUuid(job_id)
+	if session.get("user_id") is None and user != "Guest":
 		return redirect("/login")
 
-	job_data = Job.getJobForUserId(job_id, session.get("user_id"))
+	job_data = Job.getJobFromUuid(job_id)
 	associated_jobs = Job.getAssociatedJobs(job_data["uuid"])
 
 	if(job_data is not None):

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% set active_page = "reset" %}
+{% set active_page = "password/reset" %}
 {% set page_controller = "ResetCtrl" %}
 {% set addSearchBox = False %}
 
@@ -30,36 +30,34 @@
 {% endblock %}
 
 {% block content %}
-	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-			<h1 class="h2">Reset Password</h1>
-		</div>
+	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+		<h1 class="h2">Reset Password</h1>
+	</div>
 	
 	
-		<div class="card">
-			<div class="card-body">
+	<div class="card">
+		<div class="card-body">
 	
-				You can reset your password below.
+			You can reset your password below.
 	
-				<br><br>
+			<br><br>
 	
-				<div class="row">
-					<div class="col-6">
-						<div ng-if="status != null">
-							<h6 ng-cloak>{{status}}</h6>
-						</div>
-						<div>
-							<br>
-							New password:&emsp;&ensp; <input type="password" ng-model="newPassword">
-							<br><br>
-							Confirm password: <input type="password" ng-model="confirmPassword">
-							<br><br><br>
-							<button ng-click="submit()">Reset my password</button>
-						</div>
+			<div class="row">
+				<div class="col-6">
+					<div ng-if="status != null">
+						<h6 ng-cloak>{{status}}</h6>
+					</div>
+					<div>
+						<br>
+						New password:&emsp;&ensp; <input type="password" ng-model="newPassword">
+						<br><br>
+						Confirm password: <input type="password" ng-model="confirmPassword">
+						<br><br><br>
+						<button ng-click="submit()">Reset my password</button>
 					</div>
 				</div>
-	
 			</div>
 	
-	</main>
-{% endblock}
+		</div>
+	</div>
+{% endblock %}

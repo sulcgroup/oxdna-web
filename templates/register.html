@@ -30,51 +30,48 @@
 {% endblock %}
 
 {% block content %}
-	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-		<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-			<h1 class="h2">Register</h1>
+	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+		<h1 class="h2">Register</h1>
+	</div>
+	
+	<div class="card" ng-cloak>
+		<div class="card-body">
+	
+			<form novalidate>
+				<p class="font-weight-bold">First Name:
+					<input ng-model="user.firstName" name="firstName" id="firstName" type="text">
+					<span class="font-weight-normal text-danger">[[errors.firstName]]</span>
+				</p>
+				<p class="font-weight-bold" style="margin-left: 0.1em;">Last Name:
+					<input ng-model="user.lastName" name="lastName" id="lastName" type="text">
+					<span class="font-weight-normal text-danger">[[errors.lastName]]</span>
+				</p>
+				<p class="font-weight-bold" style="margin-left: 0.25em;">Institution:
+					<input ng-model="user.institution" name="institution" id="institution" type="text">
+					<span class="font-weight-normal text-danger">[[errors.institution]]</span>
+				</p>
+				<br>
+				<p class="font-weight-bold" style="margin-left: 2.3em;">Email:<sup>*</sup>
+					<input ng-model="user.email" name="username" id="username" type="text">
+					<span class="font-weight-normal text-danger">[[errors.email]]</span>
+				</p>
+				<p class="font-weight-bold" style="margin-left: 0.55em; display: inline;">Password:
+					<input ng-model="user.password" name="password" id="password" type="password">
+					<span class="font-weight-normal text-danger">[[errors.password]]</span>
+				</p>
+				<br /><br />
+				<p class="card-body" style="margin-left: 0.55em; display: inline;">
+					<input ng-model="user.iAgree" name="iAgree" id="iAgree" type="checkbox">
+					I agree with Terms and Conditions of the server usage, as specified <a href="/#LegalCard">here</a>
+					<span class="font-weight-normal text-danger">[[errors.iAgree]]</span>
+				</p>
+				<br><br>
+	
+				<p><sup class="font-weight-bold">*</sup>You must check for an email to verify your account before
+					running simulations.</p>
+				<input ng-click="register(user)" type="submit"> [[loadingMessage]]
+			</form>
 		</div>
 	
-		<div class="card" ng-cloak>
-			<div class="card-body">
-	
-				<form novalidate>
-					<p class="font-weight-bold">First Name:
-						<input ng-model="user.firstName" name="firstName" id="firstName" type="text">
-						<span class="font-weight-normal text-danger">[[errors.firstName]]</span>
-					</p>
-					<p class="font-weight-bold" style="margin-left: 0.1em;">Last Name:
-						<input ng-model="user.lastName" name="lastName" id="lastName" type="text">
-						<span class="font-weight-normal text-danger">[[errors.lastName]]</span>
-					</p>
-					<p class="font-weight-bold" style="margin-left: 0.25em;">Institution:
-						<input ng-model="user.institution" name="institution" id="institution" type="text">
-						<span class="font-weight-normal text-danger">[[errors.institution]]</span>
-					</p>
-					<br>
-					<p class="font-weight-bold" style="margin-left: 2.3em;">Email:<sup>*</sup>
-						<input ng-model="user.email" name="username" id="username" type="text">
-						<span class="font-weight-normal text-danger">[[errors.email]]</span>
-					</p>
-					<p class="font-weight-bold" style="margin-left: 0.55em; display: inline;">Password:
-						<input ng-model="user.password" name="password" id="password" type="password">
-						<span class="font-weight-normal text-danger">[[errors.password]]</span>
-					</p>
-					<br /><br />
-					<p class="card-body" style="margin-left: 0.55em; display: inline;">
-						<input ng-model="user.iAgree" name="iAgree" id="iAgree" type="checkbox">
-						I agree with Terms and Conditions of the server usage, as specified <a
-							href="/#LegalCard">here</a>
-						<span class="font-weight-normal text-danger">[[errors.iAgree]]</span>
-					</p>
-					<br><br>
-	
-					<p><sup class="font-weight-bold">*</sup>You must check for an email to verify your account before
-						running simulations.</p>
-					<input ng-click="register(user)" type="submit"> [[loadingMessage]]
-				</form>
-			</div>
-	
-		</div>
-	</main>
+	</div>
 {% endblock %}
