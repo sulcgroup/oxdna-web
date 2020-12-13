@@ -141,6 +141,13 @@
                 <p>Due to storage limitations, the simulated trajectory gets automatically deleted after 1 week. You will receive a reminder by e-mail, but we strongly recommend 
                 to download all data once simulation is finished. The start and final configuration file will remain available on the server, as well as results of analysis that you carried out on the server.</p>
             </div>
+            <button class="accordion" onclick="toggle(this)"><b>What is the difference between submitting as guest vs making a user account?</b></button>
+            <div class="panel">
+                <p>
+                    Guest jobs are created using a temporary account which will be inaccessible after logging out.  The unique URL for guest jobs (something like oxdna.org/job/&lt;32-digit-uuid&gt;) can be shared and accessed by anybody whether or not they have an account.
+                    Jobs submitted by verified user accounts are completley private, only the user that created the job can access the job page.
+                </p>
+            </div>
             
             <button class="accordion" onclick="toggle(this)"><b>Can I submit my own oxDNA input files?</b></button>
             <div class="panel">
@@ -224,7 +231,7 @@
             </h2>
             <p>
                 If you have bug reports/issues/feature requests, please post them in the <a target="_blank" href=https://github.com/sulcgroup/oxdna-web/issues>issues page</a> of our GitHub. We will get to them as soon as possible.<br>
-                You can also email us at <a target="_blank" href="mailto:oxdna.help@gmail.com">oxdna.help@gmail.com</a>
+                You can also email us at <a target="_blank" href="mailto:oxdna.help@gmail.com">oxdna.help@gmail.com</a>.  If you have a question about a specific job, please provide us the 32-character uuid found in the job URL so we can look up the logs for that specific job.
             </p>
         </div>
     </div>
