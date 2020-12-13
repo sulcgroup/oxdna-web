@@ -2,6 +2,7 @@ import os
 import sys
 import uuid
 from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort, make_response, render_template, flash
+from werkzeug.middleware.proxy_fix import ProxyFix
 import requests
 import Login
 import Job
@@ -12,6 +13,9 @@ import Database
 
 app = Flask(__name__, static_url_path='/static', static_folder="static")
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
+
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 # request.headers["Cache-Control"] = "no-cache, no-store, must-revalidate" # HTTP 1.1.
 # request.headers["Pragma"] = "no-cache" # HTTP 1.0.
