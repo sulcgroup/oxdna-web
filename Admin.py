@@ -25,15 +25,12 @@ remove_user = ("DELETE FROM Users WHERE id = %s")
 
 
 def getRecentlyAddedUsers():
-	connection = Database.pool.get_connection()
-
 	result = []
 
-	with connection.cursor() as cursor:
-		cursor.execute(recentUsersQuery)
-		result = cursor.fetchall()
-	
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(recentUsersQuery)
+			result = cursor.fetchall()
 
 	usernames = []
 
@@ -43,15 +40,12 @@ def getRecentlyAddedUsers():
 	return usernames
 
 def getAllUsers():
-	connection = Database.pool.get_connection()
-
 	result = []
 
-	with connection.cursor() as cursor:
-		cursor.execute(allUsersQuery)
-		result = cursor.fetchall()
-	
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(allUsersQuery)
+			result = cursor.fetchall()
 
 	usernames = []
 
@@ -61,14 +55,12 @@ def getAllUsers():
 	return usernames
 
 def checkIfAdmin(user_id):
-	connection = Database.pool.get_connection()
-
 	result = None
-	with connection.cursor() as cursor:
-		cursor.execute(adminQuery, (user_id,))
-		result = cursor.fetchone()
 
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(adminQuery, (user_id,))
+			result = cursor.fetchone()
 
 	if result is not None:
 		return result[0]
@@ -76,14 +68,11 @@ def checkIfAdmin(user_id):
 		return False
 
 def checkIfPrivaleged(user_id):
-	connection = Database.pool.get_connection()
-
 	result = None
-	with connection.cursor() as cursor:
-		cursor.execute(privalegedQuery, (user_id,))
-		result = cursor.fetchone()
-
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(privalegedQuery, (user_id,))
+			result = cursor.fetchone()
 
 	if result is not None:
 		return result[0]
@@ -91,29 +80,24 @@ def checkIfPrivaleged(user_id):
 		return False
 
 def promoteToAdmin(user_id):
-	connection = Database.pool.get_connection()
-
-	with connection.cursor() as cursor:
-		cursor.execute(updateToAdministrator, (user_id,))
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(updateToAdministrator, (user_id,))
 
 	connection.close()
 
 def promoteToPrivaleged(user_id):
-	connection = Database.pool.get_connection()
-
-	with connection.cursor() as cursor:
-		cursor.execute(updateToPrivaleged, (user_id,))
-
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(updateToPrivaleged, (user_id,))
 
 def getJobLimit(user_id):
-	connection = Database.pool.get_connection()
 	result = None
 
-	with connection.cursor() as cursor:
-		cursor.execute(jobLimitQuery, (user_id,))
-		result = cursor.fetchone()
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(jobLimitQuery, (user_id,))
+			result = cursor.fetchone()
 
 	if result is not None:
 		return result[0]
@@ -121,13 +105,12 @@ def getJobLimit(user_id):
 		return 0
 
 def getTimeLimit(user_id):
-	connection = Database.pool.get_connection()
 	result = None
 
-	with connection.cursor() as cursor:
-		cursor.execute(timeLimitQuery, (user_id,))
-		result = cursor.fetchone()
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(timeLimitQuery, (user_id,))
+			result = cursor.fetchone()
 
 	if result is not None:
 		return result[0]
@@ -135,29 +118,22 @@ def getTimeLimit(user_id):
 		return 0
 
 def setJobLimit(user_id, jobs):
-	connection = Database.pool.get_connection()
-
-	with connection.cursor() as cursor:
-		cursor.execute(updateJobLimit, (jobs, user_id,))
-	
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(updateJobLimit, (jobs, user_id,))
 
 def setTimeLimit(user_id, timeLimit):
-	connection = Database.pool.get_connection()
-
-	with connection.cursor() as cursor:
-		cursor.execute(setMonthlyTimeLimit, (timeLimit, user_id,))
-	
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(setMonthlyTimeLimit, (timeLimit, user_id,))
 
 def getUserJobCount(user_id):
-	connection = Database.pool.get_connection()
-
 	result = None
-	with connection.cursor() as cursor:
-		cursor.execute(userJobCountQuery, (user_id,))
-		result = cursor.fetchone()
-	connection.close()
+
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(userJobCountQuery, (user_id,))
+			result = cursor.fetchone()
 
 	if result is not None:
 		return result[0]
@@ -165,13 +141,12 @@ def getUserJobCount(user_id):
 		return 0
 
 def getUserJobStatusCount(user_id, status):
-	connection = Database.pool.get_connection()
-
 	result = None
-	with connection.cursor() as cursor:
-		cursor.execute(userJobStatusCountQuery, (user_id, status,))
-		result = cursor.fetchone()
-	connection.close()
+
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(userJobStatusCountQuery, (user_id, status,))
+			result = cursor.fetchone()
 
 	if result is not None:
 		return result[0]
@@ -187,21 +162,19 @@ def deleteUser(user_id):
 	except:
 		return "Couldn't delete user's job files"
 	
-	connection = Database.pool.get_connection()
-
-	with connection.cursor() as cursor:
-		cursor.execute(remove_user, (user_id))
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(remove_user, (user_id))
 
 	return "User has been deleted"
 
 def getID(username):
-	connection = Database.pool.get_connection()
-
 	result = None
-	with connection.cursor() as cursor:
-		cursor.execute(userIDQuery, (username.encode("utf-8"),))
-		result = cursor.fetchone()
-	connection.close()
+
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(userIDQuery, (username.encode("utf-8"),))
+			result = cursor.fetchone()
 
 	if result is not None:
 		return result[0]

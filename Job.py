@@ -32,14 +32,12 @@ update_status = ("UPDATE Jobs SET status = %s WHERE uuid = %s")
 get_firstname_for_uuid = ("SELECT u.firstName from Jobs j JOIN Users u on j.userId=u.id WHERE j.uuid=%s")
 
 def getUserIdForJob(job_id):
-	connection = Database.pool.get_connection()
 	result = None
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_userId_for_job_uuid, (job_id,))
+			result = cursor.fetchone()[0]
 
-	with connection.cursor() as cursor:
-		cursor.execute(get_userId_for_job_uuid, (job_id,))
-		result = cursor.fetchone()[0]
-
-	connection.close()
 	return result
 
 def startSlurmJob(job_directory):
@@ -337,22 +335,20 @@ def createAnalysisForUserIdWithJob(userId, analysis_parameters):
 		randomAnalysisId
 	)
 
-	connection = Database.pool.get_connection()
+	with Database.pool.get_connection() as connection:
 
-	analysis_data = (
-		int(userId),
-		analysis_parameters["name"],
-		randomAnalysisId,
-		job_number,
-		analysis_types[analysis_type],
-		jobId,
-		int(time.time())
-	)
+		analysis_data = (
+			int(userId),
+			analysis_parameters["name"],
+			randomAnalysisId,
+			job_number,
+			analysis_types[analysis_type],
+			jobId,
+			int(time.time())
+		)
 
-	with connection.cursor() as cursor:
-		cursor.execute(add_job_query, analysis_data)
-	
-	connection.close()
+		with connection.cursor() as cursor:
+			cursor.execute(add_job_query, analysis_data)
 
 	return randomAnalysisId
 
@@ -443,12 +439,10 @@ def createJobForUserIdWithData(userId, jsonData, randomJobId):
 		int(time.time())
 	)
 
-	connection = Database.pool.get_connection()
-
-	with connection.cursor() as cursor:
-		cursor.execute(add_job_query, job_data)
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(add_job_query, job_data)
 	
-	connection.close()
 	print("Successfully created job {uuid} for user {user}".format(uuid=randomJobId, user=userId), flush=True)
 
 	return True, job_number
@@ -458,11 +452,10 @@ def getAssociatedJobs(job_id):
 	payload = []
 
 	#retrieve entries from SQL with sim_job_id == jobId
-	connection = Database.pool.get_connection()
-	with connection.cursor() as cursor:
-		cursor.execute(get_associated_query, (job_id,))
-		associates = cursor.fetchall()
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_associated_query, (job_id,))
+			associates = cursor.fetchall()
 
 	if associates:
 		for job_data in associates:
@@ -474,25 +467,19 @@ def getAssociatedJobs(job_id):
 		return None
 
 def isRelax(job_id):
-	connection = Database.pool.get_connection()
-
-	with connection.cursor() as cursor:
-		cursor.execute(get_userId_for_job_uuid, (job_id,))
-		user_id = cursor.fetchone()[0]
-
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_userId_for_job_uuid, (job_id,))
+			user_id = cursor.fetchone()[0]
 	
 	job_files = os.listdir("/users/{}/{}".format(user_id, job_id))
 	return "True" if "MD_relax.dat" in job_files else "False"
 
 def hasTrajectory(job_id):
-	connection = Database.pool.get_connection()
-
-	with connection.cursor() as cursor:
-		cursor.execute(get_userId_for_job_uuid, (job_id,))
-		user_id = cursor.fetchone()[0]
-
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_userId_for_job_uuid, (job_id,))
+			user_id = cursor.fetchone()[0]
 
 	job_files = os.listdir("/users/{}/{}".format(user_id, job_id))
 	return "True" if "trajectory.dat" in job_files else "False"
@@ -520,32 +507,26 @@ def createJobDictionaryForTuple(data):
 
 
 def getJobsForUserId(userId):
-	connection = Database.pool.get_connection()
 	payload = []
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_jobs_query, (int(userId),))
+			result = cursor.fetchall()
 
-	with connection.cursor() as cursor:
-		cursor.execute(get_jobs_query, (int(userId),))
-		result = cursor.fetchall()
-
-		for data in result:
-			job_data = createJobDictionaryForTuple(data)
-			job_data["status"] = getJobStatus(data[3])
-			payload.append(job_data)
-
-	connection.close()
+			for data in result:
+				job_data = createJobDictionaryForTuple(data)
+				job_data["status"] = getJobStatus(data[3])
+				payload.append(job_data)
 
 	return payload
 
 def getJobFromUuid(jobId):
-	connection = Database.pool.get_connection()
-
 	result = None
 
-	with connection.cursor() as cursor:
-		cursor.execute(get_job_query, (jobId,))
-		result = cursor.fetchone()
-
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_job_query, (jobId,))
+			result = cursor.fetchone()
 
 	if result is not None:
 		return createJobDictionaryForTuple(result)
@@ -553,15 +534,12 @@ def getJobFromUuid(jobId):
 		return None
 
 def getJobNameForUuid(uuid):
-	connection = Database.pool.get_connection()
-
 	result = None
 
-	with connection.cursor() as cursor:
-		cursor.execute(get_job_name_for_uuid, (uuid,))
-		result = cursor.fetchone()
-	
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_job_name_for_uuid, (uuid,))
+			result = cursor.fetchone()
 	
 	if result is not None:
 		return result[0]
@@ -569,15 +547,11 @@ def getJobNameForUuid(uuid):
 		return None
 
 def getFirstNameForUuid(uuid):
-	connection = Database.pool.get_connection()
-
 	result = None
-
-	with connection.cursor() as cursor:
-		cursor.execute(get_firstname_for_uuid, (uuid,))
-		result = cursor.fetchone()
-	
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_firstname_for_uuid, (uuid,))
+			result = cursor.fetchone()
 	
 	if result is not None:
 		return result[0]
@@ -585,12 +559,9 @@ def getFirstNameForUuid(uuid):
 		return None
 
 def updateJobName(name, uuid):
-	connection = Database.pool.get_connection()
-
-	with connection.cursor() as cursor:
-		cursor.execute(update_job_name, (name, uuid,))
-	
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(update_job_name, (name, uuid,))
 	
 	return name
 
@@ -609,49 +580,45 @@ def runOneStepJob(job_directory):
 		return True, None
 	
 def updateStatus(user_id, job_uuid):
-	connection = Database.pool.get_connection()
+	with Database.pool.get_connection() as connection:
 
-	with connection.cursor() as cursor:
-		cursor.execute("UPDATE Jobs SET status = \"Completed\" WHERE uuid = %s", (job_uuid))
+		with connection.cursor() as cursor:
+			cursor.execute("UPDATE Jobs SET status = \"Completed\" WHERE uuid = %s", (job_uuid))
 
-	with connection.cursor() as cursor:
-		cursor.execute("SELECT creationDate FROM Jobs WHERE uuid = %s", (job_uuid,))
-		creation_time = int(cursor.fetchone()[0])
+		with connection.cursor() as cursor:
+			cursor.execute("SELECT creationDate FROM Jobs WHERE uuid = %s", (job_uuid,))
+			creation_time = int(cursor.fetchone()[0])
 
-	elapsed_time = time.time() - creation_time
-	new_time_limit = Admin.getTimeLimit(user_id) - elapsed_time
-	if new_time_limit < 0:
-		new_time_limit = 0
+		elapsed_time = time.time() - creation_time
+		new_time_limit = Admin.getTimeLimit(user_id) - elapsed_time
+		if new_time_limit < 0:
+			new_time_limit = 0
 
-	with connection.cursor() as cursor:
-		cursor.execute("UPDATE Users SET timeLimit = %s WHERE id = %s", (new_time_limit, user_id))
+		with connection.cursor() as cursor:
+			cursor.execute("UPDATE Users SET timeLimit = %s WHERE id = %s", (new_time_limit, user_id))
 
-	connection.close()
 	print("Remaining monthly time limit: ", str(new_time_limit), " seconds")
 
 def cancelJob(job_name):
 	subprocess.Popen(["scancel", "-n", job_name], stdout=subprocess.PIPE)
 
-	connection = Database.pool.get_connection()
-
 	user_id = None
-	with connection.cursor() as cursor:
-		cursor.execute(get_userId_for_job_uuid, (job_name,))
-		result = cursor.fetchone()
-		user_id = result[0]
-	updateStatus(user_id, job_name)
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_userId_for_job_uuid, (job_name,))
+			result = cursor.fetchone()
+			user_id = result[0]
+		updateStatus(user_id, job_name)
 
-	prev_status = None
+		prev_status = None
 
-	with connection.cursor() as cursor:
-		cursor.execute(get_status, (job_name,))
-		result = cursor.fetchone()
-		prev_status = result[0]
+		with connection.cursor() as cursor:
+			cursor.execute(get_status, (job_name,))
+			result = cursor.fetchone()
+			prev_status = result[0]
 
-	if prev_status == "Pending":
-		cursor.execute(update_status, ("Canceled", job_name,))
-
-	connection.close()
+		if prev_status == "Pending":
+			cursor.execute(update_status, ("Canceled", job_name,))
 
 def deleteJob(job_uuid):
 	print("Deleting Job {}".format(job_uuid), flush=True)
@@ -660,19 +627,14 @@ def deleteJob(job_uuid):
 
 	user_id = None
 
-	connection = Database.pool.get_connection()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_userId_for_job_uuid, (job_uuid,))
+			result = cursor.fetchone()
+			user_id = result[0]
 
-	with connection.cursor() as cursor:
-		cursor.execute(get_userId_for_job_uuid, (job_uuid,))
-		result = cursor.fetchone()
-		user_id = result[0]
-
-	with connection.cursor() as cursor:
-		cursor.execute(remove_job, (job_uuid,))
-
-	
-	connection.close()
-	
+		with connection.cursor() as cursor:
+			cursor.execute(remove_job, (job_uuid,))
 
 	job_path = "/users/" + str(user_id) + "/" + job_uuid
 	subprocess.Popen(["rm", "-R", job_path], stdout=subprocess.PIPE)
@@ -680,11 +642,9 @@ def deleteJob(job_uuid):
 def deleteJobsForUser(user_id):
 	Delete_User_Files.deleteUser(user_id)
 
-	connection = Database.pool.get_connection()
-	with connection.cursor() as cursor:
-		cursor.execute(remove_jobs_for_user_id, (user_id,))
-	
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(remove_jobs_for_user_id, (user_id,))
 
 def getJobStatusFromSlurm(job_name):
 	pipe = subprocess.Popen(["squeue", "-n", job_name], stdout=subprocess.PIPE)
@@ -723,26 +683,25 @@ def getJobStatus(job_name):
 	#else:
 		#print("Did not find entry for:", job_name)
 
-	connection = Database.pool.get_connection()
+	with Database.pool.get_connection() as connection:
 	
-	status = getJobStatusFromSlurm(job_name)
+		status = getJobStatusFromSlurm(job_name)
 
-	#if it was still not found,
-	#we can assume the job has completed
-	#and we won't see further updates
-	if status == None:
-		status = "Completed"
-		Cache.CompletedJobsCache.set(job_name, status)
+		#if it was still not found,
+		#we can assume the job has completed
+		#and we won't see further updates
+		if status == None:
+			status = "Completed"
+			Cache.CompletedJobsCache.set(job_name, status)
 
-	#update the job status
-	#maybe we can eventually have a cronjob running to actually handle these updates
-	#that would make this interface a lot more REST-y too
-	#would just query MySQL only, without ever having to look at the squeue
-	with connection.cursor() as cursor:
-		#print("JOB NAME: ", job_name)
-		cursor.execute(update_status, (status, job_name,))	
+		#update the job status
+		#maybe we can eventually have a cronjob running to actually handle these updates
+		#that would make this interface a lot more REST-y too
+		#would just query MySQL only, without ever having to look at the squeue
+		with connection.cursor() as cursor:
+			#print("JOB NAME: ", job_name)
+			cursor.execute(update_status, (status, job_name,))	
 
-	connection.close()
 	return status
 
 def getQueue():

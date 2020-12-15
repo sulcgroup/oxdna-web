@@ -25,14 +25,12 @@ get_reset_token_expiration = ("SELECT resetTokenExpiration FROM Users WHERE id =
 get_name_by_id_query = ("SELECT firstName FROM Users WHERE id = %s")
 
 def getEmailPrefs(userId):
-	connection = Database.pool.get_connection()
 	result = None
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_email_prefs, userId)
+			result = cursor.fetchone()[0]
 
-	with connection.cursor() as cursor:
-		cursor.execute(get_email_prefs, userId)
-		result = cursor.fetchone()[0]
-
-	connection.close()
 	return result
 
 def setEmailPrefs(userId, prefs):
@@ -42,46 +40,40 @@ def setEmailPrefs(userId, prefs):
 
 	prefs_integers = list(map(lambda x: "1" if x == "true" else "0", prefs.split(",")))
 	result = " ".join(prefs_integers)
-	print(result)
 
-	connection = Database.pool.get_connection()
-	with connection.cursor() as cursor:
-		cursor.execute(set_email_prefs, (result, userId))
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(set_email_prefs, (result, userId))
+
 	return "Success"
 
 ##DEPRECATED
 def getEmail(userId):
-	connection = Database.pool.get_connection()
 	result = None
 
-	with connection.cursor() as cursor:
-		cursor.execute(find_email_by_user_id_query, userId)
-		result = cursor.fetchone()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(find_email_by_user_id_query, userId)
+			result = cursor.fetchone()
 
-	connection.close()
 	return result[0]
 
 def setEmail(email, userId):
-	connection = Database.pool.get_connection()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(set_email, (email, userId))
 
-	with connection.cursor() as cursor:
-		cursor.execute(set_email, (email, userId))
-	
-	connection.close()
 	return "Email successfully updated!"
 ##DEPRECATED
 
 def getCreationDate(userId):
-	connection = Database.pool.get_connection()
 	results = None
 
-	with connection.cursor() as cursor:
-		cursor.execute(find_date_by_user_id_query, (userId,))
-		#fetchall returns all results
-		results = cursor.fetchall()
-	
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(find_date_by_user_id_query, (userId,))
+			#fetchall returns all results
+			results = cursor.fetchall()
 
 	if results is not None:
 		return results[0][0]
@@ -89,16 +81,13 @@ def getCreationDate(userId):
 		return None
 
 def getStatus(userId):
-
-	connection = Database.pool.get_connection()
 	results = None
 
-	with connection.cursor() as cursor:
-		cursor.execute(find_status_by_user_id_query, (userId,))
-		#fetchall returns all results
-		results = cursor.fetchall()
-
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(find_status_by_user_id_query, (userId,))
+			#fetchall returns all results
+			results = cursor.fetchall()
 
 	if results is not None:
 		return results[0][0]
@@ -106,14 +95,11 @@ def getStatus(userId):
 		return None
 
 def getVerificationCode(userId):
-	connection = Database.pool.get_connection()
 	results = None
-
-	with connection.cursor() as cursor:
-		cursor.execute(get_verify_code_query, (userId,))
-		results = cursor.fetchall()
-
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_verify_code_query, (userId,))
+			results = cursor.fetchall()
 
 	if results is not None:
 		return results[0][0]
@@ -121,14 +107,12 @@ def getVerificationCode(userId):
 		return None
 
 def getUsername(userId):
-	connection = Database.pool.get_connection()
 	results = None
 
-	with connection.cursor() as cursor:
-		cursor.execute(get_username_query, (userId,))
-		results = cursor.fetchall()
-
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_username_query, (userId,))
+			results = cursor.fetchall()
 
 	if results is not None:
 		print(results)
@@ -137,15 +121,12 @@ def getUsername(userId):
 		return None
 
 def getUserId(username):
-	connection = Database.pool.get_connection()
-	
 	result = None
 
-	with connection.cursor() as cursor:
-		cursor.execute(get_userid_query, (username,))
-		result = cursor.fetchone()
-
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_userid_query, (username,))
+			result = cursor.fetchone()
 
 	if result is not None:
 		return result[0]
@@ -155,14 +136,11 @@ def getUserId(username):
 
 #checks verification code for user
 def verifyUser(userId, VerifyCode):
-	connection = Database.pool.get_connection()
-
 	code = None
-	with connection.cursor() as cursor:
-		cursor.execute(get_verify_code_query, (userId,))
-		code = cursor.fetchall()
-
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_verify_code_query, (userId,))
+			code = cursor.fetchall()
 
 	if code is not None and code[0][0] == VerifyCode:
 		with connection.cursor() as cursor:
@@ -172,62 +150,57 @@ def verifyUser(userId, VerifyCode):
 	return False
 
 def sendResetToken(username):
-	connection = Database.pool.get_connection()
 	token = str(uuid.uuid4())
 	day = time.time() + 86400
 
-	with connection.cursor() as cursor:
-		cursor.execute(set_reset_token, (token, username,))
-		cursor.execute(set_reset_token_expiration, (day, username,))
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(set_reset_token, (token, username,))
+			cursor.execute(set_reset_token_expiration, (day, username,))
 	
 	verifylink = "http://oxdna.org/password/reset?token={token}".format(token = token)
 	EmailScript.SendEmail("-t 6 -n {username} -u {verifylink} -d {email}".format(username = username, verifylink = verifylink, email = username).split(" "))
 
-	connection.close()
 	return "Email sent"
 
 def checkToken(token):
-	connection = Database.pool.get_connection()
 	userId = 0
 	expirationTime = 0
 
-	with connection.cursor() as cursor:
-		cursor.execute(check_reset_token, (token,))
-		userId = cursor.fetchone()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(check_reset_token, (token,))
+			userId = cursor.fetchone()
 
-	if not userId:
-		connection.close()
-		return 0
+		if not userId:
+			return 0
 	
-	with connection.cursor() as cursor:
-		cursor.execute(get_reset_token_expiration, userId[0])
-		expirationTime = cursor.fetchone()
+		with connection.cursor() as cursor:
+			cursor.execute(get_reset_token_expiration, userId[0])
+			expirationTime = cursor.fetchone()
 	
-	if time.time() > expirationTime[0]:
-		connection.close()
-		return -1
-	else:
-		connection.close()
-		return userId[0]
+		if time.time() > expirationTime[0]:
+			return -1
+
+	return userId[0]
 
 
 def resetPassword(userId, newPassword):
-	connection = Database.pool.get_connection()
 	user_data = (
 		bcrypt.hashpw(newPassword.encode("utf-8"), bcrypt.gensalt()),
 		userId
 	)
 
-	with connection.cursor() as cursor:
-		cursor.execute(reset_password, user_data)
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(reset_password, user_data)
 
-	connection.close()
 	return "Password succesfully changed!"
 
 def getFirstName(userId):
-	connection = Database.pool.get_connection()
-	with connection.cursor() as cursor:
-		cursor.execute(get_name_by_id_query, userId)
-		name = cursor.fetchone()[0]
-	connection.close()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(get_name_by_id_query, userId)
+			name = cursor.fetchone()[0]
+			
 	return name

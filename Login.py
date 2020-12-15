@@ -16,30 +16,27 @@ def loginUser(username, password):
 	print("Now logging in user:", username)
 	errors = {}
 
-	connection = Database.pool.get_connection()
-
 	user_id, password_hash, verified = None, None, None
 	verification_status = None
 
 	result = None
 
-	with connection.cursor() as cursor:
-		cursor.execute(query, (username,))
-		result = cursor.fetchone()
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(query, (username,))
+			result = cursor.fetchone()
 
-	if result is not None:
-		user_id, password_hash, verified = result
+		if result is not None:
+			user_id, password_hash, verified = result
 
-	if user_id is None or password_hash is None:
-		errors["loginError"] = "Please enter your username and password"
-		connection.close()
-		return errors
+		if user_id is None or password_hash is None:
+			errors["loginError"] = "Please enter your username and password"
+			connection.close()
+			return errors
 
-	with connection.cursor() as cursor:
-		cursor.execute(get_verified_query, (user_id,))
-		res = cursor.fetchone()
-		
-	connection.close()
+		with connection.cursor() as cursor:
+			cursor.execute(get_verified_query, (user_id,))
+			res = cursor.fetchone()
 
 	password_check = bcrypt.checkpw(password.encode("utf8"), password_hash.encode("utf8"))
 
@@ -56,32 +53,28 @@ def loginUser(username, password):
 
 
 def updatePasssword(userId, old_password, new_password):
-
-	connection = Database.pool.get_connection()
-
 	result = None
 
-	with connection.cursor() as cursor:
-		cursor.execute(find_by_user_id_query, (userId,))
-		result = cursor.fetchone()
-
-	if result is None:
-		return "There was an error with your account"
-
-	user_id, stored_password = result
-
-	password_check = bcrypt.checkpw(old_password.encode("utf8"), stored_password.encode("utf8"))
-
-	user_data = (
-		bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt()),
-		userId
-	)
-
-	if password_check:
+	with Database.pool.get_connection() as connection:
 		with connection.cursor() as cursor:
-			cursor.execute(update_password_query, user_data)
+			cursor.execute(find_by_user_id_query, (userId,))
+			result = cursor.fetchone()
 
-	connection.close()
+		if result is None:
+			return "There was an error with your account"
+
+		user_id, stored_password = result
+
+		password_check = bcrypt.checkpw(old_password.encode("utf8"), stored_password.encode("utf8"))
+
+		user_data = (
+			bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt()),
+			userId
+		)
+
+		if password_check:
+			with connection.cursor() as cursor:
+				cursor.execute(update_password_query, user_data)
 
 	if password_check:
 		return "Password updated"

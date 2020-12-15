@@ -43,15 +43,11 @@ In order to use a connection, use the following procedure:
 ```python
 import Database
 
-connection = Database.pool.get_connection()
 results = None
-
-with connection.cursor() as cursor:
-	cursor.execute("SELECT * FROM Users")
-	results = cursor.fetchall()
-
-#Remember this!
-connection.close()
+with Database.pool.get_connection() as connection:
+	with connection.cursor() as cursor:
+		cursor.execute("SELECT * FROM Users")
+		results = cursor.fetchall()
 ```
 
 Please be sure to close your connection, or else the server will crash if it exhausts the connection pool.

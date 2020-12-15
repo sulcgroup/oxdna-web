@@ -10,6 +10,14 @@ class MyConnection:
 		self.closer = None
 		self._connection = connection
 
+	def __enter__(self):
+		return self
+		
+	def __exit__(self, exc_type, exc_value, exc_traceback):
+		if (exc_type or exc_value or exc_traceback):
+			print("There was an error in a database call!:\nexc_type: {}\nexc_value: {}\nexc_traceback: {}\n".format(exc_type, exc_value, exc_traceback))
+		self.close()
+
 	def close(self):
 		curframe = inspect.currentframe()
 		calframe = inspect.getouterframes(curframe, 2)
@@ -18,7 +26,7 @@ class MyConnection:
 
 		self.closer = function_caller
 		self._connection.close()
-		#print("CONNECTION: ", self.identifier, " CLOSE BY:", function_caller)
+		#print("CONNECTION: ", self.identifier, " CLOSE BY:", function_caller, flush=True)
 
 	def cursor(self):
 		return self._connection.cursor()

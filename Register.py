@@ -24,11 +24,8 @@ group_query = ("SELECT `group` FROM Users WHERE username = %s")
 max_id_query = ("SELECT MAX(id) FROM Users")
 
 def registerUser(user, requires_verification=True):
-	connection = Database.pool.get_connection()
-
 	response = validate(user)
 	if len(response) > 0:
-		connection.close()
 		return response
 	
 	name = user["email"]
@@ -44,8 +41,9 @@ def registerUser(user, requires_verification=True):
 	if requires_verification == False:
 		user_data = (name, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), 0, int(time.time()), verifycode, "True", firstName, lastName, institution, defaultJobLimit)
 
-	with connection.cursor() as cursor:
-		cursor.execute(add_user_query, user_data)
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(add_user_query, user_data)
 
 	user_id = Account.getUserId(name)
 
@@ -53,7 +51,6 @@ def registerUser(user, requires_verification=True):
 		verifylink = request.url_root + "verify?id={userId}&verify={verifycode}".format(userId = user_id, verifycode = verifycode)
 		EmailScript.SendEmail("-t 0 -n {username} -u {verifylink} -d {email}".format(username = firstName, verifylink = verifylink, email = name).split(" "))
 
-	connection.close()
 	return "Success"
 
 def validate(user):
@@ -80,30 +77,27 @@ def validate(user):
 	return errors
 
 def getGroup(email):
-	connection = Database.pool.get_connection()
 	result = None
 	
-	with connection.cursor() as cursor:
-		cursor.execute(group_query, (email))
-		result = cursor.fetchone()[0]
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(group_query, (email))
+			result = cursor.fetchone()[0]
 
-	connection.close()
 	return result if result else None
 
 def getMaxId():
-	connection = Database.pool.get_connection()
 	result = None
 
-	with connection.cursor() as cursor:
-		cursor.execute(max_id_query, ())
-		result = cursor.fetchone()[0]
+	with Database.pool.get_connection() as connection:
+		with connection.cursor() as cursor:
+			cursor.execute(max_id_query, ())
+			result = cursor.fetchone()[0]
 
-	connection.close()
 	return result if result else None
 
 
 def registerGuest():
-	connection = Database.pool.get_connection()
 
 	id = getMaxId() + 1
 	
@@ -116,7 +110,7 @@ def registerGuest():
 
 	user_data = (name, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), 1, int(time.time()), verifycode, "False", firstName, lastName, institution, defaultJobLimit)
 
-	connection.cursor().execute(add_user_query, user_data)
+	with Database.pool.get_connection() as connection:
+		connection.cursor().execute(add_user_query, user_data)
 
-	connection.close()
 	return str(id)

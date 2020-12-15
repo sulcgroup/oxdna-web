@@ -130,13 +130,11 @@ def cancel_job():
 
 @app.route('/delete_job', methods=['POST'])
 def delete_job():
-	print("Received Delete Request")
 	if session.get("user_id") is None:
 		return "You must be logged in to delete this job!"
 
 	json_data = request.get_json()
 	job_uuid = json_data["jobId"]
-	print("Deleting Job " + job_uuid)
 	Job.deleteJob(job_uuid)
 	return "Deleted Job " + job_uuid
 
