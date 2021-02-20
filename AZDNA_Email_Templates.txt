@@ -48,7 +48,7 @@ OxDNA Files Deleted
 ::
 <HEADER>
 
-We have deleted some of your simulation files as per our policy. 
+We have deleted some of your old simulation files to avoid running out of disk space.  As a reminder, files are only kept on the server for one week. 
 The following files were deleted:
 <j>
 

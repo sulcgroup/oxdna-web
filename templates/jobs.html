@@ -72,22 +72,22 @@ table tr:nth-child(even) {
 							ng-class="{'completed': x.status == 'Completed', 'pending': x.status == 'Pending', 'running': x.status == 'Running'}">[[x.status]]</span>
 					</td>
 					<td>[[ x.dateString ]]</td>
-					<td><a target="_blank" href="/job_output/[[x.uuid]]/input">view</a>
-						<a href="/job_output/[[x.uuid]]/input" download="[[x.name]]_input">download</a>
+					<td><a target="_blank" href="/job_output/[[x.uuid]]/input" class="input_[[x.uuid]]">view</a>
+						<a href="/job_output/[[x.uuid]]/input" download="[[x.name]]_input" class="input_[[x.uuid]]">download</a>
 					</td>
-					<td><a target="_blank" href="/job_output/[[x.uuid]]/log">view</a>
-						<a href="/job_output/[[x.uuid]]/log" download="[[x.name]].log">download</a>
+					<td><a target="_blank" href="/job_output/[[x.uuid]]/log" class="log_[[x.uuid]]">view</a>
+						<a href="/job_output/[[x.uuid]]/log" download="[[x.name]].log" class="log_[[x.uuid]]">download</a>
 					</td>
-					<td><a href="/job_output/[[x.uuid]]/topology" download="[[x.name]].top">download</a></td>
-					<td ng-cloak><a id="init-view" ng-cloak target="_blank" href="[[ x.initConf[0] ]]">view</a>
+					<td><a href="/job_output/[[x.uuid]]/topology" download="[[x.name]].top" class="top_[[x.uuid]]">download</a></td>
+					<td ng-cloak><a id="init-view" ng-cloak target="_blank" href="[[ x.initConf[0] ]]" class="first_[[x.uuid]]">view</a>
 						<a id="init-download" ng-cloak href="[[ x.initConf[1] ]]"
-							download="[[x.name]]_init_conf.dat">download</a>
+							download="[[x.name]]_init_conf.dat" class="first_[[x.uuid]]">download</a>
 					</td>
 					<td><a target="_blank"
-							href="/static/oxdna-viewer/index.html?configuration=/job_output/[[x.uuid]]/last_conf&topology=/job_output/[[x.uuid]]/topology">view</a>
-						<a href="/job_output/[[x.uuid]]/last_conf" download="[[x.name]]_last_conf.dat">download</a>
+							href="/static/oxdna-viewer/index.html?configuration=/job_output/[[x.uuid]]/last_conf&topology=/job_output/[[x.uuid]]/topology" class="last_[[x.uuid]]">view</a>
+						<a href="/job_output/[[x.uuid]]/last_conf" download="[[x.name]]_last_conf.dat" class="last_[[x.uuid]]">download</a>
 					</td>
-					<td><a id="traj_[[x.uuid]]" href="/job_output/[[x.uuid]]/trajectory_zip">download</a></td>
+					<td><a id="traj_[[x.uuid]]" class="traj_[[x.uuid]]" href="/job_output/[[x.uuid]]/trajectory_zip">download</a></td>
 					<td><button class="rounded" ng-click="cancelJob(x); x.status = 'Completed'"
 							ng-disabled="x.status == 'Completed'">Cancel Job</button></td>
 					<td><button class="rounded" ng-click="confirmDelete(x)"

@@ -608,7 +608,7 @@ app.controller("JobsCtrl", function($scope, JobsService, SessionManager, $http) 
 				}				
 			});
 		}
-		setTimeout(() => $scope.checkTrajectories(), 0);
+		setTimeout(() => $scope.availableFiles(), 0);
 		$scope.updateStatus();
 	})
 	$scope.getQueue();
@@ -637,19 +637,23 @@ app.controller("JobsCtrl", function($scope, JobsService, SessionManager, $http) 
 		}, 1000);
 	}
 
-	$scope.checkTrajectories = function() {
+	$scope.availableFiles = function() {
 		const jobs = $scope.jobs;
 		for (let i = 0; i < jobs.length; i++) {
 			$http({
 				method: 'GET',
-				url: `/api/job/hasTrajectory/${jobs[i].uuid}`
+				url: `/api/job/availableFiles/${jobs[i].uuid}`
 			}).then(response => {
-				if (response.data === "False") {
-					const traj = document.getElementById(`traj_${jobs[i].uuid}`);
-					traj.removeAttribute("href");
-					traj.style.color = "#6d6d6d";
+				for (const file in response.data) {
+					document.querySelectorAll(".".concat(file.concat(`_${jobs[i].uuid}`))).forEach((e) => {
+						if (response.data[file] === "False"){
+							e.removeAttribute("href");
+							e.style.color = "#6d6d6d";
+						}
+					})
+					//console.log(file, response.data[file])
 				}
-			});
+			})
 		}
 	}
 

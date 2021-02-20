@@ -475,14 +475,23 @@ def isRelax(job_id):
 	job_files = os.listdir("/users/{}/{}".format(user_id, job_id))
 	return "True" if "MD_relax.dat" in job_files else "False"
 
-def hasTrajectory(job_id):
+def availableFiles(job_id):
 	with Database.pool.get_connection() as connection:
 		with connection.cursor() as cursor:
 			cursor.execute(get_userId_for_job_uuid, (job_id,))
 			user_id = cursor.fetchone()[0]
 
-	job_files = os.listdir("/users/{}/{}".format(user_id, job_id))
-	return "True" if "trajectory.dat" in job_files else "False"
+	job_files = set(os.listdir("/users/{}/{}".format(user_id, job_id)))
+	files = {
+		"input" : "True" if "input" in job_files else "False",
+		"energy" : "True" if "energy.dat" in job_files else "False",
+		"log" : "True" if "job_out.log" in job_files else "False",
+		"top" : "True" if "output.top" in job_files else "False",
+		"first" : "True" if "output.dat" in job_files else "False",
+		"last" : "True" if "last_conf.dat" in job_files else "False",
+		"traj" : "True" if "trajectory.zip" in job_files else "False"
+	}
+	return files
 
 def createAssociateDictionary(data) :
 	keys = ["name", "uuid", "job_type", "sim_job_id", "creation_date", "status"]
