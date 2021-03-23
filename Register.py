@@ -112,5 +112,7 @@ def registerGuest():
 
 	with Database.pool.get_connection() as connection:
 		connection.cursor().execute(add_user_query, user_data)
+	Account.setEmailPrefs(id, "0, 0, 0")
+
 
 	return str(id)

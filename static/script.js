@@ -195,13 +195,13 @@ app.controller("AccountCtrl", function($scope, $http, SessionManager) {
 			url: '/account/get_email_prefs'
 		}).then(response => {
 			$scope.emailPrefs = response.data.split(' ').map(el => parseInt(el));
-			if ($scope.emailPrefs[0]) {
+			if ($scope.emailPrefs[0]) { //job complete
 				document.getElementById('email0').checked = true;
 			}
-			if ($scope.emailPrefs[1]) {
+			if ($scope.emailPrefs[1]) { //delete warning
 				document.getElementById('email1').checked = true;
 			}
-			if ($scope.emailPrefs[2]) {
+			if ($scope.emailPrefs[2]) { //delte notification
 				document.getElementById('email2').checked = true;
 			}
 		});

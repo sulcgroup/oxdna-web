@@ -25,6 +25,7 @@ get_reset_token_expiration = ("SELECT resetTokenExpiration FROM Users WHERE id =
 get_name_by_id_query = ("SELECT firstName FROM Users WHERE id = %s")
 
 def getEmailPrefs(userId):
+	# job complete / delete warning / delete notify
 	result = None
 	with Database.pool.get_connection() as connection:
 		with connection.cursor() as cursor:
@@ -34,9 +35,7 @@ def getEmailPrefs(userId):
 	return result
 
 def setEmailPrefs(userId, prefs):
-	print(prefs)
-	print(type(prefs))
-	print(prefs[0])
+	# job complete / delete warning / delete notify
 
 	prefs_integers = list(map(lambda x: "1" if x == "true" else "0", prefs.split(",")))
 	result = " ".join(prefs_integers)

@@ -36,7 +36,10 @@ def getUserIdForJob(job_id):
 	with Database.pool.get_connection() as connection:
 		with connection.cursor() as cursor:
 			cursor.execute(get_userId_for_job_uuid, (job_id,))
-			result = cursor.fetchone()[0]
+			try:
+				result = cursor.fetchone()[0]
+			except: #throws in index error if there is no such job.
+				return None
 
 	return result
 
