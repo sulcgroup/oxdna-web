@@ -549,6 +549,8 @@ def getJobOutput(uuid, desired_output):
 		"input":"input",
 		"mean":"mean.dat",
 		"deviations":"deviations.json",
+		"rmsd_traj":"deviations_rmsd.png",
+		"rmsd_data":"deviations_rmsd_data.json",
 		"aligned_traj":"aligned.zip",
 		"bond_log":"bond.log",
 		"bond_output":"bond_occupancy.json",
