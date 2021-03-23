@@ -86,26 +86,36 @@
 			<div ng-hide="mean[0] == undefined">
 				<table>
 					<tr class="font-weight-bold">
-						<td>Job Name</td>
-						<td>Status</td>
-						<td>Creation Date</td>
-						<td>Log</td>
-						<td>Mean+Deviations</td>
+						<td style="width:8%">Job Name</td>
+						<td style="width:5%">Status</td>
+						<td style="width:5%">Creation Date</td>
+						<td style="width:5%">Log</td>
+						<td style="width:8%">Mean+Deviations</td>
+						<td>RMSD plot</td>
 					</tr>
 					<tr>
-						<td>Compute Mean</td>
-						<td><span
+						<td style="width:8%">Compute Mean</td>
+						<td style="width:5%"><span
 								ng-class="{'completed': mean[0].status == 'Completed', 'pending': mean[0].status == 'Pending', 'running': mean[0].status == 'Running'}">[[mean[0].status]]</span>
 						</td>
-						<td>[[ mean[0].dateString ]]</td>
-						<td><a href="/job_output/[[mean[0].sim_job_id]]/mean_log" target="_blank">View log</a></td>
-						<td><a target="_blank"
+						<td style="width:5%">[[ mean[0].dateString ]]</td>
+						<td style="width:5%"><a href="/job_output/[[mean[0].sim_job_id]]/mean_log" target="_blank">View log</a></td>
+						<td style="width:8%"><a target="_blank"
 								href="/static/oxdna-viewer/index.html?configuration=/job_output/[[mean[0].sim_job_id]]/mean&topology=/job_output/[[mean[0].sim_job_id]]/topology&overlay=/job_output/[[mean[0].sim_job_id]]/deviations">View
 								mean+deviations</a></br>
 							<a href="/job_output/[[mean[0].sim_job_id]]/mean" target="_blank"
 								download=[[job.name]]_mean.dat>Download mean</a></br>
 							<a href="/job_output/[[mean[0].sim_job_id]]/deviations" target="_blank"
 								download=[[job.name]]_devs.json>Download deviations</a></br>
+							<a href="/job_output/[[mean[0].sim_job_id]]/rmsd_data" target="_blank"
+								download=[[job.name]]_rmsd.json>Download RMSD data</a></br>
+						</td>
+						<td>
+							<a href="/job_output/[[mean[0].sim_job_id]]/rmsd_traj" target="_blank"
+								download=[[x.name]]_rmsd.png>
+								<img id="rmsd_traj"
+									src="/job_output/[[mean[0].sim_job_id]]/rmsd_traj" width=100%>
+							</a>
 						</td>
 					</tr>
 
