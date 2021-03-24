@@ -183,10 +183,15 @@
                 If you are in doubt, do not hesitate to contact us or check out some of our publications where we study systems similar to yours for further discussion of underlying phenomena.</p>
             </div>
             
-            <button class="accordion" onclick="toggle(this)"><b> I want two single-stranded segments (e.g. on two different structures that  I want to join together) to bind into a duplex. How do I force simulation to do it?</b></button>
+            <button class="accordion" onclick="toggle(this)"><b> I want to add external forces to the simulation. How do they work?</b></button>
             <div class="panel">
-                <p>You first load your structure in oxView and select all the complementary pairs that will be bound to each other in a duplex. You then select the option to download "Selected base pair trap file". 
-                    When you submit the simulation, you can then upload this file under the optional "External force file" field in Advanced Parameters.</p>
+                <p>In the "Advanced Parameters" section on the submission form there's a file upload for external forces.  OxDNA implements a variety of different external force potentials which are defined by specifically-formatted text files. 
+                    A full list can be found in <a target="_blank" href="https://dna.physics.ox.ac.uk/index.php/Documentation#External_Forces">the documentation</a>.
+                </p>
+                <p>
+                    One of the most popular types of forces is a mutual trap, used, for example, to bring two single-stranded segments into proximity to facilitate binding.  These can be generated interactivley in oxView by selecting pairs of nucleotides you would like bound, 
+                    selecting "Create from selection" in the forces dialog from the Dynamics tab and then downloading the file with the "Forces" button in the oxDNA files section of the File tab.
+                </p>
             </div>
             
             <button class="accordion" onclick="toggle(this)"><b> The simulation is finished. How do I analyze the results now?</b></button>
