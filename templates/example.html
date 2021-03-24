@@ -72,4 +72,79 @@
 
     </div>
 
+    <!--------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h1">Forces Example</h1>
+    </div>
+
+    <div class="card">
+        <div id=exampleCard2 class="card-body">
+            The following tutorial will demonstrate adding forces to a DNA strand.  This example is the "TRAPS" example found in the main distribution of oxDNA
+            <div class="mb-3 mt-3">
+                <h4>
+                    Example files
+                </h4>
+                To start, you will need the configuration and topology files for the structure:
+                <ul>
+                    <li><a href="example/ssdna100.dat">Configuration</a></li>
+                    <li><a href="example/ssdna100.top">Topology</a></li>
+                </ul>
+                These files describe a single, 100 base pair long strand in oxDNA format.
+                <br>
+                <br>
+                You will also need some example force files:
+                <ul>
+                    <li><a href="example/pull.txt" download>Pulling</a></li>
+                    <li><a href="example/rotate.txt" download>Rotation</a></li>
+                    <li><a href="example/repulsion.txt" download>Repulsion plane</a></li>
+                </ul>
+            </div>
+            <div class="mb-3">
+                <h4>
+                    Submitting the job
+                </h4>
+                <p>
+                Next, open the "Submit as guest" link in the sidebar in a new tab to go to the job submit page.  On that page you will see a button to upload files.  
+                Click that button, navigate to where you saved 23.dat and 23.top, select both (ctrl+click) and click "Open".
+                Some browsers have trouble with opening two files like that, if this doesn't work, you can also select the two files and drag and drop them over the oxView window below the upload files button.
+                </p>
+                <p>
+                    Next, make some modifications to the default parameters so the example finishes quickly:
+                    <ul>
+                        <li>Change the number of steps to 1000000 so the example finishes quickly.</li>
+                        <li>In Advanced parameters, change the print conf every to 100000</li>
+                    </ul>
+                    This will make the simulation take about 3 minutes to complete and will produce a trajectory with 10 configurations to analyze.  If you would like more data for the analysis, increase the number of steps.  OxDNA limits how much data can be produced per second, and increasing the configuration print frequency much more will hit the limit, terminating the simulation early.
+                </p>
+            </div>
+            <div class="mb-3">
+                Now click "Submit Job", after a few seconds you will be taken to the job status page.
+            </div>
+            <div class="mb-3">
+                <h4>
+                    Analyzing the output
+                </h4>
+                <p>
+                Once the job status has changed to "Completed", it is ready for analysis.  Click the job name in the leftmost column to go to the analysis page.
+                On the analysis page you will find a series of options for built-in analysis options.  
+                </p>
+                <p>
+                As an example, try clicking on "Compute mean", wait for the status to change to "Completed" and then click "View means+deviations" to see the mean structure and per-nucleotide RMSF during the simulation.
+                Distance is another good example, in the "particle 1s" box type 7133 3513  and in the "particle 2s" box type 7351 7346 and then click "Start Analysis".  This will compute the end to end distance of one of the long edges and the adjacent short edge of the structure over the simulation.
+                <p>
+                The trajectory can be downloaded from the list of jobs or aligned and downloaded from the analysis page.  Once you have the trajectory downloaded, you can, for example create a movie using oxView, run the trajectory through some of our other <a href="https://github.com/sulcgroup/oxdna_analysis_tools">analysis scripts</a>, or run through your own analyses.
+                </p>
+            </div>
+            <div class="mb-3">
+                <h4>
+                    Accessing the job later
+                </h4>
+                <p>
+                    The URL of the job page is unique and can be accessed at any time.  If you want to check back later, save this URL.
+                    Jobs submitted as guest can be viewed by anybody with the URL.  Jobs submitted with a user account can only be accessed by the user who created the job.
+                </p>
+            </div>
+        </div>-->
+
 {% endblock %}
