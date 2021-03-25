@@ -73,7 +73,8 @@
     </div>
 
     <!--------------------------------------------------------------------------------------------------------------------------------------------------------------->
-    <!--
+    <br>
+    <br>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h1">Forces Example</h1>
     </div>
@@ -99,23 +100,29 @@
                     <li><a href="example/rotate.txt" download>Rotation</a></li>
                     <li><a href="example/repulsion.txt" download>Repulsion plane</a></li>
                 </ul>
+                One output that is quite interesting here is to visualize how different strengths of trap affect the molecule's behavior.
+                Make a copy of pull.txt and edit the "stiff" parameters to increase the force applied to the particles.
             </div>
             <div class="mb-3">
                 <h4>
                     Submitting the job
                 </h4>
                 <p>
-                Next, open the "Submit as guest" link in the sidebar in a new tab to go to the job submit page.  On that page you will see a button to upload files.  
-                Click that button, navigate to where you saved 23.dat and 23.top, select both (ctrl+click) and click "Open".
-                Some browsers have trouble with opening two files like that, if this doesn't work, you can also select the two files and drag and drop them over the oxView window below the upload files button.
+                    Since there are multiple structures, we recommend submitting mulitple copies of this job.  For each one, try submitting a different force file with the same input files.
+                    The submission will start in the same manner as the previous example.
                 </p>
                 <p>
-                    Next, make some modifications to the default parameters so the example finishes quickly:
+                    Change the length of the simulation and output frequency so it finishes in a reasonable timeframe:
                     <ul>
                         <li>Change the number of steps to 1000000 so the example finishes quickly.</li>
-                        <li>In Advanced parameters, change the print conf every to 100000</li>
+                        <li>In Advanced parameters, change the print conf every to 10000</li>
                     </ul>
-                    This will make the simulation take about 3 minutes to complete and will produce a trajectory with 10 configurations to analyze.  If you would like more data for the analysis, increase the number of steps.  OxDNA limits how much data can be produced per second, and increasing the configuration print frequency much more will hit the limit, terminating the simulation early.
+                    There are two additional changes for this simulation:
+                    <ul>
+                        <li>Change the backend to CPU in Advanced parameters.  This structure is only 100 nt, so the speedup from using a GPU is negligible</li>
+                        <li>Choose a force file to upload in Advanced parameters.</li>
+                    </ul>
+                    This will make the simulation take about 3 minutes to complete and will produce a trajectory with 100 configurations to analyze.  If you would like more data for the analysis, increase the number of steps.  As this structure is quite small, you can decrease the print_every in this case to get more configurations.
                 </p>
             </div>
             <div class="mb-3">
@@ -130,10 +137,16 @@
                 On the analysis page you will find a series of options for built-in analysis options.  
                 </p>
                 <p>
-                As an example, try clicking on "Compute mean", wait for the status to change to "Completed" and then click "View means+deviations" to see the mean structure and per-nucleotide RMSF during the simulation.
-                Distance is another good example, in the "particle 1s" box type 7133 3513  and in the "particle 2s" box type 7351 7346 and then click "Start Analysis".  This will compute the end to end distance of one of the long edges and the adjacent short edge of the structure over the simulation.
+                    This structure is very simple: just a single strand of DNA under various external forces.
+                    The first thing we recommend doing is running "Align trajectory" to create a trajectory that removes bulk translations and rotations.
+                    Download this trajectory and view the trajectory using oxView to observe the effect of the forces.
+                    For rotate.txt, the raw trajectory is also interesting to view the effect of the rotation.
+                </p>
                 <p>
-                The trajectory can be downloaded from the list of jobs or aligned and downloaded from the analysis page.  Once you have the trajectory downloaded, you can, for example create a movie using oxView, run the trajectory through some of our other <a href="https://github.com/sulcgroup/oxdna_analysis_tools">analysis scripts</a>, or run through your own analyses.
+                    Try running "Mean and RMSF" and observe how various traps modify the flexibility of individual nucleotides.
+                </p>
+                <p>
+                    Calculate the end-to-end distance (between particles 0 and 99) and observe how increasing the stiffness of the trap in pull.txt reduces the freedom of the strand ends.
                 </p>
             </div>
             <div class="mb-3">
@@ -145,6 +158,36 @@
                     Jobs submitted as guest can be viewed by anybody with the URL.  Jobs submitted with a user account can only be accessed by the user who created the job.
                 </p>
             </div>
-        </div>-->
+        </div>
+    </div>
+
+    <!--------------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <br>
+    <br>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h1">Additional examples</h1>
+    </div>
+
+    <div class="card">
+        <div id=exampleCard2 class="card-body">
+            Many of the examples from our <a href="https://doi.org/10.1093/nar/gkaa417">previous tools paper can be run using oxDNA.org.</a>
+            <br>
+            The following examples can be run and analyzed using the webserver:
+            <ul>
+                <li>
+                    <a href="https://github.com/sulcgroup/oxdna_analysis_tools/tree/master/paper_examples/angles">Angles</a>
+                </li>
+                <li>
+                    <a href="https://github.com/sulcgroup/oxdna_analysis_tools/tree/master/paper_examples/distances">Distances</a>
+                </li>
+                <li>
+                    <a href="https://github.com/sulcgroup/oxdna_analysis_tools/tree/master/paper_examples/svd_mean">SVD mean</a>
+                </li>
+                <li>
+                    <a href="https://github.com/sulcgroup/oxdna_analysis_tools/tree/master/paper_examples/h_bonds">Hydrogen bonds</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 
 {% endblock %}
