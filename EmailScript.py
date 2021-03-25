@@ -15,6 +15,7 @@ except FileNotFoundError:
 #subject lines for templates
 
 #initialize email sever
+# EMAIL_CREDENTIALS = ['test','test']
 yag = yagmail.SMTP(EMAIL_CREDENTIALS[0], EMAIL_CREDENTIALS[1])
 
 def SendEmail(args):

@@ -41,9 +41,9 @@
 					id="exampleFormControlFile1" multiple onchange="openFiles(this.files)">
 			</div>
 
-			<iframe name="editor-frame"
+			<iframe name="editor-frame" id="editor-frame"
 				style="resize:vertical;overflow:auto;width:95%;height:550px;margin:10px auto;display:block;"
-				src="/static/oxdna-viewer/index.html"></iframe>
+				src="http://localhost:8080/"></iframe>
 
 			<h4>Parameters</h4>
 
@@ -246,7 +246,8 @@
 
 {% block additionalScript %}
 <script>
-	var frame = window.frames['editor-frame'];
+	// var frame = window.frames['editor-frame'];
+	const frame = document.getElementById('editor-frame');
 
 	var openFiles = function (files) {
 		//console.log(files);
@@ -258,14 +259,18 @@
 
 	var dispatchFakeDrop = function (files) {
 		console.log("called");
-		var fakeDropEvent = new DragEvent('drop');
-		// You override dataTransfer with whichever property
-		// and method the drop function needs
+		// Send files to oxview
+		
+    	frame.contentWindow.postMessage({files: files, message: 'drop'}, 'http://localhost:8080/');
+		
+		// var fakeDropEvent = new DragEvent('drop');
+		// // You override dataTransfer with whichever property
+		// // and method the drop function needs
 
-		Object.defineProperty(fakeDropEvent, 'dataTransfer', {
-			value: new FakeDataTransfer(files)
-		});
-		frame.renderer.domElement.dispatchEvent(fakeDropEvent);
+		// Object.defineProperty(fakeDropEvent, 'dataTransfer', {
+		// 	value: new FakeDataTransfer(files)
+		// });
+		// frame.renderer.domElement.dispatchEvent(fakeDropEvent);
 
 	}
 
@@ -294,7 +299,8 @@
 	}
 
 	function TriggerFileDownloads() {
-		frame.makeOutputFiles()
+		frame.contentWindow.postMessage({message: 'download'}, 'http://localhost:8080');
+		// frame.makeOutputFiles()
 	}
 </script>
 {% endblock %}
