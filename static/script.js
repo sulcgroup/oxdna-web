@@ -806,12 +806,12 @@ app.controller("MainCtrl", function($scope, $http, SessionManager) {
 
 	$scope.setDefaults = function() {
 		$scope.data["job_title"] = "My Job"
-		$scope.data["steps" ] = 1e5;
+		$scope.data["steps" ] = 1e9;
 		$scope.data["salt_concentration"] = 1.0;
-		$scope.data["backend"] = "CPU";
+		$scope.data["backend"] = "CUDA";
 		$scope.data["interaction_type"]= "DNA";
-		$scope.data["print_conf_interval"] = 5e2;
-		$scope.data["print_energy_every"] = 5e2;
+		$scope.data["print_conf_interval"] = 5e5;
+		$scope.data["print_energy_every"] = 5e4;
 		$scope.data["MC_steps"] = 1e5;
 		$scope.data["MD_steps"] = 1e7;
 		$scope.data["MD_dt"] = 0.0001;
