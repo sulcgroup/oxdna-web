@@ -245,49 +245,18 @@
 {% endblock %}
 
 {% block additionalScript %}
+<!--File handler for uploaded files-->
 <script>
-	var frame = window.frames['editor-frame'];
+	const frame = document.getElementById('editor-frame');
 	var files = {};
 
 	var openFiles = function (uploaded) {
-		dispatchFakeDrop(uploaded);
-		console.log(uploaded.lengh)
+		frame.contentWindow.postMessage({message:'drop', files:uploaded}, "http://localhost:8080");
 		for (let i = 0; i < uploaded.length; i++){
 			f = uploaded.item(i)
-			console.log(f)
 			files[f.name] = f
 		}
-		console.log(files)
 	}
-
-	var dispatchFakeDrop = function (files) {
-		var fakeDropEvent = new DragEvent('drop');
-		// You override dataTransfer with whichever property
-		// and method the drop function needs
-
-		Object.defineProperty(fakeDropEvent, 'dataTransfer', {
-			value: new FakeDataTransfer(files)
-		});
-		frame.renderer.domElement.dispatchEvent(fakeDropEvent);
-
-	}
-
-	var finishedLoading = function () {
-		console.log("child finished loading!");
-		//dispatchFakeDrop();
-	}
-
-	function FakeDataTransfer(files) {
-		this.dropEffect = 'all';
-		this.effectAllowed = 'all';
-		this.items = [];
-		this.types = ['Files'];
-		this.getData = function () {
-
-			return files;
-		};
-		this.files = files;
-	};
 </script>
 
 <!--Make whole page a drag listener to accept files-->
