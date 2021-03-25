@@ -806,12 +806,12 @@ app.controller("MainCtrl", function($scope, $http, SessionManager) {
 
 	$scope.setDefaults = function() {
 		$scope.data["job_title"] = "My Job"
-		$scope.data["steps" ] = 1e9;
+		$scope.data["steps" ] = 1e5;
 		$scope.data["salt_concentration"] = 1.0;
-		$scope.data["backend"] = "CUDA";
+		$scope.data["backend"] = "CPU";
 		$scope.data["interaction_type"]= "DNA";
-		$scope.data["print_conf_interval"] = 5e5;
-		$scope.data["print_energy_every"] = 5e4;
+		$scope.data["print_conf_interval"] = 5e2;
+		$scope.data["print_energy_every"] = 5e2;
 		$scope.data["MC_steps"] = 1e5;
 		$scope.data["MD_steps"] = 1e7;
 		$scope.data["MD_dt"] = 0.0001;
@@ -876,7 +876,6 @@ app.controller("MainCtrl", function($scope, $http, SessionManager) {
 
 		// Handle guest job submission
 		const id = await SessionManager.checkCookie().then(res => res);
-		console.log(id);
 		if (id < 0) {
 			const userId = await $scope.registerGuest().then(res => res);
 			if (!isNaN(parseInt(userId))) {
@@ -885,7 +884,6 @@ app.controller("MainCtrl", function($scope, $http, SessionManager) {
 		}
 		
 		$scope.parseData()
-		TriggerFileDownloads();
 
 		if ($scope.force_file) {
 			[$scope.data["external_forces_file"], $scope.data["force_file"]] = $scope.force_file;
@@ -895,12 +893,22 @@ app.controller("MainCtrl", function($scope, $http, SessionManager) {
 		var file_data = {};
 		var fullyRead = 0;
 
+		console.log(files)
+
 		for(fileName in files) {
 			var reader = new FileReader();
  			reader.onloadend = (function(fileName) {
  				return function(event) {
  					var read_data = event.target.result;
- 					file_data[fileName] = read_data;
+					if (fileName.split('.').pop() == 'top'){
+						file_data['output.top'] = read_data;
+					}
+					else if (fileName.split('.').pop() == 'dat') {
+						file_data['output.dat'] = read_data
+					}
+					else {
+						console.log('bad files one-step gonna die')
+					}
  					fullyRead++;
  					readCallback();
  				}

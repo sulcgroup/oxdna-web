@@ -36,9 +36,9 @@
 
 			<h4>Input Files</h4>
 			<div class="form-group">
-				<label for="exampleFormControlFile1">Please select <b>2 input files</b> (configuration and topology) for the job</label>
+				<label for="oxDNAFileUpload">Please select <b>2 input files</b> (configuration and topology) for the job</label>
 				<input type="file" accept=".top,.conf,.dat,.oxdna" autocomplete="off" class="form-control-file"
-					id="exampleFormControlFile1" multiple onchange="openFiles(this.files)">
+					id="oxDNAFileUpload" multiple onchange="openFiles(this.files)">
 			</div>
 
 			<iframe name="editor-frame"
@@ -247,17 +247,20 @@
 {% block additionalScript %}
 <script>
 	var frame = window.frames['editor-frame'];
+	var files = {};
 
-	var openFiles = function (files) {
-		//console.log(files);
-		//frame.document.dispatchEvent(new Event('drop'));
-		//console.log("EVENT DISPATCHED!")
-		console.log(files);
-		dispatchFakeDrop(files);
+	var openFiles = function (uploaded) {
+		dispatchFakeDrop(uploaded);
+		console.log(uploaded.lengh)
+		for (let i = 0; i < uploaded.length; i++){
+			f = uploaded.item(i)
+			console.log(f)
+			files[f.name] = f
+		}
+		console.log(files)
 	}
 
 	var dispatchFakeDrop = function (files) {
-		console.log("called");
 		var fakeDropEvent = new DragEvent('drop');
 		// You override dataTransfer with whichever property
 		// and method the drop function needs
@@ -285,16 +288,36 @@
 		};
 		this.files = files;
 	};
+</script>
 
-	var files = {};
+<!--Make whole page a drag listener to accept files-->
+<script>
+// define the drag and drop behavior of the scene
+	const target = document;
+	target.addEventListener("dragover", function (event) {
+		event.preventDefault();
+		target.body.classList.add('dragging');
+	}, false);
 
-	function FakeDataDownload(file, filename) {
-		console.log("Fake file download: ", file, filename);
-		files[filename] = file;
-	}
+	target.addEventListener("dragenter", function (event) {
+		event.preventDefault();
+		target.body.classList.add('dragging');
+	}, false);
 
-	function TriggerFileDownloads() {
-		frame.makeOutputFiles()
-	}
+	target.addEventListener("dragexit", function (event) {
+		event.preventDefault();
+		target.body.classList.remove('dragging');
+	}, false);
+
+	// What to do if a file is dropped
+	target.addEventListener("drop", function (event) {
+	    // cancel default actions
+		event.preventDefault();
+		target.body.classList.remove('dragging');
+		const files = event.dataTransfer.files;
+		document.getElementById('oxDNAFileUpload').files = files
+	    openFiles(files);
+
+	}, false);
 </script>
 {% endblock %}
