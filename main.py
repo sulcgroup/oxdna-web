@@ -112,10 +112,6 @@ def handle_form():
 	else:
 		return error_message
 
-@app.route("/guestcreate", methods=["GET"])
-def create_guest_job():
-	return render_template("guestcreate.html")
-
 @app.route('/cancel_job', methods=['POST'])
 def cancel_job():
 	print("Received Cancel Request")

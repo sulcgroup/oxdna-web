@@ -36,14 +36,14 @@
 
 			<h4>Input Files</h4>
 			<div class="form-group">
-				<label for="exampleFormControlFile1">Please select <b>2 input files</b> (configuration and topology) for the job</label>
+				<label for="oxDNAFileUpload">Please select <b>2 input files</b> (configuration and topology) for the job</label>
 				<input type="file" accept=".top,.conf,.dat,.oxdna" autocomplete="off" class="form-control-file"
-					id="exampleFormControlFile1" multiple onchange="openFiles(this.files)">
+					id="oxDNAFileUpload" multiple onchange="openFiles(this.files)">
 			</div>
 
-			<iframe name="editor-frame"
+			<iframe name="editor-frame" id="editor-frame"
 				style="resize:vertical;overflow:auto;width:95%;height:550px;margin:10px auto;display:block;"
-				src="/static/oxdna-viewer/index.html"></iframe>
+				src="https://sulcgroup.github.io/oxdna-viewer/"></iframe>
 
 			<h4>Parameters</h4>
 
@@ -245,56 +245,48 @@
 {% endblock %}
 
 {% block additionalScript %}
+<!--File handler for uploaded files-->
 <script>
-	var frame = window.frames['editor-frame'];
-
-	var openFiles = function (files) {
-		//console.log(files);
-		//frame.document.dispatchEvent(new Event('drop'));
-		//console.log("EVENT DISPATCHED!")
-		console.log(files);
-		dispatchFakeDrop(files);
-	}
-
-	var dispatchFakeDrop = function (files) {
-		console.log("called");
-		var fakeDropEvent = new DragEvent('drop');
-		// You override dataTransfer with whichever property
-		// and method the drop function needs
-
-		Object.defineProperty(fakeDropEvent, 'dataTransfer', {
-			value: new FakeDataTransfer(files)
-		});
-		frame.renderer.domElement.dispatchEvent(fakeDropEvent);
-
-	}
-
-	var finishedLoading = function () {
-		console.log("child finished loading!");
-		//dispatchFakeDrop();
-	}
-
-	function FakeDataTransfer(files) {
-		this.dropEffect = 'all';
-		this.effectAllowed = 'all';
-		this.items = [];
-		this.types = ['Files'];
-		this.getData = function () {
-
-			return files;
-		};
-		this.files = files;
-	};
-
+	const frame = document.getElementById('editor-frame');
 	var files = {};
 
-	function FakeDataDownload(file, filename) {
-		console.log("Fake file download: ", file, filename);
-		files[filename] = file;
+	var openFiles = function (uploaded) {
+		frame.contentWindow.postMessage({message:'drop', files:uploaded}, "https://sulcgroup.github.io/oxdna-viewer/");
+		for (let i = 0; i < uploaded.length; i++){
+			f = uploaded.item(i)
+			files[f.name] = f
+		}
 	}
+</script>
 
-	function TriggerFileDownloads() {
-		frame.makeOutputFiles()
-	}
+<!--Make whole page a drag listener to accept files-->
+<script>
+// define the drag and drop behavior of the scene
+	const target = document;
+	target.addEventListener("dragover", function (event) {
+		event.preventDefault();
+		target.body.classList.add('dragging');
+	}, false);
+
+	target.addEventListener("dragenter", function (event) {
+		event.preventDefault();
+		target.body.classList.add('dragging');
+	}, false);
+
+	target.addEventListener("dragexit", function (event) {
+		event.preventDefault();
+		target.body.classList.remove('dragging');
+	}, false);
+
+	// What to do if a file is dropped
+	target.addEventListener("drop", function (event) {
+	    // cancel default actions
+		event.preventDefault();
+		target.body.classList.remove('dragging');
+		const files = event.dataTransfer.files;
+		document.getElementById('oxDNAFileUpload').files = files
+	    openFiles(files);
+
+	}, false);
 </script>
 {% endblock %}
