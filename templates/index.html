@@ -43,7 +43,7 @@
 
 			<iframe name="editor-frame" id="editor-frame"
 				style="resize:vertical;overflow:auto;width:95%;height:550px;margin:10px auto;display:block;"
-				src="https://sulcgroup.github.io/oxdna-viewer/"></iframe>
+				src="https://sulcgroup.github.io/oxdna-viewer"></iframe>
 
 			<h4>Parameters</h4>
 
@@ -251,7 +251,7 @@
 	var files = {};
 
 	var openFiles = function (uploaded) {
-		frame.contentWindow.postMessage({message:'drop', files:uploaded}, "https://sulcgroup.github.io/oxdna-viewer/");
+		frame.contentWindow.postMessage({message:'drop', files:uploaded}, "https://sulcgroup.github.io/oxdna-viewer");
 		for (let i = 0; i < uploaded.length; i++){
 			f = uploaded.item(i)
 			files[f.name] = f
