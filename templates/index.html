@@ -43,7 +43,7 @@
 
 			<iframe name="editor-frame" id="editor-frame"
 				style="resize:vertical;overflow:auto;width:95%;height:550px;margin:10px auto;display:block;"
-				src="https://sulcgroup.github.io/oxdna-viewer"></iframe>
+				src="https://sulcgroup.github.io/oxdna-viewer" onload="removeListener()"></iframe>
 
 			<h4>Parameters</h4>
 
@@ -248,6 +248,11 @@
 <!--File handler for uploaded files-->
 <script>
 	const frame = document.getElementById('editor-frame');
+	// remove oxView's drop listener
+	function removeListener() {
+		console.log("called");
+		frame.contentWindow.postMessage({message:'remove-event'}, "https://sulcgroup.github.io/oxdna-viewer");
+	}
 	var files = {};
 
 	var openFiles = function (uploaded) {
@@ -262,28 +267,29 @@
 <!--Make whole page a drag listener to accept files-->
 <script>
 // define the drag and drop behavior of the scene
-	const target = document;
-	target.addEventListener("dragover", function (event) {
+	const doc = document;
+	doc.addEventListener("dragover", function (event) {
 		event.preventDefault();
-		target.body.classList.add('dragging');
+		doc.body.classList.add('dragging');
 	}, false);
 
-	target.addEventListener("dragenter", function (event) {
+	doc.addEventListener("dragenter", function (event) {
 		event.preventDefault();
-		target.body.classList.add('dragging');
+		doc.body.classList.add('dragging');
 	}, false);
 
-	target.addEventListener("dragexit", function (event) {
+	doc.addEventListener("dragexit", function (event) {
 		event.preventDefault();
-		target.body.classList.remove('dragging');
+		doc.body.classList.remove('dragging');
 	}, false);
 
 	// What to do if a file is dropped
-	target.addEventListener("drop", function (event) {
+	doc.addEventListener("drop", function (event) {
 	    // cancel default actions
 		event.preventDefault();
-		target.body.classList.remove('dragging');
+		doc.body.classList.remove('dragging');
 		const files = event.dataTransfer.files;
+		console.log(files)
 		document.getElementById('oxDNAFileUpload').files = files
 	    openFiles(files);
 

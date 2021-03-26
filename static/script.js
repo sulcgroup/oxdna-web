@@ -893,8 +893,6 @@ app.controller("MainCtrl", function($scope, $http, SessionManager) {
 		var file_data = {};
 		var fullyRead = 0;
 
-		console.log(files)
-
 		for(fileName in files) {
 			var reader = new FileReader();
  			reader.onloadend = (function(fileName) {
