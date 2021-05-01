@@ -36,7 +36,10 @@
 
 			<h4>Input Files</h4>
 			<div class="form-group">
-				<label for="oxDNAFileUpload">Please select <b>2 input files</b> (configuration and topology) for the job</label>
+				<label for="oxDNAFileUpload">Please select <b>2 input files</b> (configuration and topology) for the job.
+				<br>
+				You can also drag and drop the two files anywhere on the form EXCEPT on the oxView window below.
+				</label>
 				<input type="file" accept=".top,.conf,.dat,.oxdna" autocomplete="off" class="form-control-file"
 					id="oxDNAFileUpload" multiple onchange="openFiles(this.files)">
 			</div>
@@ -250,7 +253,6 @@
 	const frame = document.getElementById('editor-frame');
 	// remove oxView's drop listener
 	function removeListener() {
-		console.log("called");
 		frame.contentWindow.postMessage({message:'remove-event'}, "https://oxdna.org");
 	}
 	var files = {};

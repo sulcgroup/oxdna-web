@@ -901,7 +901,7 @@ app.controller("MainCtrl", function($scope, $http, SessionManager) {
 					if (fileName.split('.').pop() == 'top'){
 						file_data['output.top'] = read_data;
 					}
-					else if (fileName.split('.').pop() == 'dat') {
+					else if (fileName.split('.').pop() == 'dat' || fileName.split('.').pop() == 'conf' || fileName.split('.').pop() == 'oxdna') {
 						file_data['output.dat'] = read_data
 					}
 					else {
