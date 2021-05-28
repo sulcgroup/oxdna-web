@@ -10,6 +10,7 @@ import Register
 import Account
 import Admin
 import Database
+import EmailScript
 
 app = Flask(__name__, static_url_path='/static', static_folder="static")
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -717,6 +718,19 @@ def getExample(fname):
 		return send_file("example/{}".format(fname))
 	else:
 		abort(404, description="File not found")
+
+@app.route("/canary")
+def canary():
+	try:
+		con = Database.pool.get_connection()
+		con.close()
+		print("Pool test passed", flush=True)
+		return("Test passed")
+	except Exception as e:	
+		print("Pool test failed:", flush=True)
+		print(e)
+		EmailScript.SendEmail("-t 9 -d {email}".format(email = "epopplet@asu.edu").split(" "))
+		abort(404, description="Test failed")
 
 @app.route("/")
 def index():

@@ -80,3 +80,9 @@ Please keep in mind the limit of 4 jobs per user. Subsequent submissions will de
 
 <TAIL>
 ;;
+
+
+Canary Email
+::
+Database connection failed.  Help!
+;;
