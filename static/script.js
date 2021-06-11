@@ -763,6 +763,7 @@ app.controller("MainCtrl", function($scope, $http, SessionManager) {
 	$scope.submissionStatus = "";
 	$scope.jobsRunning = 0;
 	$scope.jobsQueued = 0;
+	$scope.reminder = '';
 
 	$scope.auxillary = {
 		"temperature":20,
@@ -780,6 +781,15 @@ app.controller("MainCtrl", function($scope, $http, SessionManager) {
 			$scope.jobsRunning = parseInt(data[0]);
 			$scope.jobsQueued = parseInt(data[1]);
 		});
+	}
+
+	$scope.remind = function() {
+		if($scope.data.interaction_type == 'DNANM' || $scope.data.interaction_type == 'RNANM') {
+			$scope.reminder = 'Make sure you upload a par file with your configuration and topology?';
+		}
+		else {
+			$scope.reminder = '';
+		}
 	}
 
 	$scope.parseData = function() {
