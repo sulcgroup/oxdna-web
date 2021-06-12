@@ -87,6 +87,8 @@ def handle_form():
 			parameters.update({"topology": file_name})
 		if(".dat" in file_name or ".conf" in file_name or ".oxdna" in file_name):
 			parameters.update({"conf_file": file_name})
+		if(".par" in file_name):
+			parameters.update({"par_file" : file_name})
 
 	parameters.update(json_data["parameters"])
 	files = json_data["files"]

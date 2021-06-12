@@ -369,7 +369,7 @@ def createJobForUserIdWithData(userId, jsonData, randomJobId):
 	#pass randomJobId to slurm!
 	files = jsonData["files"]
 
-	#write the top, conf, and (optional) force files
+	#write the top, conf, and (optional) par and force files
 	for (file_name, file_data) in files.items():
 		#set file path to /users here
 		file_path = job_directory + file_name
@@ -398,6 +398,10 @@ def createJobForUserIdWithData(userId, jsonData, randomJobId):
 	elif parameters["interaction_type"] == "RNA":
 		parameters["interaction_type"] = "RNA2"
 
+	#Protein simulations can be very dense.
+	if parameters["interaction_type"] == "DNANM" or parameters["interaction_type"] == "RNANM":
+		parameters["max_density_multiplier"] = 200
+
 	backend = parameters["backend"]
 	if backend == "CUDA":
 		backend = "GPU"
@@ -408,13 +412,21 @@ def createJobForUserIdWithData(userId, jsonData, randomJobId):
 		])
 
 	#empty optional parameters need to be removed from the list
-	if parameters["external_forces_file"] == '':
-		parameters.pop("external_forces_file")
+	to_remove = []
+	for key in parameters.keys():
+		if parameters[key] == '':
+			to_remove.append(key)
+
+	for key in to_remove:
+		parameters.pop(key)
+			
+	#if parameters["external_forces_file"] == '':
+	#	parameters.pop("external_forces_file")
 
 	if parameters["use_average_seq"] == 0:
-		if parameters["interaction_type"] == "DNA2":
+		if parameters["interaction_type"] == "DNA2" or parameters["interaction_type"] == "DNANM":
 			parameters.update({"seq_dep_file":"/opt/oxdna/oxDNA/oxDNA2_sequence_dependent_parameters.txt"})
-		if parameters["interaction_type"] == "RNA2":
+		if parameters["interaction_type"] == "RNA2" or parameters["interaction_type"] == "RNANM":
 			parameters.update({"seq_dep_file":"/opt/oxdna/oxDNA/rna_sequence_dependent_parameters.txt"})
 
 	input_files = createOxDNAFile(parameters, job_directory, needs_relax)
