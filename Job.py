@@ -171,7 +171,10 @@ cd {job_directory}""".	format(
 	backend=backend,
 	job_name=job_name
 	)
-		oxdna_binary = "/opt/oxdna-cpu-only/oxDNA/build/bin/oxDNA"
+		if interaction == "DNANM" or interaction == "RNANM":
+			oxdna_binary = "/opt/anm-oxdna_cpu/oxDNA/build/bin/oxDNA"
+		else:
+			oxdna_binary = "/opt/oxdna-cpu-only/oxDNA/build/bin/oxDNA"
 	
 	else:
 		sbatch_file = """#!/bin/bash
@@ -190,6 +193,7 @@ cd {job_directory}""".	format(
 			oxdna_binary = "/opt/anm-oxdna/oxDNA/build/bin/oxDNA"
 		else:
 			oxdna_binary = "/opt/oxdna/oxDNA/build/bin/oxDNA"
+		print(oxdna_binary, flush=True)
 
 	for f in input_files:
 		sbatch_file += "\n{oxdna_binary} {file_name}".format(oxdna_binary = oxdna_binary, file_name=f)
@@ -374,6 +378,7 @@ def createJobForUserIdWithData(userId, jsonData, randomJobId):
 
 	#write the top, conf, and (optional) par and force files
 	for (file_name, file_data) in files.items():
+		print(file_name, flush=True)
 		#set file path to /users here
 		file_path = job_directory + file_name
 		#print(file_directory)
@@ -438,7 +443,7 @@ def createJobForUserIdWithData(userId, jsonData, randomJobId):
 		
 	
 	#delay until we've ran one step job!
-	job_ran_okay, error = runOneStepJob(job_directory)
+	job_ran_okay, error = runOneStepJob(job_directory, interaction)
 
 	if not job_ran_okay:
 		print("Job {uuid} died on one-step run".format(uuid=randomJobId), flush=True)
@@ -593,9 +598,13 @@ def updateJobName(name, uuid):
 	
 	return name
 
-def runOneStepJob(job_directory):
+def runOneStepJob(job_directory, interaction):
+	if interaction == "DNANM" or interaction == "RNANM":
+		oxdna_binary = "/opt/anm-oxdna_cpu/oxDNA/build/bin/oxDNA"
+	else:
+		oxdna_binary = "/opt/oxdna-cpu-only/oxDNA/build/bin/oxDNA"
 	pipe = subprocess.Popen(
-		["/opt/oxdna-cpu-only/oxDNA/build/bin/oxDNA", "input_one_step"], 
+		[oxdna_binary, "input_one_step"], 
 		stdout=subprocess.PIPE, 
 		stderr=subprocess.PIPE,
 		cwd=job_directory
