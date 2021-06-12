@@ -912,7 +912,10 @@ app.controller("MainCtrl", function($scope, $http, SessionManager) {
 						file_data['output.top'] = read_data;
 					}
 					else if (fileName.split('.').pop() == 'dat' || fileName.split('.').pop() == 'conf' || fileName.split('.').pop() == 'oxdna') {
-						file_data['output.dat'] = read_data
+						file_data['output.dat'] = read_data;
+					}
+					else if (fileName.split('.').pop() == 'par') {
+						file_data['output.par']	= read_data;
 					}
 					else {
 						console.log('bad files one-step gonna die')
@@ -925,7 +928,7 @@ app.controller("MainCtrl", function($scope, $http, SessionManager) {
 		}
 
 		var readCallback = async function() {
-			if(fullyRead == 2) {
+			if(fullyRead == Object.keys(files).length) {
 				$scope.data["files"] = file_data;
 				const response = await $scope.postJob();
 				if (response === "user job submitted") {

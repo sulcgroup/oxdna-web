@@ -193,7 +193,6 @@ cd {job_directory}""".	format(
 			oxdna_binary = "/opt/anm-oxdna/oxDNA/build/bin/oxDNA"
 		else:
 			oxdna_binary = "/opt/oxdna/oxDNA/build/bin/oxDNA"
-		print(oxdna_binary, flush=True)
 
 	for f in input_files:
 		sbatch_file += "\n{oxdna_binary} {file_name}".format(oxdna_binary = oxdna_binary, file_name=f)
@@ -610,6 +609,7 @@ def runOneStepJob(job_directory, interaction):
 		cwd=job_directory
 	)
 	stdout, stderr = pipe.communicate()
+	print(stderr, flush=True)
 
 	if len(stdout) == 0 and len(stderr) > 0:
 		return False, stderr
