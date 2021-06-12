@@ -153,7 +153,7 @@ python3 /opt/oxdna_analysis_tools/{run_command}""".format(
 	file = open(file_path, "w+")
 	file.write(sbatch_file)
 
-def createSlurmJobFile(job_directory, job_name, backend, input_files, force=1.5):
+def createSlurmJobFile(job_directory, job_name, backend, interaction, input_files, force=1.5):
 	home_path = Utilities.get_home_path()
 
 	#job_output_location = job_directory
@@ -186,7 +186,10 @@ cd {job_directory}""".	format(
 	backend=backend,
 	job_name=job_name
 	)
-		oxdna_binary = "/opt/oxdna/oxDNA/build/bin/oxDNA"
+		if interaction == "DNANM" or interaction == "RNANM":
+			oxdna_binary = "/opt/anm-oxdna/oxDNA/build/bin/oxDNA"
+		else:
+			oxdna_binary = "/opt/oxdna/oxDNA/build/bin/oxDNA"
 
 	for f in input_files:
 		sbatch_file += "\n{oxdna_binary} {file_name}".format(oxdna_binary = oxdna_binary, file_name=f)
@@ -392,14 +395,15 @@ def createJobForUserIdWithData(userId, jsonData, randomJobId):
 		pass
 	
 	#use the most up-to-date models
-	if parameters["interaction_type"] == "DNA":
+	interaction = parameters["interaction_type"]
+	if interaction == "DNA":
 		parameters["interaction_type"] = "DNA2"
 
-	elif parameters["interaction_type"] == "RNA":
+	elif interaction == "RNA":
 		parameters["interaction_type"] = "RNA2"
 
 	#Protein simulations can be very dense.
-	if parameters["interaction_type"] == "DNANM" or parameters["interaction_type"] == "RNANM":
+	if interaction == "DNANM" or interaction == "RNANM":
 		parameters["max_density_multiplier"] = 200
 
 	backend = parameters["backend"]
@@ -424,13 +428,13 @@ def createJobForUserIdWithData(userId, jsonData, randomJobId):
 	#	parameters.pop("external_forces_file")
 
 	if parameters["use_average_seq"] == 0:
-		if parameters["interaction_type"] == "DNA2" or parameters["interaction_type"] == "DNANM":
+		if interaction == "DNA2" or interaction == "DNANM":
 			parameters.update({"seq_dep_file":"/opt/oxdna/oxDNA/oxDNA2_sequence_dependent_parameters.txt"})
-		if parameters["interaction_type"] == "RNA2" or parameters["interaction_type"] == "RNANM":
+		if interaction == "RNA2" or interaction == "RNANM":
 			parameters.update({"seq_dep_file":"/opt/oxdna/oxDNA/rna_sequence_dependent_parameters.txt"})
 
 	input_files = createOxDNAFile(parameters, job_directory, needs_relax)
-	createSlurmJobFile(job_directory, randomJobId, backend, input_files, force=relax_force)
+	createSlurmJobFile(job_directory, randomJobId, backend, interaction, input_files, force=relax_force)
 		
 	
 	#delay until we've ran one step job!
