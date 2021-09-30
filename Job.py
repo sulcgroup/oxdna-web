@@ -377,7 +377,6 @@ def createJobForUserIdWithData(userId, jsonData, randomJobId):
 
 	#write the top, conf, and (optional) par and force files
 	for (file_name, file_data) in files.items():
-		print(file_name, flush=True)
 		#set file path to /users here
 		file_path = job_directory + file_name
 		#print(file_directory)
@@ -405,6 +404,7 @@ def createJobForUserIdWithData(userId, jsonData, randomJobId):
 
 	elif interaction == "RNA":
 		parameters["interaction_type"] = "RNA2"
+	interaction = parameters["interaction_type"]
 
 	#Protein simulations can be very dense.
 	if interaction == "DNANM" or interaction == "RNANM":
@@ -431,7 +431,9 @@ def createJobForUserIdWithData(userId, jsonData, randomJobId):
 	#if parameters["external_forces_file"] == '':
 	#	parameters.pop("external_forces_file")
 
+	print(parameters["use_average_seq"], flush=True)
 	if parameters["use_average_seq"] == 0:
+		print(interaction, flush=True)
 		if interaction == "DNA2" or interaction == "DNANM":
 			parameters.update({"seq_dep_file":"/opt/oxdna/oxDNA/oxDNA2_sequence_dependent_parameters.txt"})
 		if interaction == "RNA2" or interaction == "RNANM":
@@ -609,7 +611,6 @@ def runOneStepJob(job_directory, interaction):
 		cwd=job_directory
 	)
 	stdout, stderr = pipe.communicate()
-	print(stderr, flush=True)
 
 	if len(stdout) == 0 and len(stderr) > 0:
 		return False, stderr

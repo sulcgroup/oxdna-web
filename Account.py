@@ -114,7 +114,6 @@ def getUsername(userId):
 			results = cursor.fetchall()
 
 	if results is not None:
-		print(results)
 		return results[0][0]
 	else:
 		return None

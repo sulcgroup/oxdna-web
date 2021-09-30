@@ -36,7 +36,9 @@
 
 			<h4>Input Files</h4>
 			<div class="form-group">
-				<label for="oxDNAFileUpload">Please select <b>2 input files</b> (configuration and topology) for the job.
+				<label for="oxDNAFileUpload">Please select <b>2 input files</b> (configuration and topology) for the job. 
+				<br>
+				If you are running a protein simulation, please aditionally provide a <b>paramater file</b>.
 				<br>
 				You can also drag and drop the two files anywhere on the form EXCEPT on the oxView window below.
 				</label>
@@ -72,12 +74,12 @@
 							<div class="form-check form-check-inline">
 								<input ng-model="data.interaction_type" class="form-check-input" type="radio" name="interaction_type"
                                         id="inlineRadio3" value="DNANM" ng-change="remind()">
-                                <label class="form-check-label" for="inlineRadio3">DNANM</label>
+                                <label class="form-check-label" for="inlineRadio3">DNA-protein (DNANM)</label>
 							</div>
 							<div class="form-check form-check-inline">
 								<input ng-model="data.interaction_type" class="form-check-input" type="radio" name="interaction_type"
                                         id="inlineRadio4" value="RNANM" ng-change="remind()">
-                                <label class="form-check-label" for="inlineRadio4" >RNANM</label>
+                                <label class="form-check-label" for="inlineRadio4" >RNA-protein (RNANM)</label>
 							</div>
 							<span ng-cloak><br>[[reminder]]</span>
 			</div>

@@ -75,7 +75,7 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
         email_warning_files = []
         email_deletion_files = []
 
-        url = "http://oxdna.org/jobs"
+        url = "https://oxdna.org/jobs"
         email = getUsername(user)
         email_prefs = getEmailPrefs(user)
         
