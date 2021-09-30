@@ -120,9 +120,9 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
     # update warning files in results with old results dictionary only if the file hasn't been deleted
     for user in old_results.keys():
         new_results = []
-        for file in old_results[user][0]:
-            if not (file in results[user][1]):
-                new_results.append(file)
+        for f in old_results[user][0]:
+            if not (f in results[user][1]):
+                new_results.append(f)
 
         results[user][0].extend(new_results)
 
@@ -130,9 +130,9 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
     for user in results.keys():
         results[user] = (list(set(results[user][0])), [])
         
-    file = open(output_path, "w")
-    file.write(str(results))
-    file.close()
+    f = open(output_path, "w")
+    f.write(str(results))
+    f.close()
     print("Success: File check complete!")
     if bad_emails:
         print("The following emails are not valid and were not notified: ", bad_emails)
