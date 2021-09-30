@@ -45,22 +45,24 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
 
     # create new results.txt if running for the first time (or in different directory)
     if OUTPUT_FILE in os.listdir(output_dir):
-        file = open(output_path, "r")
+        f = open(output_path, "r")
         try:
-            old_results = literal_eval(file.read())
+            old_results = literal_eval(f.read())
             if not isinstance(old_results, dict):
                 print("Failure: Contents of results.txt must be a dictionary. Please delete it and run again.")
+                f.close()
                 exit(0)
         except:
             print("Failure: Can't read results.txt. Please delete it and run again.")
+            f.close()
             exit(0)
         print("Updating results.txt...")
     else:
-        file = open(output_path, "w")
+        f = open(output_path, "w")
         old_results = {}
         print("Creating new output file...")
 
-    file.close()
+    f.close()
     results = deepcopy(old_results)
 
     searchDirectory(dir, results, size_limit, warning_time, deletion_time)
@@ -115,7 +117,7 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
             email_deletion_files = ',\n'.join(email_deletion_files)
             EmailScript.SendEmail("-t``5``-n``{username}``-d``{email}``-j``{files}".format(username = email, email = email, files = email_deletion_files).split("``"))
     
-    # update warning files in results with old results dctionary only if the file hasn't been deleted
+    # update warning files in results with old results dictionary only if the file hasn't been deleted
     for user in old_results.keys():
         new_results = []
         for file in old_results[user][0]:
