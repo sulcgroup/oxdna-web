@@ -38,6 +38,11 @@ OxDNA File Deletion Notice
 ::
 <HEADER>
 
+We have a few updates to share on our file check system:
+(1) We have updated the maximum file size to 10 MB
+(2) The warning now comes out on day 12 and the deletion on day 14 rather than 5 and 7.
+(3) The issue where you would recieve warnings about files you deleted yourself should be fixed. 
+
 You have files that are approaching the one-week time limit and will soon be deleted. You can access the files here <u>
 The files are
 <j>

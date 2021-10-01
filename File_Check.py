@@ -27,11 +27,11 @@ from Job import getJobNameForUuid
     # python File_Check.py -d /users -s 100000 -w 432000 -x 604800 -o results -b
 
 
-DEFAULT_SIZE_LIMIT = 5000000 # 5MB
-DEFAULT_WARNING_TIME = 432000 # five days
-DEFAULT_DELETION_TIME = 604800 # one week
+DEFAULT_SIZE_LIMIT = 10000000 # 10MB
+DEFAULT_WARNING_TIME = 1036800 # 12 days
+DEFAULT_DELETION_TIME = 1209600 # 2 weeks
 DEFAULT_DIR = "/users"
-OUTPUT_FILE = "results.txt"
+OUTPUT_FILE = "results2.txt"
 CURRENT_TIME = time()
 
 def is_dir(dir):
@@ -63,9 +63,9 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
         print("Creating new output file...")
 
     f.close()
-    results = deepcopy(old_results)
+    results = {}
 
-    searchDirectory(dir, results, size_limit, warning_time, deletion_time)
+    searchDirectory(dir, results, old_results, size_limit, warning_time, deletion_time)
 
     # results.txt contains a dict where keys are userIds and values are tuples ([warning_files list], [deletion_files list]).
     # warning_files is replaced by new files for emailing users and possible deletion next time the script is run
@@ -84,6 +84,23 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
         if not "@" in email:
             print(email, " is not a valid email. User ", user, " will not be notified.")
             bad_emails.append(email)
+
+            #delete the file anyway
+            for job_path in deletion_files:
+                job_path_list = job_path.split('/')
+                job_file = job_path_list[-1]
+
+                path_to_job = os.path.join(dir, str(user), job_path)
+                if os.path.exists(path_to_job):
+                    if not debug:
+                        os.remove(path_to_job)
+                    else:
+                        print("I would like to remove {}, but noooo".format(path_to_job))
+                else:
+                    print("Failure: tried to remove job that doesn't exist")
+                    exit(0)
+
+            #skip all the emailing parts        
             continue
         
         # format job files for warning
@@ -109,6 +126,8 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
             if os.path.exists(path_to_job):
                 if not debug:
                     os.remove(path_to_job)
+                else:
+                    print("I would like to remove {}/{}, but noooo".format(job_name,job_file))
             else:
                 print("Failure: tried to remove job that doesn't exist")
                 exit(0)
@@ -116,15 +135,6 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
         if email_deletion_files and email_prefs[4] == '1' and not debug:
             email_deletion_files = ',\n'.join(email_deletion_files)
             EmailScript.SendEmail("-t``5``-n``{username}``-d``{email}``-j``{files}".format(username = email, email = email, files = email_deletion_files).split("``"))
-    
-    # update warning files in results with old results dictionary only if the file hasn't been deleted
-    for user in old_results.keys():
-        new_results = []
-        for f in old_results[user][0]:
-            if not (f in results[user][1]):
-                new_results.append(f)
-
-        results[user][0].extend(new_results)
 
     # remove duplicates and deletion files
     for user in results.keys():
@@ -140,13 +150,13 @@ def main(dir, size_limit, warning_time, deletion_time, output_dir, debug):
 
 
 # Update results dictionary with jobs to be warned to the user and jobs to be deleted
-def searchDirectory(dir, results, size_limit, warning_time, deletion_time):
+def searchDirectory(dir, results, old_results, size_limit, warning_time, deletion_time):
     for item in os.listdir(dir):
         path = os.path.join(dir, item)
 
         # recursive case
         if os.path.isdir(path):
-            searchDirectory(path, results, size_limit, warning_time, deletion_time)
+            searchDirectory(path, results, old_results, size_limit, warning_time, deletion_time)
 
         # base case - check job file stats
         else:
@@ -163,27 +173,29 @@ def searchDirectory(dir, results, size_limit, warning_time, deletion_time):
             size = file_stats.st_size
             elapsed_time = CURRENT_TIME - file_stats.st_mtime
 
-            # handle large & old file
+            # If a file is found that meets the criteria
             if size > size_limit and elapsed_time > warning_time:
+                #find out who's file it is and make a results entry for them
                 user = int(path_list[2])
-                try:
-                    warning_files = results[user][0]
-                except KeyError:
-                    warning_files = []
-                    results.update({ user: ([],[])})
-                deletion_files = results[user][1]
                 problem_file = '/'.join(path_list[3:])
+                #find out if they've already been warned
+                try:
+                    old_warning_files = old_results[user][0]
+                    deletion_files = old_results[user][1]
+                except KeyError:
+                    old_warning_files = []
+                #find out if there's already an entry for the user in results
+                try: 
+                    _ = results[user]
+                except KeyError:
+                    results[user] = ([], [])
+                            
 
-                # core logic of script
-                if elapsed_time > deletion_time and problem_file in warning_files:
-                    warning_files.remove(problem_file)
-                    deletion_files.append(problem_file)
-                elif not problem_file in warning_files:
-                    warning_files.append(problem_file)
+                # If delete time and they have already been warned, queue for deletion, else queue for warning.
+                if elapsed_time > deletion_time and problem_file in old_warning_files:
+                    results[user][1].append(problem_file)
                 else:
-                    warning_files.remove(problem_file)
-
-                results.update({ user: (warning_files, deletion_files) })
+                    results[user][0].append(problem_file)
 
 
 # parse command line arguments
