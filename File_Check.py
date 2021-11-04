@@ -31,7 +31,7 @@ DEFAULT_SIZE_LIMIT = 10000000 # 10MB
 DEFAULT_WARNING_TIME = 1036800 # 12 days
 DEFAULT_DELETION_TIME = 1209600 # 2 weeks
 DEFAULT_DIR = "/users"
-OUTPUT_FILE = "results2.txt"
+OUTPUT_FILE = "results.txt"
 CURRENT_TIME = time()
 
 def is_dir(dir):
