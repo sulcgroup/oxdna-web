@@ -109,7 +109,7 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 			run_command = "forces2pairs.py force.txt designed_pairs.txt"
 		else:
 			run_command = "generate_force.py -o force.txt -f designed_pairs.txt input output.dat"
-		run_command += ";python3 /opt/oxdna_analysis_tools/bond_analysis.py -p {n} input trajectory.dat designed_pairs.txt bond_occupancy.json".format(n = cpu_allocation[analysis_type])
+		run_command += ";python3 /opt/oxdna_analysis_tools/src/oxDNA_analysis_tools/bond_analysis.py -p {n} input trajectory.dat designed_pairs.txt bond_occupancy.json".format(n = cpu_allocation[analysis_type])
 	elif analysis_type == "angle_find":
 		run_command = "duplex_angle_finder.py -p {n} -o duplex_angle.txt input trajectory.dat".format(n = cpu_allocation[analysis_type])
 	elif analysis_type == "angle_plot":
@@ -136,7 +136,7 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 #SBATCH -o {job_output_file}
 #SBATCH -e {job_output_file}
 cd {job_directory}
-python3 /opt/oxdna_analysis_tools/{run_command}""".format(
+python3 /opt/oxdna_analysis_tools/src/oxDNA_analysis_tools/{run_command}""".format(
 	analysis_id=analysis_id,
 	job_directory=job_directory, 
 	job_output_file=job_output_file,
@@ -197,7 +197,7 @@ cd {job_directory}""".	format(
 	for f in input_files:
 		sbatch_file += "\n{oxdna_binary} {file_name}".format(oxdna_binary = oxdna_binary, file_name=f)
 		if f == "input_relax_MC":
-			sbatch_file += "\n/opt/oxdna_analysis_tools/generate_force.py -o force.txt input_relax_MC MC_relax.dat"
+			sbatch_file += "\n/opt/oxdna_analysis_tools/src/oxDNA_analysis_tools/generate_force.py -o force.txt input_relax_MC MC_relax.dat"
 			sbatch_file += "\nsed -i 's/0\.9/{force}/g' force.txt".format(force=force)
 	sbatch_file += "\npython3 /opt/zip_traj.py trajectory.dat trajectory.zip"
 	sbatch_file += "\npython3 {path}/Update_Status.py".format(path=home_path)

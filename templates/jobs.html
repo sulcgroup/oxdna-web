@@ -78,14 +78,14 @@ table tr:nth-child(even) {
 					<td><a target="_blank" href="/job_output/[[x.uuid]]/log" class="log_[[x.uuid]]">view</a>
 						<a href="/job_output/[[x.uuid]]/log" download="[[x.name]].log" class="log_[[x.uuid]]">download</a>
 					</td>
-					<td><a href="/job_output/[[x.uuid]]/topology" download="[[x.name]].top" class="top_[[x.uuid]]">download</a></td>
+					<td><a href="/job_output/[[x.uuid]]/topology.top" download="[[x.name]].top" class="top_[[x.uuid]]">download</a></td>
 					<td ng-cloak><a id="init-view" ng-cloak target="_blank" href="[[ x.initConf[0] ]]" class="first_[[x.uuid]]">view</a>
 						<a id="init-download" ng-cloak href="[[ x.initConf[1] ]]"
 							download="[[x.name]]_init_conf.dat" class="first_[[x.uuid]]">download</a>
 					</td>
 					<td><a target="_blank"
-							href="/static/oxdna-viewer/index.html?configuration=/job_output/[[x.uuid]]/last_conf&topology=/job_output/[[x.uuid]]/topology" class="last_[[x.uuid]]">view</a>
-						<a href="/job_output/[[x.uuid]]/last_conf" download="[[x.name]]_last_conf.dat" class="last_[[x.uuid]]">download</a>
+							href="/static/oxdna-viewer/index.html?configuration=/job_output/[[x.uuid]]/last_conf.dat&topology=/job_output/[[x.uuid]]/topology.top" class="last_[[x.uuid]]">view</a>
+						<a href="/job_output/[[x.uuid]]/last_conf.dat" download="[[x.name]]_last_conf.dat" class="last_[[x.uuid]]">download</a>
 					</td>
 					<td><a id="traj_[[x.uuid]]" class="traj_[[x.uuid]]" href="/job_output/[[x.uuid]]/trajectory_zip">download</a></td>
 					<td><button class="rounded" ng-click="cancelJob(x); x.status = 'Completed'"

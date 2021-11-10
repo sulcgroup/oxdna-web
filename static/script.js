@@ -599,12 +599,12 @@ app.controller("JobsCtrl", function($scope, JobsService, SessionManager, $http) 
 			}).then(response => {
 				if (response.data === "True") {
 					jobs[i]["initCon"] = "init_conf_relax"
-					jobs[i]["initConf"] = [`/static/oxdna-viewer/index.html?configuration=/job_output/${jobs[i].uuid}/init_conf_relax&topology=/job_output/${jobs[i].uuid}/topology`,
-									   `/job_output/${jobs[i].uuid}/init_conf_relax`];
+					jobs[i]["initConf"] = [`/static/oxdna-viewer/index.html?configuration=/job_output/${jobs[i].uuid}/init_conf_relax.dat&topology=/job_output/${jobs[i].uuid}/topology.top`,
+									   `/job_output/${jobs[i].uuid}/init_conf_relax.dat`];
 				}
 				else {
-					jobs[i]["initConf"] = [`/static/oxdna-viewer/index.html?configuration=/job_output/${jobs[i].uuid}/init_conf&topology=/job_output/${jobs[i].uuid}/topology`,
-									   `/job_output/${jobs[i].uuid}/init_conf`];
+					jobs[i]["initConf"] = [`/static/oxdna-viewer/index.html?configuration=/job_output/${jobs[i].uuid}/init_conf.dat&topology=/job_output/${jobs[i].uuid}/topology.top`,
+									   `/job_output/${jobs[i].uuid}/init_conf.dat`];
 				}				
 			});
 		}

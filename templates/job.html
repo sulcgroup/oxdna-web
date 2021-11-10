@@ -59,7 +59,7 @@
 			onkeydown="this.size = this.value.length < 1 ? 1 : this.value.length">
 		<button class="rounded" type="button" ng-click="updateJobName()">Change Name</button>
 		<a class="h2 d-inline-block text-primary float-right" target="_blank"
-			href="/static/oxdna-viewer/index.html?configuration=/job_output/[[job.uuid]]/last_conf&topology=/job_output/[[job.uuid]]/topology">View
+			href="/static/oxdna-viewer/index.html?configuration=/job_output/[[job.uuid]]/last_conf.dat&topology=/job_output/[[job.uuid]]/topology.top">View
 			Last Configuration</a>
 	</div>
 
@@ -101,11 +101,11 @@
 						<td style="width:5%">[[ mean[0].dateString ]]</td>
 						<td style="width:5%"><a href="/job_output/[[mean[0].sim_job_id]]/mean_log" target="_blank">View log</a></td>
 						<td style="width:8%"><a target="_blank"
-								href="/static/oxdna-viewer/index.html?configuration=/job_output/[[mean[0].sim_job_id]]/mean&topology=/job_output/[[mean[0].sim_job_id]]/topology&overlay=/job_output/[[mean[0].sim_job_id]]/deviations">View
+								href="/static/oxdna-viewer/index.html?configuration=/job_output/[[mean[0].sim_job_id]]/mean.dat&topology=/job_output/[[mean[0].sim_job_id]]/topology.top&overlay=/job_output/[[mean[0].sim_job_id]]/deviations.json">View
 								mean+deviations</a></br>
-							<a href="/job_output/[[mean[0].sim_job_id]]/mean" target="_blank"
+							<a href="/job_output/[[mean[0].sim_job_id]]/mean.dat" target="_blank"
 								download=[[job.name]]_mean.dat>Download mean</a></br>
-							<a href="/job_output/[[mean[0].sim_job_id]]/deviations" target="_blank"
+							<a href="/job_output/[[mean[0].sim_job_id]]/deviations.json" target="_blank"
 								download=[[job.name]]_devs.json>Download deviations</a></br>
 							<a href="/job_output/[[mean[0].sim_job_id]]/rmsd_data" target="_blank"
 								download=[[job.name]]_rmsd.json>Download RMSD data</a></br>
@@ -312,9 +312,9 @@
 							<td>[[ bond[0].dateString ]]</td>
 							<td><a href="/job_output/[[bond[0].sim_job_id]]/bond_log" target="_blank">View log</a></td>
 							<td>
-								<a href="/static/oxdna-viewer/index.html?configuration=/job_output/[[bond[0].sim_job_id]]/last_conf&topology=/job_output/[[bond[0].sim_job_id]]/topology&overlay=/job_output/[[bond[0].sim_job_id]]/bond_output"
+								<a href="/static/oxdna-viewer/index.html?configuration=/job_output/[[bond[0].sim_job_id]]/last_conf.dat&topology=/job_output/[[bond[0].sim_job_id]]/topology.top&overlay=/job_output/[[bond[0].sim_job_id]]/bond_output.json"
 									target="_blank">View colormap</a></br>
-								<a href="/job_output/[[bond[0].sim_job_id]]/bond_output" target="_blank"
+								<a href="/job_output/[[bond[0].sim_job_id]]/bond_output.json" target="_blank"
 									download=[[job.name]]_occupancy.json>Download colormap</a></br>
 							</td>
 						</tr>

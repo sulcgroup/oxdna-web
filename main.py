@@ -536,22 +536,22 @@ def getJobOutput(uuid, desired_output):
 		"energy":"energy.dat",
 		"trajectory_zip":"trajectory.zip",
 		"trajectory_txt":"trajectory.dat",
-        "topology": "output.top",
-		"init_conf": "output.dat",
-		"init_conf_relax": "MD_relax.dat",
-		"last_conf": "last_conf.dat",
+        "topology.top": "output.top",
+		"init_conf.dat": "output.dat",
+		"init_conf_relax.dat": "MD_relax.dat",
+		"last_conf.dat": "last_conf.dat",
 		"log":"job_out.log",
 		"mean_log":"mean.log",
 		"align_log":"align.log",
 		"analysis_log":"analysis_out.log",
 		"input":"input",
-		"mean":"mean.dat",
-		"deviations":"deviations.json",
+		"mean.dat":"mean.dat",
+		"deviations.json":"deviations.json",
 		"rmsd_traj":"deviations_rmsd.png",
 		"rmsd_data":"deviations_rmsd_data.json",
 		"aligned_traj":"aligned.zip",
 		"bond_log":"bond.log",
-		"bond_output":"bond_occupancy.json",
+		"bond_output.json":"bond_occupancy.json",
 		"angle_find_log":"angle_find.log",
 		"angle_find_output":"duplex_angle.txt"
 	}
@@ -569,7 +569,12 @@ def getJobOutput(uuid, desired_output):
 			desired_file = open(desired_file_path, "r")
 			desired_file_contents = desired_file.read()
 			desired_file.close()
-			return Response(desired_file_contents, mimetype='text/plain')
+			print(desired_output_map[desired_output], flush=True)
+			response = make_response(send_file(desired_file_path, mimetype='text/plain'))
+			response.headers["x-suggested-filename"] = desired_output_map[desired_output]
+			response.headers["filename"] = desired_output_map[desired_output]
+			response.headers["name"] = desired_output_map[desired_output]
+			return response 
 		except:
 			abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=uuid))
 
