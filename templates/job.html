@@ -167,7 +167,7 @@
 
 		<div class="card">
 			<div id="distanceCard" class="card-body">
-				<h2> Distance <a href="#" style="color:#999" title="Calculate the distances between pairs of nucleotides"
+				<h2> Distance <a href="#" style="color:#999" title="Calculate the distances between pairs of nucleotides. Names should not contain spaces."
 						data-toggle="tooltip" data-placement="right" tooltip><i
 							class="far fa-question-circle fa-sm"></i></a>
 				</h2>
@@ -177,6 +177,8 @@
 				<input type="text" value="1 2 3" id="p1" size=6>
 				<label class="lpadded" for="p2">Particle 2s: </label>
 				<input type="text" value="4 5 6" id="p2" size=6>
+				<label class="lpadded" for="names">Dataset Names: </label>
+				<input type="text" value="1-4 2-5 3-6" id="labels" size=50>
 				<br>
 				<button class="rounded mb-2" type="button" ng-click="startAnalysis('distance')" ngbTooltip="Help?"
 					placement="right" container="body"> Start analysis</button>
@@ -380,7 +382,7 @@
 		<div class="card">
 			<div id=angle_plotCard class="card-body">
 				<h2> Duplex Angle Plotter <a href="#" style="color:#999"
-						title="Reads file from duplex angle finder and plots the angle between the specified duplexes. &#013;&#010; Specify which duplexes you want with the first nucleotide in the duplex (use oxView to find the particle ids)"
+						title="Reads file from duplex angle finder and plots the angle between the specified duplexes. Dataset names cannot contain spaces. &#013;&#010; Specify which duplexes you want with the first nucleotide in the duplex (use oxView to find the particle ids or look in the angle file)"
 						data-toggle="tooltip" data-placement="right" tooltip><i
 							class="far fa-question-circle fa-sm"></i></a>
 				</h2>
@@ -390,6 +392,8 @@
 				<input type="text" value="" id="p1_angle" size=16 maxlength="16">
 				<label class="lpadded" for="p2">Particle 2: </label>
 				<input type="text" value="" id="p2_angle" size=16 maxlength="16">
+				<label class="lpadded" for="names_angle">Dataset Names: </label>
+				<input type="text" value="" id="labels_angle" size=50>
 				<br>
 				<button class="rounded mb-2" type="button" ng-click="startAnalysis('angle_plot')" ngbTooltip="Help?"
 					placement="right" container="body"> Start plotting</button>

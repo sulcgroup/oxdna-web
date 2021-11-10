@@ -149,7 +149,6 @@ def create_analysis():#jobId, analysis_type):
 		return "You must be logged in to submit a job!"
 
 	json_data = request.get_json()
-	from sys import stderr
 
 	userId = session["user_id"]
 

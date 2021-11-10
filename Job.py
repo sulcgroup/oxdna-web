@@ -100,9 +100,11 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 		plist = []
 		for pair in zip(p1s, p2s):
 			plist.extend(pair)
-		run_command = "distance.py -d {name}.txt -f both -o {name}.png -i input trajectory.dat {particles}".format(
+		labels = analysis_parameters["labels"].split(" ")
+		run_command = "distance.py -d {name}.txt -f both -o {name}.png -n {labels} -i input trajectory.dat {particles}".format(
 			name = analysis_parameters["name"],
-			particles = ' '.join(plist)
+			particles = ' '.join(plist),
+			labels = ' '.join(labels)
 		)
 	elif analysis_type == "bond":
 		if ("force.txt" in os.listdir(job_directory)):
@@ -114,15 +116,17 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 		run_command = "duplex_angle_finder.py -p {n} -o duplex_angle.txt input trajectory.dat".format(n = cpu_allocation[analysis_type])
 	elif analysis_type == "angle_plot":
 		analysis_parameters["name"] = analysis_parameters["name_angle"]
-		job_output_file = job_directory + analysis_parameters["name"] + ".log"
+		job_output_file = job_directory + analysis_parameters["name_angle"] + ".log"
 		p1 = analysis_parameters["p1_angle"].split(" ")
 		p2 = analysis_parameters["p2_angle"].split(" ")
+		labels = analysis_parameters["labels_angle"].split(" ")
 		p_input = []
 		for pair in zip(p1, p2):
 			p_input.append("-i duplex_angle.txt " + " ".join(pair))
-		run_command = "duplex_angle_plotter.py -f both -o {name}.png {particle_input}".format(
-			name = analysis_parameters["name"],
-			particle_input = ' '.join(p_input)
+		run_command = "duplex_angle_plotter.py -f both -o {name}.png -n {labels} {particle_input}".format(
+			name = analysis_parameters["name_angle"],
+			particle_input = ' '.join(p_input),
+			labels = ' '.join(labels)
 		)
 	elif analysis_type == "energy":
 		job_output_file = job_directory + analysis_parameters["name"] + ".log"
@@ -338,11 +342,6 @@ def createAnalysisForUserIdWithJob(userId, analysis_parameters):
 	job_number = startSlurmAnalysis(job_directory)
 
 	print("Creating analysis for user {}, received job number: {}".format(userId, job_number), flush=True)
-
-	update_data = (
-		jobId,
-		randomAnalysisId
-	)
 
 	with Database.pool.get_connection() as connection:
 
