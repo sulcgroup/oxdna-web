@@ -487,6 +487,7 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 	user_directory = "/users/" + str(userid) + "/"
 	job_directory =  user_directory + uuid + "/"
 
+	# if you add something to this which gets an image, you also need to update getImg in script.js
 	desired_output_map = {
 		"distance_data" : ".txt",
 		"distance_hist" : "_hist.png",
@@ -495,10 +496,7 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 		"angle_plot_data" : ".txt",
 		"angle_plot_hist" : "_hist.png",
 		"angle_plot_traj" : "_traj.png",
-		"angle_plot_log" : ".log",
-		"energy_log" : ".log",
-		"energy_hist" : "_hist.png",
-		"energy_traj" : "_traj.png"
+		"angle_plot_log" : ".log"
 	}
 
 	desired_file_path = ""
@@ -512,9 +510,12 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 
 	if "log" in desired_output_map:
 		try:
-			desired_file = open(desired_file_path, "r")
-			desired_file_contents = desired_file.read()
-			return Response(desired_file_contents, mimetype='text/plain')
+			response = make_response(send_file(desired_file_path, mimetype='text/plain'))
+			response.headers["x-suggested-filename"] = desired_output_map[desired_output]
+			response.headers["filename"] = desired_output_map[desired_output]
+			response.headers["name"] = desired_output_map[desired_output]
+			return response
+
 		except:
 			abort(404, description="{type} for job {uuid} is currently unfinished".format(type=desired_output, uuid=analysis_id))
 	else:
@@ -530,29 +531,40 @@ def getJobOutput(uuid, desired_output):
 	if session.get("user_id") is None and user != "Guest":
 		return "You must be logged in to view the output of a job"
 
-
+	# if you add something to this which gets an image, you also need to update getImg in script.js
 	desired_output_map = {
+		#input files
+		"topology.top": "output.top",
+		"init_conf.dat": "output.dat",
+		"init_conf_relax.dat": "MD_relax.dat",
+		"input":"input",
+
+		#output files
+		"log":"job_out.log",
 		"energy":"energy.dat",
 		"trajectory_zip":"trajectory.zip",
 		"trajectory_txt":"trajectory.dat",
-        "topology.top": "output.top",
-		"init_conf.dat": "output.dat",
-		"init_conf_relax.dat": "MD_relax.dat",
 		"last_conf.dat": "last_conf.dat",
-		"log":"job_out.log",
+
+		#analysis files
 		"mean_log":"mean.log",
-		"align_log":"align.log",
-		"analysis_log":"analysis_out.log",
-		"input":"input",
 		"mean.dat":"mean.dat",
 		"deviations.json":"deviations.json",
 		"rmsd_traj":"deviations_rmsd.png",
 		"rmsd_data":"deviations_rmsd_data.json",
+
+		"align_log":"align.log",
 		"aligned_traj":"aligned.zip",
+
+		"energy_log" : "energy.log",
+		"energy_hist" : "energy_hist.png",
+		"energy_traj" : "energy_traj.png",
+
 		"bond_log":"bond.log",
 		"bond_output.json":"bond_occupancy.json",
+
 		"angle_find_log":"angle_find.log",
-		"angle_find_output":"duplex_angle.txt"
+		"angle_find_output":"duplex_angle.txt"		
 	}
 
 	if desired_output not in desired_output_map:
@@ -565,10 +577,6 @@ def getJobOutput(uuid, desired_output):
 
 	if not "traj" in desired_output and not "zip" in desired_output:
 		try:
-			desired_file = open(desired_file_path, "r")
-			desired_file_contents = desired_file.read()
-			desired_file.close()
-			print(desired_output_map[desired_output], flush=True)
 			response = make_response(send_file(desired_file_path, mimetype='text/plain'))
 			response.headers["x-suggested-filename"] = desired_output_map[desired_output]
 			response.headers["filename"] = desired_output_map[desired_output]

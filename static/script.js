@@ -427,15 +427,17 @@ app.controller("JobCtrl", function($scope, $location, SessionManager, JobService
 			$scope.associated_jobs[job]["dateString"] = date;
 		}
 
-		$scope.associated_jobs.sort((a, b) => parseInt(b["creation_date"]) - parseInt(a["creation_date"]))
-		$scope.mean = [$scope.associated_jobs.filter(x => x["job_type"] == MEAN)[0]];
-		$scope.align = [$scope.associated_jobs.filter(x => x["job_type"] == ALIGN)[0]];
-		$scope.distance = $scope.associated_jobs.filter(x => x["job_type"] == DISTANCE);
-		$scope.bond = [$scope.associated_jobs.filter(x => x["job_type"] == BOND)[0]];
-		$scope.angle_find = [$scope.associated_jobs.filter(x => x["job_type"] == ANGLE_FIND)[0]];
-		$scope.angle_plot = $scope.associated_jobs.filter(x => x["job_type"] == ANGLE_PLOT);
-		$scope.energy = [$scope.associated_jobs.filter(x => x["job_type"] == ENERGY)[0]];
-		$scope.updateStatus();
+		if ($scope.associated_jobs) {
+			$scope.associated_jobs.sort((a, b) => parseInt(b["creation_date"]) - parseInt(a["creation_date"]))
+			$scope.mean = [$scope.associated_jobs.filter(x => x["job_type"] == MEAN)[0]];
+			$scope.align = [$scope.associated_jobs.filter(x => x["job_type"] == ALIGN)[0]];
+			$scope.distance = $scope.associated_jobs.filter(x => x["job_type"] == DISTANCE);
+			$scope.bond = [$scope.associated_jobs.filter(x => x["job_type"] == BOND)[0]];
+			$scope.angle_find = [$scope.associated_jobs.filter(x => x["job_type"] == ANGLE_FIND)[0]];
+			$scope.angle_plot = $scope.associated_jobs.filter(x => x["job_type"] == ANGLE_PLOT);
+			$scope.energy = [$scope.associated_jobs.filter(x => x["job_type"] == ENERGY)[0]];
+			$scope.updateStatus();
+		}
 	}
 
 	$scope.updateStatus = function() {
@@ -514,6 +516,20 @@ app.controller("JobCtrl", function($scope, $location, SessionManager, JobService
 			}
 		})
 		
+	}
+	$scope.getImg  = function(condition, lookup) {
+
+		if (condition == 'Completed') {
+			if (lookup.includes('distance') || lookup.includes('angle_plot')) {
+				return `/analysis_output/${$scope.viewing_job_uuid}/${lookup}`
+			} 
+			else {
+				return `/job_output/${$scope.viewing_job_uuid}/${lookup}`;
+			}
+		} 
+		else {
+			return "";
+		}
 	}
 
 	$scope.updateJobName = function() {

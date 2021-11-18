@@ -113,8 +113,8 @@
 						<td>
 							<a href="/job_output/[[mean[0].sim_job_id]]/rmsd_traj" target="_blank"
 								download=[[x.name]]_rmsd.png>
-								<img id="rmsd_traj"
-									src="/job_output/[[mean[0].sim_job_id]]/rmsd_traj" width=100%>
+								<img id="rmsd_traj" 
+									ng-src="[[getImg(mean[0].status, 'rmsd_traj')]]" width=100%>
 							</a>
 						</td>
 					</tr>
@@ -207,14 +207,14 @@
 								<a href="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/distance_hist" target="_blank"
 									download=[[x.name]]_hist.png>
 									<img id="hist_[[x.uuid]]"
-										src="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/distance_hist" width=100%>
+									ng-src="[[getImg(distance[0].status, x.uuid+'/distance_hist')]]" width=100%>
 								</a>
 							</td>
 							<td>
 								<a href="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/distance_traj" target="_blank"
 									download=[[x.name]]_traj.png>
 									<img id="traj_[[x.uuid]]"
-										src="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/distance_traj" width=100%>
+									ng-src="[[getImg(distance[0].status, x.uuid+'/distance_traj')]]" width=100%>
 								</a>
 							</td>
 						</tr>
@@ -263,7 +263,7 @@
 								<a href="/analysis_output/[[energy[0].sim_job_id]]/[[energy[0].uuid]]/energy_hist"
 									target="_blank" download=[[energy[0].name]]_hist.png>
 									<img id="hist_[[energy[0].uuid]]"
-										src="/analysis_output/[[energy[0].sim_job_id]]/[[energy[0].uuid]]/energy_hist"
+									ng-src="[[getImg(energy[0].status, 'energy_hist')]]"
 										width=100%>
 								</a>
 							</td>
@@ -271,7 +271,7 @@
 								<a href="/analysis_output/[[energy[0].sim_job_id]]/[[energy[0].uuid]]/energy_traj"
 									target="_blank" download=[[energy[0].name]]_traj.png>
 									<img id="traj_[[energy[0].uuid]]"
-										src="/analysis_output/[[energy[0].sim_job_id]]/[[energy[0].uuid]]/energy_traj"
+									ng-src="[[getImg(energy[0].status, 'energy_traj')]]"
 										width=100%>
 								</a>
 							</td>
@@ -419,14 +419,14 @@
 								<a href="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/angle_plot_hist" target="_blank"
 									download=[[x.name]]_hist.png>
 									<img id="hist_[[x.uuid]]"
-										src="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/angle_plot_hist" width=100%>
+									ng-src="[[getImg(angle_plot[0].status, 'angle_plot_traj')]]" width=100%>
 								</a>
 							</td>
 							<td>
 								<a href="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/angle_plot_traj" target="_blank"
 									download=[[x.name]]_traj.png>
 									<img id="traj_[[x.uuid]]"
-										src="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/angle_plot_traj" width=100%>
+									ng-src="[[getImg(angle_plot[0].status, `${x.sim_job_id}/angle_plot_traj`)]]" width=100%>
 								</a>
 							</td>
 						</tr>

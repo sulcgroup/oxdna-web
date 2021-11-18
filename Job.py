@@ -101,7 +101,7 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 		for pair in zip(p1s, p2s):
 			plist.extend(pair)
 		labels = analysis_parameters["labels"].split(" ")
-		run_command = "distance.py -d {name}.txt -f both -o {name}.png -n {labels} -i input trajectory.dat {particles}".format(
+		run_command = "distance.py -d {name}.json -f both -o {name}.png -n {labels} -i input trajectory.dat {particles}".format(
 			name = analysis_parameters["name"],
 			particles = ' '.join(plist),
 			labels = ' '.join(labels)
