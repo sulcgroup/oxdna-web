@@ -508,12 +508,9 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 		if not desired_file_path:
 			print("No output found for query {}".format)
 
-	if "log" in desired_output_map:
+	if "log" in desired_output:
 		try:
 			response = make_response(send_file(desired_file_path, mimetype='text/plain'))
-			response.headers["x-suggested-filename"] = desired_output_map[desired_output]
-			response.headers["filename"] = desired_output_map[desired_output]
-			response.headers["name"] = desired_output_map[desired_output]
 			return response
 
 		except:
@@ -554,7 +551,7 @@ def getJobOutput(uuid, desired_output):
 		"rmsd_data":"deviations_rmsd_data.json",
 
 		"align_log":"align.log",
-		"aligned_traj":"aligned.zip",
+		"aligned_trajectory":"aligned.zip",
 
 		"energy_log" : "energy.log",
 		"energy_hist" : "energy_hist.png",
@@ -575,12 +572,9 @@ def getJobOutput(uuid, desired_output):
 	job_directory =  user_directory + uuid + "/"
 	desired_file_path = job_directory + desired_output_map[desired_output]
 
-	if not "traj" in desired_output and not "zip" in desired_output:
+	if not "trajectory" in desired_output and not "zip" in desired_output:
 		try:
 			response = make_response(send_file(desired_file_path, mimetype='text/plain'))
-			response.headers["x-suggested-filename"] = desired_output_map[desired_output]
-			response.headers["filename"] = desired_output_map[desired_output]
-			response.headers["name"] = desired_output_map[desired_output]
 			return response 
 		except:
 			abort(404, description="No {type} found for job {uuid}\nEither the job hasn't produced that output yet or something has gone horribly wrong".format(type=desired_output, uuid=uuid))

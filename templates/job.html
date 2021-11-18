@@ -156,7 +156,7 @@
 							</td>
 							<td>[[ align[0].dateString ]]</td>
 							<td><a href="/job_output/[[align[0].sim_job_id]]/align_log" target="_blank">View log</a></td>
-							<td><a href="/job_output/[[align[0].sim_job_id]]/aligned_traj" target="_blank">Download aligned
+							<td><a href="/job_output/[[align[0].sim_job_id]]/aligned_trajectory" target="_blank">Download aligned
 									trajectory</a></br>
 							</td>
 						</tr>
@@ -255,12 +255,12 @@
 							</td>
 							<td style="width:5%">[[ energy[0].dateString ]]</td>
 							<td style="width:5%"><a
-									href="/analysis_output/[[energy[0].sim_job_id]]/[[energy[0].uuid]]/energy_log"
+									href="/job_output/[[energy[0].sim_job_id]]/energy_log"
 									target="_blank">View log</a></td>
 							<td style="width:8%"><a href="/job_output/[[energy[0].sim_job_id]]/energy"
 									download=[[job.name]]_energy.dat>Download energy as text</a></td>
 							<td>
-								<a href="/analysis_output/[[energy[0].sim_job_id]]/[[energy[0].uuid]]/energy_hist"
+								<a href="/job_output/[[energy[0].sim_job_id]]/energy_hist"
 									target="_blank" download=[[energy[0].name]]_hist.png>
 									<img id="hist_[[energy[0].uuid]]"
 									ng-src="[[getImg(energy[0].status, 'energy_hist')]]"
@@ -268,7 +268,7 @@
 								</a>
 							</td>
 							<td>
-								<a href="/analysis_output/[[energy[0].sim_job_id]]/[[energy[0].uuid]]/energy_traj"
+								<a href="/job_output/[[energy[0].sim_job_id]]/energy_traj"
 									target="_blank" download=[[energy[0].name]]_traj.png>
 									<img id="traj_[[energy[0].uuid]]"
 									ng-src="[[getImg(energy[0].status, 'energy_traj')]]"
@@ -389,9 +389,9 @@
 				<label for="name">Job Name: </label>
 				<input type="text" value="angle_plot" id="name" size=16 maxlength="16">
 				<label class="lpadded" for="p1">Particle 1: </label>
-				<input type="text" value="" id="p1_angle" size=16 maxlength="16">
+				<input type="text" value="" id="p1" size=16 maxlength="16">
 				<label class="lpadded" for="p2">Particle 2: </label>
-				<input type="text" value="" id="p2_angle" size=16 maxlength="16">
+				<input type="text" value="" id="p2" size=16 maxlength="16">
 				<label class="lpadded" for="names_angle">Dataset Names: </label>
 				<input type="text" value="" id="labels_angle" size=50>
 				<br>

@@ -90,7 +90,10 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 	}
 	print(analysis_parameters, flush=True)
 
-	analysis_parameters["name"] = "".join([c for c in analysis_parameters["name"] if c not in "/;$&'}{"]) #turns out you could do directory injection on the name.  This cleans that up.
+	#the input parameters are actually vulnerable to injecting bash code
+	analysis_parameters["name"] = "".join([c for c in analysis_parameters["name"] if c not in "/;$&'}{"]) 
+	analysis_parameters["p1"] = "".join([c for c in analysis_parameters["p1"] if c not in "/;$&'}{"])
+	analysis_parameters["p2"] = "".join([c for c in analysis_parameters["p2"] if c not in "/;$&'}{"])
 
 	if analysis_type == "mean":
 		run_command = "compute_mean.py -p {n} -d deviations.json -f oxDNA -o mean.dat trajectory.dat".format(n = cpu_allocation[analysis_type])
@@ -120,8 +123,8 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 	elif analysis_type == "angle_plot":
 		analysis_parameters["name"] = analysis_parameters["name"]
 		job_output_file = job_directory + analysis_parameters["name"] + ".log"
-		p1 = analysis_parameters["p1_angle"].split(" ")
-		p2 = analysis_parameters["p2_angle"].split(" ")
+		p1 = analysis_parameters["p1"].split(" ")
+		p2 = analysis_parameters["p2"].split(" ")
 		labels = analysis_parameters["labels_angle"].split(" ")
 		p_input = []
 		for pair in zip(p1, p2):
