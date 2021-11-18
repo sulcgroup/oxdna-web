@@ -88,6 +88,7 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 		"angle_plot" : 1,
 		"energy" : 1
 	}
+	print(analysis_parameters, flush=True)
 
 	analysis_parameters["name"] = "".join([c for c in analysis_parameters["name"] if c not in "/;$&'}{"]) #turns out you could do directory injection on the name.  This cleans that up.
 
@@ -117,8 +118,8 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 	elif analysis_type == "angle_find":
 		run_command = "duplex_angle_finder.py -p {n} -o duplex_angle.txt input trajectory.dat".format(n = cpu_allocation[analysis_type])
 	elif analysis_type == "angle_plot":
-		analysis_parameters["name"] = analysis_parameters["name_angle"]
-		job_output_file = job_directory + analysis_parameters["name_angle"] + ".log"
+		analysis_parameters["name"] = analysis_parameters["name"]
+		job_output_file = job_directory + analysis_parameters["name"] + ".log"
 		p1 = analysis_parameters["p1_angle"].split(" ")
 		p2 = analysis_parameters["p2_angle"].split(" ")
 		labels = analysis_parameters["labels_angle"].split(" ")
@@ -126,7 +127,7 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 		for pair in zip(p1, p2):
 			p_input.append("-i duplex_angle.txt " + " ".join(pair))
 		run_command = "duplex_angle_plotter.py -f both -o {name}.png -n {labels} {particle_input}".format(
-			name = analysis_parameters["name_angle"],
+			name = analysis_parameters["name"],
 			particle_input = ' '.join(p_input),
 			labels = ' '.join(labels)
 		)

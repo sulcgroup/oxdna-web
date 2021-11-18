@@ -387,7 +387,7 @@
 							class="far fa-question-circle fa-sm"></i></a>
 				</h2>
 				<label for="name">Job Name: </label>
-				<input type="text" value="angle_plot" id="name_angle" size=16 maxlength="16">
+				<input type="text" value="angle_plot" id="name" size=16 maxlength="16">
 				<label class="lpadded" for="p1">Particle 1: </label>
 				<input type="text" value="" id="p1_angle" size=16 maxlength="16">
 				<label class="lpadded" for="p2">Particle 2: </label>
@@ -419,14 +419,14 @@
 								<a href="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/angle_plot_hist" target="_blank"
 									download=[[x.name]]_hist.png>
 									<img id="hist_[[x.uuid]]"
-									ng-src="[[getImg(angle_plot[0].status, 'angle_plot_traj')]]" width=100%>
+									ng-src="[[getImg(angle_plot[0].status, x.uuid+'/angle_plot_hist')]]" width=100%>
 								</a>
 							</td>
 							<td>
 								<a href="/analysis_output/[[x.sim_job_id]]/[[x.uuid]]/angle_plot_traj" target="_blank"
 									download=[[x.name]]_traj.png>
 									<img id="traj_[[x.uuid]]"
-									ng-src="[[getImg(angle_plot[0].status, `${x.sim_job_id}/angle_plot_traj`)]]" width=100%>
+									ng-src="[[getImg(angle_plot[0].status, x.uuid+'/angle_plot_traj')]]" width=100%>
 								</a>
 							</td>
 						</tr>

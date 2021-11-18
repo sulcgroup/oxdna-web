@@ -107,6 +107,7 @@ app.factory("JobService", function($http) {
 		let parameters = $(`#${divId} input`).map(function(idx, elem) {
 			return [[$(elem).attr('id'), $(elem).val()]];
 		}).get();
+		console.log(parameters)
 
 		let request = new XMLHttpRequest();
 		request.open("POST", "/api/create_analysis");
@@ -427,14 +428,22 @@ app.controller("JobCtrl", function($scope, $location, SessionManager, JobService
 			$scope.associated_jobs[job]["dateString"] = date;
 		}
 
+		function filterUnique(jobs) {
+			return jobs.filter((j, i, a) =>
+				a.findIndex(e=>e.name === j.name)===i
+			)
+		}
+
 		if ($scope.associated_jobs) {
 			$scope.associated_jobs.sort((a, b) => parseInt(b["creation_date"]) - parseInt(a["creation_date"]))
 			$scope.mean = [$scope.associated_jobs.filter(x => x["job_type"] == MEAN)[0]];
 			$scope.align = [$scope.associated_jobs.filter(x => x["job_type"] == ALIGN)[0]];
 			$scope.distance = $scope.associated_jobs.filter(x => x["job_type"] == DISTANCE);
+			$scope.distance = filterUnique($scope.distance);
 			$scope.bond = [$scope.associated_jobs.filter(x => x["job_type"] == BOND)[0]];
 			$scope.angle_find = [$scope.associated_jobs.filter(x => x["job_type"] == ANGLE_FIND)[0]];
 			$scope.angle_plot = $scope.associated_jobs.filter(x => x["job_type"] == ANGLE_PLOT);
+			$scope.angle_plot = filterUnique($scope.angle_plot);
 			$scope.energy = [$scope.associated_jobs.filter(x => x["job_type"] == ENERGY)[0]];
 			$scope.updateStatus();
 		}
