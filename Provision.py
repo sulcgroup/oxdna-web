@@ -1,5 +1,13 @@
 import Register
 import Admin
 
-Register.registerUser(name="admin", password="admin", firstName="admin", lastName="admin", institution="Admin University", requires_verification=False)
+user = {
+    "email" : "admin",
+    "password" : "password",
+    "firstName" : "admin",
+    "lastName" : "admin",
+    "institution" : "Admin University",
+    "iAgree" : True
+}
+Register.registerUser(user, requires_verification=False)
 Admin.promoteToAdmin(1)
