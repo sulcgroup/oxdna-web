@@ -89,6 +89,8 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 		"energy" : 1
 	}
 
+	analysis_parameters["name"] = "".join([c for c in analysis_parameters["name"] if c not in "/;$&'}{"]) #turns out you could do directory injection on the name.  This cleans that up.
+
 	if analysis_type == "mean":
 		run_command = "compute_mean.py -p {n} -d deviations.json -f oxDNA -o mean.dat trajectory.dat".format(n = cpu_allocation[analysis_type])
 	elif analysis_type == "align":
