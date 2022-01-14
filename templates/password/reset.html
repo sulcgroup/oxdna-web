@@ -50,14 +50,14 @@
 					<div ng-if="status === 'Password succesfully changed!'">
 						<h6 ng-cloak>Click <a href=https://oxdna.org/login>here</a> to return to the login page.</h6>
 					</div>
-					<div>
+					<form>
 						<br>
 						New password:&emsp;&ensp; <input type="password" ng-model="newPassword">
 						<br><br>
 						Confirm password: <input type="password" ng-model="confirmPassword">
 						<br><br><br>
-						<button ng-click="submit()">Reset my password</button>
-					</div>
+						<input type="submit" ng-click="submit()" value="Reset my password"></input>
+					</form>
 				</div>
 			</div>
 	

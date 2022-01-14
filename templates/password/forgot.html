@@ -47,12 +47,12 @@
 					<div ng-if="status != null">
 						<h6 ng-cloak>[[status]]</h6>
 					</div>
-					<div>
+					<form>
 						<br>
 						Email: <input type="text" ng-model="email">
 						<br><br>
-						<button ng-click="submit()">Reset password</button>
-					</div>
+						<input type="submit" ng-click="submit()" value="Reset password">
+					</form>
 				</div>
 			</div>
 		</div>
