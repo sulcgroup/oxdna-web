@@ -91,9 +91,12 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 	print(analysis_parameters, flush=True)
 
 	#the input parameters are actually vulnerable to injecting bash code
-	analysis_parameters["name"] = "".join([c for c in analysis_parameters["name"] if c not in "/;$&'}{"]) 
-	analysis_parameters["p1"] = "".join([c for c in analysis_parameters["p1"] if c not in "/;$&'}{"])
-	analysis_parameters["p2"] = "".join([c for c in analysis_parameters["p2"] if c not in "/;$&'}{"])
+	if "name" in analysis_parameters:
+		analysis_parameters["name"] = "".join([c for c in analysis_parameters["name"] if c not in "/;$&'}{"]) 
+	if "p1" in analysis_parameters:
+		analysis_parameters["p1"] = "".join([c for c in analysis_parameters["p1"] if c not in "/;$&'}{"])
+	if "p2" in analysis_parameters:
+		analysis_parameters["p2"] = "".join([c for c in analysis_parameters["p2"] if c not in "/;$&'}{"])
 
 	if analysis_type == "mean":
 		run_command = "compute_mean.py -p {n} -d deviations.json -f oxDNA -o mean.dat trajectory.dat".format(n = cpu_allocation[analysis_type])
@@ -114,7 +117,7 @@ def createSlurmAnalysisFile(job_directory, analysis_id, analysis_type, analysis_
 		)
 	elif analysis_type == "bond":
 		if ("force.txt" in os.listdir(job_directory)):
-			run_command = "forces2pairs.py force.txt designed_pairs.txt"
+			run_command = "forces2pairs.py -o designed_pairs.txt force.txt"
 		else:
 			run_command = "generate_force.py -o force.txt -f designed_pairs.txt input output.dat"
 		run_command += ";python3 /opt/oxdna_analysis_tools/src/oxDNA_analysis_tools/bond_analysis.py -p {n} input trajectory.dat designed_pairs.txt bond_occupancy.json".format(n = cpu_allocation[analysis_type])

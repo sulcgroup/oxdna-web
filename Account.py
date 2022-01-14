@@ -149,17 +149,20 @@ def verifyUser(userId, VerifyCode):
 
 def sendResetToken(username):
 	token = str(uuid.uuid4())
-	day = time.time() + 86400
+	expire = time.time() + 86400
 
 	with Database.pool.get_connection() as connection:
 		with connection.cursor() as cursor:
+			cursor.execute(get_userid_query,(username,))
 			cursor.execute(set_reset_token, (token, username,))
-			cursor.execute(set_reset_token_expiration, (day, username,))
+			cursor.execute(set_reset_token_expiration, (expire, username,))
+		if len(cursor.fetchall()) == 0:
+			return "That email is not recognized.  Please try creating an account instead."
 	
 	verifylink = "http://oxdna.org/password/reset?token={token}".format(token = token)
 	EmailScript.SendEmail("-t 6 -n {username} -u {verifylink} -d {email}".format(username = username, verifylink = verifylink, email = username).split(" "))
 
-	return "Email sent"
+	return "Email sent!"
 
 def checkToken(token):
 	userId = 0

@@ -489,7 +489,7 @@ def getAnalysisOutput(uuid, analysis_id, desired_output):
 
 	# if you add something to this which gets an image, you also need to update getImg in script.js
 	desired_output_map = {
-		"distance_data" : ".txt",
+		"distance_data" : ".json",
 		"distance_hist" : "_hist.png",
 		"distance_traj" : "_traj.png",
 		"distance_log" :  ".log",
